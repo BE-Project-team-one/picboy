@@ -7,7 +7,6 @@ on:
 
 env:
   S3_BUCKET_NAME: doker-bucket
-  RESOURCE_PATH: ./src/main/resources/application.properties
   CODE_DEPLOY_APPLICATION_NAME: doker-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: doker-server
 
@@ -24,17 +23,15 @@ jobs:
         with:
           java-version: 11
         
-        # [1]
-      - name: Set properties file 
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: ${{ env.RESOURCE_PATH }} 
-        env:
-          jwt.secret: ${{ secrets.JWT_SECRET }}
-          spring.h2.console.enabled: true
-          spring.datasource.url: ${{ secrets.H2_DB_URL }}
-          spring.datasource.username: ${{ secrets.H2_DB_USERNAME }}
-          spring.datasource.password: ${{ secrets.H2_DB_PASSWORD }}
+        ## create application.properties
+      - name: make application.properties
+        if: contains(github.ref, 'main')
+        run: |
+          cd ./src/main/resources
+          touch ./application.properties 
+          echo "${{ secrets.PROPERTIES }}" > ./application.properties 
+          
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
