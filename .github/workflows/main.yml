@@ -27,8 +27,10 @@ jobs:
       - name: make application.properties
         if: contains(github.ref, 'main')
         run: |
+          cd ./src/main
+          touch ./resources
           cd ./src/main/resources
-          touch ./application.properties 
+          touch ./application.properties
           echo "${{ secrets.PROPERTIES }}" > ./application.properties 
           
         shell: bash
