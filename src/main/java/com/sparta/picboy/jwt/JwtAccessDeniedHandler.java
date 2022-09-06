@@ -1,7 +1,7 @@
 package com.sparta.picboy.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.picboy.dto.ResponseDto;
+import com.sparta.picboy.dto.response.ResponseDto;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
                 )
         );
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//        response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }
 

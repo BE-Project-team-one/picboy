@@ -1,8 +1,8 @@
 package com.sparta.picboy.service;
 
-import com.sparta.picboy.domain.Member;
+import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.UserDetailsImpl;
-import com.sparta.picboy.repository.MemberRepository;
+import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

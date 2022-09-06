@@ -1,5 +1,6 @@
 package com.sparta.picboy.domain;
 
+import com.sparta.picboy.domain.user.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

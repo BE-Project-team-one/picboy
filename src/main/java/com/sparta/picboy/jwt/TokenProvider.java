@@ -1,6 +1,6 @@
 package com.sparta.picboy.jwt;
 
-import com.sparta.picboy.dto.TokenDto;
+import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

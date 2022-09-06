@@ -1,7 +1,7 @@
 package com.sparta.picboy.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.picboy.dto.ResponseDto;
+import com.sparta.picboy.dto.response.ResponseDto;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 )
         );
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

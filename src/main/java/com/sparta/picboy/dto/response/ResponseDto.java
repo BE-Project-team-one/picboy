@@ -1,4 +1,4 @@
-package com.sparta.picboy.dto;
+package com.sparta.picboy.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
