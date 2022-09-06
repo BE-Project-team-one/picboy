@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Member extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // pk값
 
     @Column(nullable = false, unique = true)
