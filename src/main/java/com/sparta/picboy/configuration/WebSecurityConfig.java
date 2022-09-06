@@ -70,6 +70,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/user/**").permitAll() // 로그인,회원가입은 토큰없이도 가능
+                        .antMatchers("/post/**").permitAll()
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());
 
