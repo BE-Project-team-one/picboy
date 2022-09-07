@@ -1,6 +1,7 @@
 package com.sparta.picboy.domain.user;
 
 import com.sparta.picboy.domain.Timestamped;
+import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,5 +45,12 @@ public class Member extends Timestamped {
         this.status = status;
         this.phoneNumber = phoneNumber;
         this.authority = authority;
+    }
+
+    public Member(SignupRequestDto requestDto, String password) {  // signup애서 생성자 생성
+        this.username = requestDto.getUsername();
+        this.nickname = requestDto.getNickname();
+        this.password = password;
+        this.phoneNumber = requestDto.getPhoneNumber();
     }
 }
