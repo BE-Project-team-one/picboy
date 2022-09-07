@@ -35,8 +35,4 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-<<<<<<< HEAD
 .vscode/
-
-/application.proerties
-
