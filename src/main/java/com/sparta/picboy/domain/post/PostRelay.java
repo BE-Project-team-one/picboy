@@ -1,5 +1,6 @@
 package com.sparta.picboy.domain.post;
 
+import com.sparta.picboy.domain.Timestamped;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class PostRelay {
+public class PostRelay extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

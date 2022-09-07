@@ -48,18 +48,18 @@ public class MemberService {
     public ResponseDto<?> idDoubleCheck(SignupRequestDto requestDto) {
 
         if(memberRepository.findByUsername(requestDto.getUsername()).isPresent()){
-            return ResponseDto.fail("403", "이미 존재하는 아이디입니다.");
-            }else{
+            return ResponseDto.fail("403", "이미 존재하는 아이디 입니다.");
         }
+
         return ResponseDto.success("true");
     }
     
     // 닉네임 중복 체크
     public ResponseDto<?> nickDoubleCheck(SignupRequestDto requestDto) {
         if((memberRepository.findByNickname(requestDto.getNickname()).isPresent())){
-            return ResponseDto.fail("403", "이미 존재하는 닉네임입니다.");
-        }else{
+            return ResponseDto.fail("403", "이미 존재하는 닉네임 입니다.");
         }
+
         return ResponseDto.success("true");
     }
 
@@ -78,8 +78,8 @@ public class MemberService {
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
 
-        httpServletResponse.addHeader("Access_Token", "Bearer " + tokenDto.getAccessToken());
-        httpServletResponse.addHeader("Refresh_Token", tokenDto.getRefreshToken());
+        httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
 
         return ResponseDto.success("true");
     }
