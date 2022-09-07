@@ -8,8 +8,6 @@ import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.maven.artifact.repository.Authentication;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
