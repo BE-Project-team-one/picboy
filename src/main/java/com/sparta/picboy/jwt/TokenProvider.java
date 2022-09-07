@@ -1,6 +1,10 @@
 package com.sparta.picboy.jwt;
 
+import com.sparta.picboy.domain.Authority;
+import com.sparta.picboy.domain.RefreshToken;
+import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
+import com.sparta.picboy.repository.user.RefreshTokenRepository;
 import com.sparta.picboy.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -25,6 +29,8 @@ import java.util.stream.Collectors;
 public class TokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
 
+    private final RefreshTokenRepository refreshTokenRepository;
+
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
@@ -32,42 +38,43 @@ public class TokenProvider {
 
     private final Key key;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService, RefreshTokenRepository refreshTokenRepository) {
         this.userDetailsService = userDetailsService;
+        this.refreshTokenRepository = refreshTokenRepository;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) { //토큰을 만들자
-        // 권한들 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        long now = (new Date()).getTime();
-
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
-                .compact();
-
-        // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-
-        return TokenDto.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-                .refreshToken(refreshToken)
-                .build();
-    }
+//    public TokenDto generateTokenDto(Authentication authentication) { //토큰을 만들자
+//        // 권한들 가져오기
+//        String authorities = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(","));
+//
+//        long now = (new Date()).getTime();
+//
+//        // Access Token 생성
+//        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+//        String accessToken = Jwts.builder()
+//                .setSubject(authentication.getName())       // payload "sub": "name"
+//                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+//                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+//                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+//                .compact();
+//
+//        // Refresh Token 생성
+//        String refreshToken = Jwts.builder()
+//                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+//                .signWith(key, SignatureAlgorithm.HS512)
+//                .compact();
+//
+//        return TokenDto.builder()
+//                .grantType(BEARER_TYPE)
+//                .accessToken(accessToken)
+//                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+//                .refreshToken(refreshToken)
+//                .build();
+//    }
 
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
@@ -112,4 +119,36 @@ public class TokenProvider {
             return e.getClaims();
         }
     }
+    public TokenDto generateTokenDto(Member member) {
+        long now = (new Date().getTime());
+
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setSubject(member.getUsername())
+                .claim(AUTHORITIES_KEY, Authority.ROLE_USER.toString())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        RefreshToken refreshTokenObject = RefreshToken.builder()
+                .id(member.getId())
+                .member(member)
+                .value(refreshToken)
+                .build();
+
+        refreshTokenRepository.save(refreshTokenObject);
+        return TokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .build();
+
+     }
+
 }
