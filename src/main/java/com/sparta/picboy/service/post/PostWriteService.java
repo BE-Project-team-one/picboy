@@ -1,6 +1,8 @@
 package com.sparta.picboy.service.post;
 
 import com.sparta.picboy.S3Upload.AwsS3Service;
+import com.sparta.picboy.WebSocket.AlarmService;
+import com.sparta.picboy.WebSocket.MessageDto;
 import com.sparta.picboy.domain.RandomTopic;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -31,6 +34,7 @@ public class PostWriteService {
     private final AwsS3Service awsS3Service;
     private final RandomTopicRepository randomTopicRepository;
     private final PostRelayRepository postRelayRepository;
+    private final AlarmService alarmService;
 
 
 
@@ -88,6 +92,21 @@ public class PostWriteService {
 
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
         postRelayRepository.save(postRelay);
+
+        // 게시물이 완성됬을 때 알람메시지 작동
+        if(post.getStatus() == 2) {
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            List<Member> memberList = new ArrayList<>();
+
+            for(PostRelay relay : postRelayList) {
+                memberList.add(relay.getMember());
+            }
+
+            MessageDto messageDto = new MessageDto(memberList, "게시물이 완성되었습니다", post.getId());
+            alarmService.alarmByMessage(messageDto);
+        }
+
+
 
         return ResponseDto.success("이어그리기 성공");
 
