@@ -1,12 +1,10 @@
 package com.sparta.picboy.controller.user;
 
-import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.service.user.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.maven.artifact.repository.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
