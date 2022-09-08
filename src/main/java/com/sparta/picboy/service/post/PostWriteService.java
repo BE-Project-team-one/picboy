@@ -21,9 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public class PostWriteService {
     @Transactional
     public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto, MultipartFile file) {
 
-        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
         String imageUrl = getFileUrl(file, 1);
@@ -75,7 +73,8 @@ public class PostWriteService {
     // 이어 그리기 생성
     @Transactional
     public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
-        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
+
+        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
         Post post = postRepository.findById(postId).orElse(null);
@@ -88,7 +87,7 @@ public class PostWriteService {
         post.imgUpdate(imageUrl);
 
         if (post.getStatus() == 2) return ResponseDto.fail("", "이미 완료된 게시물입니다.");
-        if (post.getFrameTotal() == post.getFrameTotal()) post.statusUpdate(2);
+        if (post.getFrameNum() == post.getFrameTotal()) post.statusUpdate(2);
 
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
         postRelayRepository.save(postRelay);
@@ -96,13 +95,14 @@ public class PostWriteService {
         // 게시물이 완성됬을 때 알람메시지 작동
         if(post.getStatus() == 2) {
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
-            List<Member> memberList = new ArrayList<>();
+           // List<Member> memberList = new ArrayList<>();
+            Set<Member> memberSet = new HashSet<>();
 
             for(PostRelay relay : postRelayList) {
-                memberList.add(relay.getMember());
+                memberSet.add(relay.getMember());
             }
 
-            MessageDto messageDto = new MessageDto(memberList, "게시물이 완성되었습니다", post.getId());
+            MessageDto messageDto = new MessageDto(memberSet, "게시물이 완성되었습니다", post.getId());
             alarmService.alarmByMessage(messageDto);
         }
 
