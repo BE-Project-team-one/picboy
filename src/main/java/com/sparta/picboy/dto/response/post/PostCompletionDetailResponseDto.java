@@ -16,10 +16,10 @@ public class PostCompletionDetailResponseDto {
     private LocalDateTime createdAt;
     private List<FrameImgListResponseDto> frameImgList;
     private int likeCount;
-    // 댓글 병합 이후에 이곳에 댓글리스트 추가하기 + 밑에 생성자에도 추가히기
+    private List<CommentListResponseDto> commentListResponseDtoList;
 
 
-    public PostCompletionDetailResponseDto(Long id, int frameTotal, String topic, String gifUrl, LocalDateTime createdAt, List<FrameImgListResponseDto> frameImgList, int likeCount) {
+    public PostCompletionDetailResponseDto(Long id, int frameTotal, String topic, String gifUrl, LocalDateTime createdAt, List<FrameImgListResponseDto> frameImgList, int likeCount, List<CommentListResponseDto> commentListResponseDtoList) {
         this.id = id;
         this.frameTotal = frameTotal;
         this.topic = topic;
@@ -27,5 +27,6 @@ public class PostCompletionDetailResponseDto {
         this.createdAt = createdAt;
         this.frameImgList = frameImgList;
         this.likeCount = likeCount;
+        this.commentListResponseDtoList = commentListResponseDtoList;
     }
 }

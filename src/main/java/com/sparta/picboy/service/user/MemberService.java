@@ -28,14 +28,14 @@ public class MemberService {
     // 일반 회원가입
     public ResponseDto<?> signup(SignupRequestDto requestDto) {
 
-        String usernamePattern = "^[A-Za-z0-9]{3,12}$"; // 영어, 숫자 3자이상 12자 이하
-        String nicknamePattern = "^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$"; // 영어 , 한글 , 2자이상 8자이하
-        String passwordPattern = "(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{4,12}";  // 영어, 숫자, 특수문자 4자이상 12자 이하
-
-        if(!Pattern.matches(usernamePattern, requestDto.getUsername()) ||
-           !Pattern.matches(nicknamePattern, requestDto.getNickname()) ||
-           !Pattern.matches(passwordPattern, requestDto.getPassword()))
-            return ResponseDto.fail("Error Code", "회원가입이 실패했습니다.");
+//        String usernamePattern = "^[A-Za-z0-9]{3,12}$"; // 영어, 숫자 3자이상 12자 이하
+//        String nicknamePattern = "^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,8}$"; // 영어 , 한글 , 2자이상 8자이하
+//        String passwordPattern = "(?=.*[A-Za-z])(?=.*\\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=]{4,12}";  // 영어, 숫자, 특수문자 4자이상 12자 이하
+//
+//        if(!Pattern.matches(usernamePattern, requestDto.getUsername()) ||
+//           !Pattern.matches(nicknamePattern, requestDto.getNickname()) ||
+//           !Pattern.matches(passwordPattern, requestDto.getPassword()))
+//            return ResponseDto.fail("Error Code", "회원가입이 실패했습니다.");
 
         String password = passwordEncoder.encode(requestDto.getPassword());
         Member member = new Member(requestDto, password);
