@@ -98,4 +98,9 @@ public class Post extends Timestamped {
     public void updateGif(String gifUrl) {
         this.gifUrl = gifUrl;
     }
+
+    // comment 개수 더하기빼기(jck)
+    public void updateCommentCnt(int commentCount){
+        this.commentCount = commentCount;
+    }
 }
