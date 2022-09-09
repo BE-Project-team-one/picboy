@@ -42,4 +42,5 @@ public class CommentController {
     public ResponseDto<?> getComment(@PathVariable Long postId) {
         return commentService.getComment(postId);
     }
+
 }
