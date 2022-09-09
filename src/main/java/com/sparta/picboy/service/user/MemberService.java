@@ -45,9 +45,9 @@ public class MemberService {
     }
 
     // 아이디 중복 체크
-    public ResponseDto<?> idDoubleCheck(SignupRequestDto requestDto) {
+    public ResponseDto<?> idDoubleCheck(String username) {
 
-        if(memberRepository.findByUsername(requestDto.getUsername()).isPresent()){
+        if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail("403", "이미 존재하는 아이디 입니다.");
         }
 

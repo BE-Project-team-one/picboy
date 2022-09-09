@@ -22,9 +22,9 @@ public class MemberController {
     }
 
     // 아이디 중복 체크
-    @GetMapping("/user/id-double-check")
-    public ResponseDto<?> idDoubleCheck(@RequestBody SignupRequestDto requestDto){
-        return memberService.idDoubleCheck(requestDto);
+    @GetMapping("/user/id-double-check/{username}")
+    public ResponseDto<?> idDoubleCheck(@PathVariable String username){
+        return memberService.idDoubleCheck(username);
     }
 
     // 닉네임 중복 체크
