@@ -49,8 +49,8 @@ public class PostWriteController {
 
 
     // 게시물 삭제
-    @DeleteMapping("/post/{postid}")
-    public ResponseDto<?> postDelete(@PathVariable Long postid) {
-        return  postWriteService.postDelete(postid);
+    @DeleteMapping("/post/{postId}")
+    public ResponseDto<?> postDelete(@PathVariable Long postId) {
+        return  postWriteService.postDelete(postId);
     }
 }

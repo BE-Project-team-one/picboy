@@ -145,19 +145,17 @@ public class PostWriteService {
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
 
-        awsS3Service.deleteImage("picboy/images/post" + post.getId() + "/" + post.getImgUrl());
-
         postRepository.delete(post);
-       // awsS3Service.removeFolder("picboy/images/post" + post.getId());
+        awsS3Service.removeFolder("picboy/images/post" + post.getId());
 
-//        List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
-//        Set<Member> memberSet = new HashSet<>();
-//
-//        for(PostRelay relay : postRelayList) {
-//            memberSet.add(relay.getMember());
-//        }
-//        MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
-//        alarmService.alarmByMessage(messageDto);
+        List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+        Set<Member> memberSet = new HashSet<>();
+
+        for(PostRelay relay : postRelayList) {
+            memberSet.add(relay.getMember());
+        }
+        MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
+        alarmService.alarmByMessage(messageDto);
 
         return ResponseDto.success("게시물이 삭제되었습니다.");
     }

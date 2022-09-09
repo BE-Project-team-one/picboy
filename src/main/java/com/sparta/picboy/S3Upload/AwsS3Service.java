@@ -1,18 +1,15 @@
 package com.sparta.picboy.S3Upload;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ListIterator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -64,9 +61,7 @@ public class AwsS3Service {
     }
 
 
-
-
-    // 버킷 아미지 삭제
+    // 버킷 게시물 이미지 폴더 삭제
     public void removeFolder(String folderName){
         ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request().withBucketName(bucket).withPrefix(folderName+"/");
         ListObjectsV2Result listObjectsV2Result = amazonS3Client.listObjectsV2(listObjectsV2Request);
@@ -74,15 +69,10 @@ public class AwsS3Service {
         for (S3ObjectSummary objectSummary : listObjectsV2Result.getObjectSummaries()) {
             DeleteObjectRequest request = new DeleteObjectRequest(bucket, objectSummary.getKey());
             amazonS3Client.deleteObject(request);
-            System.out.println("Deleted " + objectSummary.getKey());
+          //  System.out.println("Deleted " + objectSummary.getKey());
         }
     }
 
-
-    public void deleteImage(String fileName) {
-       // amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, "img.gif"));
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, "img.gif"));
-    }
 
 
 }

@@ -15,12 +15,13 @@ public class AlarmService {
     private final SimpMessageSendingOperations messagingTemplate;
     private final AlertRepository alertRepository;
 
+
     public void alarmByMessage(MessageDto messageDto) {
 
         for(Member member : messageDto.getMemberSet()) {
             Alert alert = new Alert(messageDto.getContent(),member);
             alertRepository.save(alert);;
-            AlertResponseDto alertResponseDto = new AlertResponseDto(messageDto.getPostId(), alert.getContent(), alert.getMember().getUsername());
+            AlertResponseDto alertResponseDto = new AlertResponseDto(messageDto.getPostId(), messageDto.getContent(), alert.getMember().getUsername());
             messagingTemplate.convertAndSend("/sub/" + member.getUsername(), alertResponseDto);
         }
     }
