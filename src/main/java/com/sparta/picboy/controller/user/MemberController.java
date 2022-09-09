@@ -28,9 +28,9 @@ public class MemberController {
     }
 
     // 닉네임 중복 체크
-    @PostMapping("/user/nickname-double-check")
-    public ResponseDto<?> nickDoubleCheck(@RequestBody SignupRequestDto requestDto){
-        return memberService.nickDoubleCheck(requestDto);
+    @GetMapping("/user/nickname-double-check/{nickname}")
+    public ResponseDto<?> nickDoubleCheck(@PathVariable String nickname){
+        return memberService.nickDoubleCheck(nickname);
     }
 
     // 휴대폰 인증 코드 보내기

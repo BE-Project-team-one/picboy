@@ -55,11 +55,10 @@ public class MemberService {
     }
     
     // 닉네임 중복 체크
-    public ResponseDto<?> nickDoubleCheck(SignupRequestDto requestDto) {
-        if((memberRepository.findByNickname(requestDto.getNickname()).isPresent())){
+    public ResponseDto<?> nickDoubleCheck(String nickname) {
+        if((memberRepository.findByNickname(nickname).isPresent())){
             return ResponseDto.fail("403", "이미 존재하는 닉네임 입니다.");
         }
-
         return ResponseDto.success("true");
     }
 
