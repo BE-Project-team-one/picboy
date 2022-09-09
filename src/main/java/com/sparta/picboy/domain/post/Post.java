@@ -103,4 +103,10 @@ public class Post extends Timestamped {
     public void updateCommentCnt(int commentCount){
         this.commentCount = commentCount;
     }
+
+    // like 개수 더하기빼기
+    public void updateLikeCnt(int likeCount) {
+        this.likeCount = likeCount;
+
+    }
 }

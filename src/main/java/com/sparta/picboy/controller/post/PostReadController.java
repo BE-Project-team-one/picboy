@@ -57,7 +57,7 @@ public class PostReadController {
 
     }
 
-    // 완료된 움짤 페ㅣ지 제시어 x 목록 조회
+    // 완료된 움짤 페이지 제시어 x 목록 조회
     @GetMapping("/post/gif/topic-no/{categoryNum}")
     public ResponseDto<?> readCompletionTopicNull(@PathVariable Long categoryNum) {
         return postReadService.readCompletionTopicNull(categoryNum);

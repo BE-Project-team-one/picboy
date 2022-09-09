@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,11 +46,19 @@ public class PostLikeService {
 
             Likes likes = new Likes(member, post);
             postLikeRepository.save(likes);
+
+            List<Likes> postLikeList = postLikeRepository.findAllByPost(post);
+            post.updateLikeCnt(postLikeList.size());
+
             return ResponseDto.success("좋아요");
 
         } else { // 좋아요 취소
 
             postLikeRepository.deleteByPostAndMember(post, member);
+
+            List<Likes> postLikeList = postLikeRepository.findAllByPost(post);
+            post.updateLikeCnt(postLikeList.size());
+
             return ResponseDto.success("좋아요 취소");
 
         }
