@@ -31,7 +31,8 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private int status; // 로그인 상태
 
-    @Column(unique = true)
+//    @Column(unique = true)
+    @Column
     private String phoneNumber; // 휴대폰 번호
 
     @Column
