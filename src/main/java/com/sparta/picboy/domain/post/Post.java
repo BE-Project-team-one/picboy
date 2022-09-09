@@ -71,4 +71,42 @@ public class Post extends Timestamped {
         this.reportCount = reportCount;
         this.member = member;
     }
+
+    public Post(String topic, int frameNum, int frameTotal, String imgUrl, int status, Member member) {
+        this.topic = topic;
+        this.frameNum = frameNum;
+        this.frameTotal = frameTotal;
+        this.imgUrl = imgUrl;
+        this.status = status;
+        this.member = member;
+    }
+
+    public void updateExpiredAt(LocalDateTime date) {
+        this.expiredAt = date.plusDays(7);
+    }
+
+    public void frameUpdate(int frameNum) {
+        this.frameNum = frameNum;
+    }
+    public void imgUpdate(String imgUrl){
+        this.imgUrl = imgUrl;
+    }
+    public void statusUpdate(int status) {
+        this.status = status;
+    }
+
+    public void updateGif(String gifUrl) {
+        this.gifUrl = gifUrl;
+    }
+
+    // comment 개수 더하기빼기(jck)
+    public void updateCommentCnt(int commentCount){
+        this.commentCount = commentCount;
+    }
+
+    // like 개수 더하기빼기
+    public void updateLikeCnt(int likeCount) {
+        this.likeCount = likeCount;
+
+    }
 }

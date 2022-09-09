@@ -4,6 +4,7 @@ import com.sparta.picboy.domain.user.Certification;
 import com.sparta.picboy.dto.request.user.CertificationRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.repository.user.CertificationRepository;
+import com.sparta.picboy.secrets.CoolSmsApi;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
@@ -19,20 +20,21 @@ import java.util.regex.Pattern;
 public class CertificationService {
 
     private final CertificationRepository certificationRepository;
+    private final CoolSmsApi coolSmsApi;
 
     // 휴대폰 인증 코드 받기
     @Transactional
     public ResponseDto<?> certifiedPhoneNumber(CertificationRequestDto requestDto, String numStr) {
-        String api_key = "NCSAW58NB3NRZMYX";
-        String api_secret = "W81HQIBFB1MHMS3UMCZIPUBWW3ME5CBC";
+        String api_key = coolSmsApi.getApi_key();
+        String api_secret = coolSmsApi.getApi_secret();
         Message coolsms = new Message(api_key, api_secret);
 
         // 4 params(to, from, type, text) are mandatory. must be filled
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("to", requestDto.getPhoneNum() );    // 수신전화번호
-        params.put("from", "010-8742-9515");    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+        params.put("from", coolSmsApi.getPhoneNum());    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
         params.put("type", "SMS");
-        params.put("text", "핫띵크 휴대폰인증 테스트 메시지 : 인증번호는" + "["+numStr+"]" + "입니다.");
+        params.put("text", "휴대폰 인증 메시지 : 인증번호는" + "["+numStr+"]" + "입니다.");
         params.put("app_version", "test app 1.2"); // application name and version
 
         try {

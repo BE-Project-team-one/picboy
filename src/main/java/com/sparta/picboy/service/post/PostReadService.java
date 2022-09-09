@@ -1,0 +1,304 @@
+package com.sparta.picboy.service.post;
+
+import com.sparta.picboy.domain.UserDetailsImpl;
+import com.sparta.picboy.domain.comment.Comment;
+import com.sparta.picboy.domain.post.Post;
+import com.sparta.picboy.domain.post.PostRelay;
+import com.sparta.picboy.domain.user.Member;
+import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.dto.response.post.*;
+import com.sparta.picboy.repository.comment.CommentRepository;
+import com.sparta.picboy.repository.post.PostRelayRepository;
+import com.sparta.picboy.repository.post.PostRepository;
+import com.sparta.picboy.repository.user.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class PostReadService {
+
+    private final PostRepository postRepository;
+    private final PostRelayRepository postRelayRepository;
+    private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
+
+
+    // 메인페이지 베스트 움짤 Top 10
+    public ResponseDto<?> mainTop10() {
+        List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDesc(1);
+        List<PostMainTop10ResponseDto> postMainTop10ResponseDtoList = new ArrayList<>();
+        for (Post post : postListTop10) {
+
+            Long id = post.getId();
+            String gifUrl = post.getGifUrl();
+            int likeCount = post.getLikeCount();
+            String topic = post.getTopic();
+            String nickname = post.getMember().getNickname();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            List<Member> memberList = new ArrayList<>();
+            for (PostRelay postRelay : postRelayList) {
+
+                // memberList 에 프레임별로 멤버를 add 해줄건데 중복 없에기 위한 작업을 진행. 지우고 넣는 방식 채택
+                memberList.remove(postRelay.getMember());
+                memberList.add(postRelay.getMember());
+
+            }
+
+
+            // 리스폰스는 '작성자 외 n 명' 이라서 작성자는 따로 빼고 연산
+            memberList.remove(post.getMember());
+            int memberCount = memberList.size();
+
+            PostMainTop10ResponseDto postMainTop10ResponseDto = new PostMainTop10ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
+            postMainTop10ResponseDtoList.add(postMainTop10ResponseDto);
+
+        }
+
+        return ResponseDto.success(postMainTop10ResponseDtoList);
+
+    }
+
+    // 로그인 유저 정보 가져오기 <- 병합 후 유저 서비스에 옮겨놓기
+    public ResponseDto<?> loginUserInfo(UserDetailsImpl userDetails) {
+        Optional<Member> member = memberRepository.findByUsername(userDetails.getUsername());
+
+        // 그럴 일이 없겠지만 혹여나 로그인한 유저의 정보를 못가져 왔을때를 위한 오류
+        if (member.isEmpty()) {
+            return ResponseDto.fail("USER_INFO_NOTFOUND", "존재하지 않는 회원이 로그인 되어있습니다.");
+        }
+
+        String username = member.get().getUsername();
+        String nickname = member.get().getNickname();
+        String profileImg = member.get().getProfileImg();
+        String authority = member.get().getAuthority();
+
+        MemberLoginInfoResponseDto memberLoginInfoResponseDto = new MemberLoginInfoResponseDto(username, nickname, profileImg, authority);
+        return ResponseDto.success(memberLoginInfoResponseDto);
+
+
+    }
+
+
+
+
+
+
+    // 진행중인 움짤 페이지 목록 조회
+    public ResponseDto<?> readProceeding(Long tabNum) {
+
+        if (tabNum == 0) { // 게시글 전체
+            List<Post> postList = postRepository.findAllByStatus(1);
+            return ResponseDto.success(sortProceedingCategory(postList));
+        } else if (tabNum == 1) { // 제시어 o
+            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatus(1);
+            return ResponseDto.success(sortProceedingCategory(postList));
+        } else { // tabNum == 2 제시어 x
+            List<Post> postList = postRepository.findAllByTopicIsNullAndStatus(1);
+            return ResponseDto.success(sortProceedingCategory(postList));
+        }
+
+    }
+
+    // 진행중인 움짤 카테고리 정렬 중복 매서드 처리
+    public List<PostProceedingResponseDto> sortProceedingCategory(List<Post> postList) {
+
+        List<PostProceedingResponseDto> postProceedingResponseDtoList = new ArrayList<>();
+        for (Post post : postList) {
+
+            Long id = post.getId();
+            String imgUrl = post.getImgUrl();
+            String topic = post.getTopic();
+            String nickname = post.getMember().getNickname();
+            int status = post.getStatus();
+
+            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status);
+            postProceedingResponseDtoList.add(postProceedingResponseDto);
+
+        }
+
+        return postProceedingResponseDtoList;
+
+    }
+
+    // 진행중인 움짤 디테일 페이지 조회
+    public ResponseDto<?> readProceedingDetail(Long postid) {
+
+        Optional<Post> postCheck = postRepository.findById(postid);
+        if(postCheck.isEmpty()) { // 찾는 게시물이 존재하지 않을때
+            return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 ID 입니다");
+        }
+        Post post = postRepository.findById(postid).orElseThrow();
+
+
+        Long id = post.getId();
+        int frameTotal = post.getFrameTotal();
+        int frameNum = post.getFrameNum();
+        String topic = post.getTopic();
+        String imgUrl = post.getImgUrl();
+        String nickname = post.getMember().getNickname();
+        String profileImg = post.getMember().getProfileImg();
+        LocalDateTime expiredAt = post.getExpiredAt();
+        LocalDateTime createdAt = post.getCreatedAt();
+
+        // 프레임 리스트 작성
+        List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+        List<FrameImgListResponseDto> frameImgListResponseDtoList = new ArrayList<>();
+        for (PostRelay postRelay : postRelayList) {
+
+            String relayImgUrl = postRelay.getImgUrl();
+            int relayFrameNum = postRelay.getFrameNum();
+            String relayNickname = postRelay.getMember().getNickname();
+            String relayProfileImg = postRelay.getMember().getProfileImg();
+
+            FrameImgListResponseDto frameImgListResponseDto = new FrameImgListResponseDto(relayImgUrl, relayFrameNum, relayNickname, relayProfileImg);
+            frameImgListResponseDtoList.add(frameImgListResponseDto);
+        }
+
+        PostProceedingDetailResponseDto postProceedingDetailResponseDto = new PostProceedingDetailResponseDto(id, frameTotal, frameNum, topic, imgUrl, nickname, profileImg, expiredAt, createdAt, frameImgListResponseDtoList);
+        return ResponseDto.success(postProceedingDetailResponseDto);
+    }
+
+
+
+
+
+
+    // 완료된 움짤 페이지 목록 전체 조회
+    public ResponseDto<?> readCompletion(Long categoryNum) {
+
+        if (categoryNum == 1) { // 최신 순 정렬
+            List<Post> postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else if (categoryNum == 2) { // 좋아요 순 정렬
+            List<Post> postList = postRepository.findAllByStatusOrderByLikeCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 3 댓글 수 순 정렬
+            List<Post> postList = postRepository.findAllByStatusOrderByCommentCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        }
+
+    }
+
+    // 완료된 움짤 페이지 목록 제시어 o 조회
+    public ResponseDto<?> readCompletionTopicOk(Long categoryNum) {
+
+        if (categoryNum == 1) { // 최신 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else if (categoryNum == 2) { // 좋아요 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 3 댓글 수 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        }
+
+    }
+
+    // 완료된 움짤 페이지 목록 제시어 x 조회
+    public ResponseDto<?> readCompletionTopicNull(Long categoryNum) {
+
+        if (categoryNum == 1) { // 최신 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else if (categoryNum == 2) { // 좋아요 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 3 댓글 수 순 정렬
+            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        }
+
+    }
+
+    // 완료된 움짤 카테고리 정렬 중복 매서드 처리
+    public List<PostCompletionResponseDto> sortCompletionCategory(List<Post> postList) {
+        List<PostCompletionResponseDto> postCompletionResponseDtoList = new ArrayList<>();
+        for (Post post : postList) {
+
+            Long id = post.getId();
+            String imgUrl = post.getImgUrl();
+            int likeCount = post.getLikeCount();
+            String topic = post.getTopic();
+            String nickname = post.getMember().getNickname();
+            int commentCount = post.getCommentCount();
+            int repotCount = post.getReportCount();
+
+            // 완성된 날짜를 계산해야됨 -> 해당 게시글의 마지막 프레임이 생성된 시각
+            int postFrameTotal = post.getFrameTotal();
+            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
+            LocalDateTime date = postRelay.getCreatedAt();
+
+            int viewCount = post.getViewCount();
+            int status = post.getStatus(); // 반드시 2의 값을 가질것임
+
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, imgUrl, likeCount, topic, nickname, commentCount, repotCount, date, viewCount, status);
+            postCompletionResponseDtoList.add(postCompletionResponseDto);
+        }
+
+        return postCompletionResponseDtoList;
+    }
+
+    // 완료된 움짤 디테일 페이지 조회
+    public ResponseDto<?> readCompletionDetail(Long postid) {
+
+        Optional<Post> postCheck = postRepository.findById(postid);
+        if (postCheck.isEmpty()) { // 존재하지 않는 게시물을 요청했을 때
+            return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 입니다.");
+        }
+        Post post = postRepository.findById(postid).orElseThrow();
+
+        Long id = post.getId();
+        int frameTotal = post.getFrameTotal();
+        String topic = post.getTopic();
+        String gifUrl = post.getGifUrl();
+        LocalDateTime createdAt = post.getCreatedAt();
+
+        // 해당 게시물의 프레임 리스트 작성
+        List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+        List<FrameImgListResponseDto> frameImgListResponseDtoList = new ArrayList<>();
+        for (PostRelay postRelay : postRelayList) {
+
+            String imgUrl = postRelay.getImgUrl();
+            int frameNum = postRelay.getFrameNum();
+            String nickname = postRelay.getMember().getNickname();
+            String profileImg = postRelay.getMember().getProfileImg();
+
+            FrameImgListResponseDto frameImgListResponseDto = new FrameImgListResponseDto(imgUrl, frameNum, nickname, profileImg);
+            frameImgListResponseDtoList.add(frameImgListResponseDto);
+
+        }
+
+        int likeCount = post.getLikeCount();
+
+        // 댓글 리스트 작성
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+
+            Long commentId = comment.getId();
+            String profileImg = comment.getMember().getProfileImg();
+            String nickname = comment.getMember().getNickname();
+            String commentContent = comment.getComment();
+            LocalDateTime commentCreatedAt = comment.getCreatedAt();
+
+            CommentListResponseDto commentListResponseDto = new CommentListResponseDto(commentId, profileImg, nickname, commentContent, commentCreatedAt);
+            commentListResponseDtoList.add(commentListResponseDto);
+
+        }
+
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, commentListResponseDtoList);
+        return ResponseDto.success(postCompletionDetailResponseDto);
+
+
+    }
+
+}
