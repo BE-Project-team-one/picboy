@@ -40,7 +40,7 @@ public class PostWriteService {
     @Transactional
     public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto, MultipartFile file) {
 
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
         Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), "", 1, member);
@@ -67,6 +67,7 @@ public class PostWriteService {
         int randomNum = random.nextInt(randomTopicList.size()) + 1;
 
         RandomTopic randomTopic = randomTopicRepository.findById((long) randomNum).orElse(null);
+        if(randomTopic == null) return ResponseDto.fail("NOT_FOUND_TOPIC", "추전할 제시어가 없습니다.");
         RandomTopicResponseDto randomTopicResponseDto = new RandomTopicResponseDto(randomTopic.getTopic());
 
         return ResponseDto.success(randomTopicResponseDto);
@@ -77,7 +78,7 @@ public class PostWriteService {
     // 이어 그리기 생성
     @Transactional
     public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
         Post post = postRepository.findById(postId).orElse(null);
@@ -98,7 +99,6 @@ public class PostWriteService {
         // 게시물이 완성됬을 때 알람메시지 작동
         if(post.getStatus() == 2) {
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
-           // List<Member> memberList = new ArrayList<>();
             Set<Member> memberSet = new HashSet<>();
 
             for(PostRelay relay : postRelayList) {
@@ -108,8 +108,6 @@ public class PostWriteService {
             MessageDto messageDto = new MessageDto(memberSet, "게시물이 완성되었습니다", post.getId());
             alarmService.alarmByMessage(messageDto);
         }
-
-
 
         return ResponseDto.success("이어그리기 성공");
 
@@ -139,5 +137,28 @@ public class PostWriteService {
         } catch (IOException e) {
             return null;
         }
+    }
+
+    @Transactional
+    // 게시물 삭제
+    public ResponseDto<?> postDelete(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
+
+        awsS3Service.deleteImage("picboy/images/post" + post.getId() + "/" + post.getImgUrl());
+
+        postRepository.delete(post);
+       // awsS3Service.removeFolder("picboy/images/post" + post.getId());
+
+//        List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+//        Set<Member> memberSet = new HashSet<>();
+//
+//        for(PostRelay relay : postRelayList) {
+//            memberSet.add(relay.getMember());
+//        }
+//        MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
+//        alarmService.alarmByMessage(messageDto);
+
+        return ResponseDto.success("게시물이 삭제되었습니다.");
     }
 }

@@ -46,4 +46,11 @@ public class PostWriteController {
                                   @RequestParam("file")MultipartFile file) {
         return postWriteService.gifSave(postid,file);
     }
+
+
+    // 게시물 삭제
+    @DeleteMapping("/post/{postid}")
+    public ResponseDto<?> postDelete(@PathVariable Long postid) {
+        return  postWriteService.postDelete(postid);
+    }
 }
