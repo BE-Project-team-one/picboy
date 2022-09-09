@@ -43,12 +43,16 @@ public class PostWriteService {
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
-        String imageUrl = getFileUrl(file, 1);
+        Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), "", 1, member);
+        post = postRepository.save(post);
+
+        String imageUrl = getFileUrl(file, 1, post.getId());
         if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
 
-        Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), imageUrl, 1, member);
-        post = postRepository.save(post);
+        // 삭제 날짜 설정
         post.updateExpiredAt(post.getCreatedAt());
+        // 이미지 저장
+        post.imgUpdate(imageUrl);
 
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
         postRelayRepository.save(postRelay);
@@ -73,20 +77,19 @@ public class PostWriteService {
     // 이어 그리기 생성
     @Transactional
     public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
-
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
+        if (post.getStatus() == 2) return ResponseDto.fail("", "이미 완료된 게시물입니다.");
 
-        String imageUrl = getFileUrl(file, 1);
+        String imageUrl = getFileUrl(file, 1, postId);
         if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
 
         post.frameUpdate(post.getFrameNum() + 1);
         post.imgUpdate(imageUrl);
 
-        if (post.getStatus() == 2) return ResponseDto.fail("", "이미 완료된 게시물입니다.");
         if (post.getFrameNum() == post.getFrameTotal()) post.statusUpdate(2);
 
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
@@ -118,7 +121,7 @@ public class PostWriteService {
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
 
-        String imageUrl = getFileUrl(file, 2);
+        String imageUrl = getFileUrl(file, 2, null);
         if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
 
         post.updateGif(imageUrl);
@@ -128,10 +131,10 @@ public class PostWriteService {
 
 
     // 파일 업로드 url 값 가져오기
-    public String getFileUrl(MultipartFile file, int num) {
+    public String getFileUrl(MultipartFile file, int num, Long postId) {
         try {
             if (num == 2) return awsS3Service.uploadFiles(file, "picboy/gif");
-            return awsS3Service.uploadFiles(file, "picboy/images");
+            return awsS3Service.uploadFiles(file, "picboy/images/post" + postId);
 
         } catch (IOException e) {
             return null;
