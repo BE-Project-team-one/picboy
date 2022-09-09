@@ -1,11 +1,13 @@
 package com.sparta.picboy.service.post;
 
 import com.sparta.picboy.domain.UserDetailsImpl;
+import com.sparta.picboy.domain.comment.Comment;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.*;
+import com.sparta.picboy.repository.comment.CommentRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -24,6 +26,7 @@ public class PostReadService {
     private final PostRepository postRepository;
     private final PostRelayRepository postRelayRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
 
 
     // 메인페이지 베스트 움짤 Top 10
@@ -275,9 +278,24 @@ public class PostReadService {
         }
 
         int likeCount = post.getLikeCount();
-        // 댓글 병합이후에 이곳에 댓글 리스트 추가하기
 
-        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount);
+        // 댓글 리스트 작성
+        List<Comment> commentList = commentRepository.findAllByPost(post);
+        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+
+            Long commentId = comment.getId();
+            String profileImg = comment.getMember().getProfileImg();
+            String nickname = comment.getMember().getNickname();
+            String commentContent = comment.getComment();
+            LocalDateTime commentCreatedAt = comment.getCreatedAt();
+
+            CommentListResponseDto commentListResponseDto = new CommentListResponseDto(commentId, profileImg, nickname, commentContent, commentCreatedAt);
+            commentListResponseDtoList.add(commentListResponseDto);
+
+        }
+
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, commentListResponseDtoList);
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 
