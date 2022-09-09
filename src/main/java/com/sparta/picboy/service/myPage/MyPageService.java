@@ -55,8 +55,10 @@ public class MyPageService {
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto test4(MypageRequestDto requestDto, int tabNum, int categoryNum) {
+    public ResponseDto getMypagePost(MypageRequestDto requestDto, int tabNum, int categoryNum) {
         String nickname = requestDto.getNickname();
+        if(!memberRepository.existsByNickname(nickname))
+            return ResponseDto.fail("NOT_FOUND", "회원정보를 가져올 수 없습니다.");
         List<Post> postList = new ArrayList<>();
         switch (categoryNum) {
             case 1 : //최신순
@@ -250,10 +252,11 @@ public class MyPageService {
     }
 
     //게시글 참여자 조회
-    public ResponseDto viewPartipants(Long postIid){
-        Post post = postRepository.findById(postIid).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 존재하지 않습니다.")
-        );
+    public ResponseDto getPartipants(Long postIid){
+        Post post = postRepository.findById(postIid).orElse(null);
+        if(post == null){
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         List<String> postNickList = new ArrayList<>();
         for (PostRelay postRelay : postRelayList)
@@ -265,6 +268,9 @@ public class MyPageService {
     public ResponseDto<?> getUserInfo(MypageRequestDto requestDto){
         String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
+        if (!memberRepository.existsByNickname(nickname)){
+            return ResponseDto.fail("NOT_FOUND", "존재하지 않은 닉네임입니다.");
+        }
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
         List<Post> postList = new ArrayList<>();
