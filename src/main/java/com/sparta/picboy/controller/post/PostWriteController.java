@@ -28,7 +28,7 @@ public class PostWriteController {
 
     //제시어 랜덤 생성
     @GetMapping("/post/random-topic")
-    public ResponseDto<?> randomTopio() {
+    public ResponseDto<?> randomTopic() {
         return postWriteService.randomTopic();
     }
 
