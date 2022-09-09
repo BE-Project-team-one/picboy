@@ -22,13 +22,13 @@ public class MemberController {
     }
 
     // 아이디 중복 체크
-    @GetMapping("user/id-double-check")
+    @GetMapping("/user/id-double-check")
     public ResponseDto<?> idDoubleCheck(@RequestBody SignupRequestDto requestDto){
         return memberService.idDoubleCheck(requestDto);
     }
 
     // 닉네임 중복 체크
-    @GetMapping("user/nickname-double-check")
+    @PostMapping("/user/nickname-double-check")
     public ResponseDto<?> nickDoubleCheck(@RequestBody SignupRequestDto requestDto){
         return memberService.nickDoubleCheck(requestDto);
     }

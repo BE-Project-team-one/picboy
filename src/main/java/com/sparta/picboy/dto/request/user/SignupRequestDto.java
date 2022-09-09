@@ -1,12 +1,10 @@
 package com.sparta.picboy.dto.request.user;
 
 import lombok.Getter;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class SignupRequestDto {
 
 //    @NotBlank
