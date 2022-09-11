@@ -91,13 +91,20 @@ public class PostWriteService {
         post.frameUpdate(post.getFrameNum() + 1);
         post.imgUpdate(imageUrl);
 
-        if (post.getFrameNum() == post.getFrameTotal()) post.statusUpdate(2);
+        if (post.getFrameNum() == post.getFrameTotal()) {
+            post.statusUpdate(2);
+
+            // 임시 데이터 삽입 (나중에 지워야함)
+            post.updateGif("https://myblog-image.s3.ap-northeast-2.amazonaws.com/picboy/gif/369f4778-c39a-4088-92f7-aa8c13de7349-gif");
+
+        }
 
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
         postRelayRepository.save(postRelay);
 
         // 게시물이 완성됬을 때 알람메시지 작동
         if(post.getStatus() == 2) {
+
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
             Set<Member> memberSet = new HashSet<>();
 
