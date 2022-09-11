@@ -27,7 +27,14 @@ public class AwsS3Service {
         return upload(uploadFile, dirName);
     }
     public String upload(File uploadFile, String filePath) {
-        String fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   // S3에 저장된 파일 이름
+        String fileName = "";
+
+        if(filePath.length() >= 14) {
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   // S3에 저장된 파일 이름
+        } else {
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(7);   // S3에 저장된 파일 이름
+        }
+
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
