@@ -42,21 +42,21 @@ public class WebSecurityConfig {
                 .antMatchers("/h2-console/**");
     }
 
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//
-//        configuration.addAllowedOriginPattern("*");
-//        configuration.addAllowedHeader("*");
-//        configuration.addAllowedMethod("*");
-//        configuration.setAllowCredentials(true);
-//        configuration.addExposedHeader("Authorization");
-//        configuration.addExposedHeader("Refresh-Token");
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("Refresh-Token");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
