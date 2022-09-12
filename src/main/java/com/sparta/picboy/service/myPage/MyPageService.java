@@ -295,7 +295,8 @@ public class MyPageService {
 
     @Transactional
     public ResponseDto<?> updateUserInfo(UserDetails userinfo, MypageRequestDto requestDto, MultipartFile file) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        System.out.println(userinfo.getUsername());
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
         String nickname = requestDto.getNickname();
         String imageUrl = getFileUrl(file, 1);
