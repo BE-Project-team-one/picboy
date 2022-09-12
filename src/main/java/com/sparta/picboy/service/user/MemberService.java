@@ -6,6 +6,7 @@ import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.LoginResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -39,8 +39,7 @@ public class MemberService {
     public ResponseDto<?> idDoubleCheck(String username) {
         if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail("403", "이미 존재하는 아이디입니다.");
-            }else{
-        }
+            }
         return ResponseDto.success("사용 가능한 아이디입니다.");
     }
     
@@ -48,7 +47,6 @@ public class MemberService {
     public ResponseDto<?> nickDoubleCheck(String nickname) {
         if((memberRepository.findByNickname(nickname).isPresent())){
             return ResponseDto.fail("403", "이미 존재하는 닉네임입니다.");
-        }else{
         }
         return ResponseDto.success("사용 가능한 닉네임입니다.");
     }
@@ -57,22 +55,16 @@ public class MemberService {
     @Transactional
     public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
 
-//        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow();
-
-//        if(!Pattern.matches(member.getUsername(),requestDto.getUsername()) ||
-//        !passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-//            return ResponseDto.fail("401", "입력 정보가 잘못되었습니다.");
-//        }
         // DB에 존재하는 아이디 인지 확인
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null);
         if (member == null) {
-            return ResponseDto.fail("404", "존재하지 않는 유저아이디 입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         }
 
         // 비밀번호 일치여부 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-            return ResponseDto.fail("400", "비밀번호가 일치하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.INVALID_VALUE);
 
         }
 
