@@ -23,16 +23,17 @@ public class MyPageController {
 
     //페이지네이션 작업 중
     @GetMapping("/api/all/post")
-    public Map<String, Object> getMypage(HttpServletRequest httpServletRequest){
+    public Map<String, Object> getMypage(){//(HttpServletRequest httpServletRequest){
         //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         //User user= principal.getUser();
-        Long memberId = Long.valueOf(1);
-        long page = Long.parseLong(httpServletRequest.getParameter("page"));
+        //Long memberId = Long.valueOf(1);
+        //long page = Long.parseLong(httpServletRequest.getParameter("page"));
         //getKeepPostList: async (pageParam) => {const res = await instance.get(`/api/all/post?page=${pageParam}`);
         //const { postList, isLast } = res.data;
         //return { postList, nextPage: pageParam + 1, isLast };
-        return myPageService.getMypage(memberId, page);
+        int page = 1;
+        return myPageService.getMypage(page);
     }
     //숨기기/숨기기 취소
     @PostMapping("/mypage/post-hidden/{postId}")
@@ -43,10 +44,10 @@ public class MyPageController {
 
     // 마이페이지 게시글 조회
     @GetMapping("/mypage/post/{tabNum}/{categoryNum}")
-    public ResponseDto getMypage(@RequestBody MypageRequestDto requestDto,
+    public ResponseDto getMypage(@RequestParam String nickname,
                              @PathVariable int tabNum,
                              @PathVariable int categoryNum){
-        return myPageService.getMypagePost(requestDto, tabNum, categoryNum);
+        return myPageService.getMypagePost(nickname, tabNum, categoryNum);
     }
 
     //참여자 정보 가져오기
@@ -57,8 +58,8 @@ public class MyPageController {
 
     //회원정보 가져오기
     @GetMapping("/mypage/user-info")
-    public ResponseDto getUserInfo(@RequestBody MypageRequestDto requestDto){
-        return myPageService.getUserInfo(requestDto);
+    public ResponseDto getUserInfo(@RequestParam String nickname){
+        return myPageService.getUserInfo(nickname);
     }
 
     //회원정보 수정

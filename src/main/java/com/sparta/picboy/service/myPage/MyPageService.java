@@ -41,22 +41,33 @@ public class MyPageService {
 
     private final AwsS3Service awsS3Service;
 
-    public Map<String, Object> getMypage(Long memberId, long page){
-        Member member = memberRepository.findById(memberId).orElse(null);
-        PageRequest pageRequest = PageRequest.of((int) page, 24);
-        Slice<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+    public Map<String, Object> getMypage(int page){
+
+        PageRequest pageRequest = PageRequest.of(page, 24);
+        Slice<Post> posts = postRepository.findAll(pageRequest);
 
         Map<String, Object> data = new HashMap<>();
         data.put("isList", posts.isLast());
+        System.out.println(data);
         return data;
     }
+
+//    public Map<String, Object> getMypage(Long memberId, long page){
+//        Member member = memberRepository.findById(memberId).orElse(null);
+//        PageRequest pageRequest = PageRequest.of((int) page, 24);
+//        Slice<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("isList", posts.isLast());
+//        return data;
+//    }
 
 
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto getMypagePost(MypageRequestDto requestDto, int tabNum, int categoryNum) {
-        String nickname = requestDto.getNickname();
+    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum) {
+//        String nickname = requestDto.getNickname();
         if(!memberRepository.existsByNickname(nickname))
             return ResponseDto.fail("NOT_FOUND", "회원정보를 가져올 수 없습니다.");
         List<Post> postList = new ArrayList<>();
@@ -205,7 +216,7 @@ public class MyPageService {
                             }
                             break;
                     }
-                    break; // 댓글 순
+                    break;
         }
 
         List<MypageResponseDto> responseDtoList = new ArrayList<>();
@@ -265,8 +276,8 @@ public class MyPageService {
         return ResponseDto.success(postNickList);
     }
 
-    public ResponseDto<?> getUserInfo(MypageRequestDto requestDto){
-        String nickname = requestDto.getNickname();
+    public ResponseDto<?> getUserInfo(String nickname){
+        //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
         if (!memberRepository.existsByNickname(nickname)){
             return ResponseDto.fail("NOT_FOUND", "존재하지 않은 닉네임입니다.");
