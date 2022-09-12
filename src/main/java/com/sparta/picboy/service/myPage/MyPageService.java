@@ -55,7 +55,7 @@ public class MyPageService {
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto test4(MypageRequestDto requestDto, int tabNum, int categoryNum) {
+    public ResponseDto<?> test4(MypageRequestDto requestDto, int tabNum, int categoryNum) {
         String nickname = requestDto.getNickname();
         List<Post> postList = new ArrayList<>();
         switch (categoryNum) {
@@ -76,7 +76,7 @@ public class MyPageService {
                         case 1 : //작성글 조회
                             List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname);
                             for (Post post : postListAll2) {
-                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){ ; // 숨김 제외
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){  // 숨김 제외
                                     postList.add(post);}
                             }
                             break;
@@ -250,7 +250,7 @@ public class MyPageService {
     }
 
     //게시글 참여자 조회
-    public ResponseDto viewPartipants(Long postIid){
+    public ResponseDto<?> viewPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElseThrow(
                 () -> new IllegalArgumentException("게시글을 존재하지 않습니다.")
         );

@@ -4,6 +4,7 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
+import com.sparta.picboy.dto.response.LoginResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -39,7 +40,7 @@ public class MemberService {
     // 아이디 중복 체크
     public ResponseDto<?> idDoubleCheck(String username) {
 
-        if(memberRepository.findByUsername(requestDto.getUsername()).isPresent()){
+        if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail("403", "이미 존재하는 아이디입니다.");
             }else{
         }
@@ -47,8 +48,8 @@ public class MemberService {
     }
     
     // 닉네임 중복 체크
-    public ResponseDto<?> nickDoubleCheck(SignupRequestDto requestDto) {
-        if((memberRepository.findByNickname(requestDto.getNickname()).isPresent())){
+    public ResponseDto<?> nickDoubleCheck(String nickname) {
+        if((memberRepository.findByNickname(nickname).isPresent())){
             return ResponseDto.fail("403", "이미 존재하는 닉네임입니다.");
         }else{
         }
@@ -70,6 +71,12 @@ public class MemberService {
         httpServletResponse.addHeader("Access_Token", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
 
-        return ResponseDto.success("로그인 되었습니다.");
+        // 바디에 토큰값 보내주기
+        String authorization = "Bearer " + tokenDto.getAccessToken();
+        String refreshToken = tokenDto.getRefreshToken();
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto(authorization, refreshToken);
+
+        return ResponseDto.success(loginResponseDto);
     }
 }

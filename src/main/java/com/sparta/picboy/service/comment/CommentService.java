@@ -89,7 +89,7 @@ public class CommentService {
         }
     }
 
-    public ResponseDto getComment (Long postId){
+    public ResponseDto<?> getComment (Long postId){
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
