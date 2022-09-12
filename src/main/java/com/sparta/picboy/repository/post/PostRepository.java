@@ -64,7 +64,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
    // mypage-------------------------------------------------------------------------------
-   List<Post> findAll();
+
    Slice<Post> findAllByOrderByCreatedAtDesc(PageRequest pageRequest); // 무한스크롤
    List<Post> findAllByOrderByCreatedAtDesc(); // 최신순
    List<Post> findAllByOrderByLikeCountDesc(); // 좋아요순

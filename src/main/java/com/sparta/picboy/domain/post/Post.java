@@ -109,4 +109,11 @@ public class Post extends Timestamped {
         this.likeCount = likeCount;
 
     }
+
+    // viewCount 업데이트
+    public void updateViewCount(int viewCount){
+        this.viewCount = viewCount;
+
+    }
+
 }
