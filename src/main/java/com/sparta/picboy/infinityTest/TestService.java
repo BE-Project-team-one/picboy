@@ -22,9 +22,12 @@ public class TestService {
     public ResponseDto<?> test(int page, int size) {
 
         System.out.println(page + "");
-        Pageable pageable = PageRequest.of(page, size);
+        String sortAt = "createdAt";
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortAt);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Post> findPost = testRepsitory.findAllByOrderByCreatedAtDesc(pageable);
+        Page<Post> findPost = testRepsitory.findAllByStatus(1,pageable);
 
         List<PostProceedingResponseDto> postProceedingResponseDtoList = new ArrayList<>();
         for (Post post : findPost) {
