@@ -70,7 +70,8 @@ public class PostReadService {
 
     // 로그인 유저 정보 가져오기 <- 병합 후 유저 서비스에 옮겨놓기
     public ResponseDto<?> loginUserInfo(UserDetailsImpl userDetails) {
-        Optional<Member> member = memberRepository.findByUsername(userDetails.getUsername());
+        String name = "asdf";
+        Optional<Member> member = memberRepository.findByUsername(name);
 
         // 그럴 일이 없겠지만 혹여나 로그인한 유저의 정보를 못가져 왔을때를 위한 오류
         if (member.isEmpty()) {
