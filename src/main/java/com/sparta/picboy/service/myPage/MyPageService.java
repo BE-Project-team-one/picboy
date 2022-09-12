@@ -285,8 +285,8 @@ public class MyPageService {
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
         List<Post> postList = new ArrayList<>();
-        List<Post>postListAll3 = postRepository.findAllByOrderByCommentCountDesc();
-        for (Post post : postListAll3) {
+        List<Post>postListAll = postRepository.findAllByOrderByCreatedAtDesc();
+        for (Post post : postListAll) {
             if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                 //if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
                 //if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
@@ -305,25 +305,29 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> updateUserInfo(UserDetails userinfo, MypageRequestDto requestDto, MultipartFile file) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+    public ResponseDto<?> updateNickname(UserDetails userinfo, String nickname) {
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
-        String nickname = requestDto.getNickname();
+        member.updateNickname(nickname);
+        memberRepository.save(member);
+        return ResponseDto.success("닉네임을 수정하였습니다.");
+    }
+
+    @Transactional
+    public ResponseDto<?> updateimage(UserDetails userinfo, MultipartFile file) {
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
+        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
         String imageUrl = getFileUrl(file, 1);
         if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
-
-        member.update(nickname, imageUrl);
+        member.updateImg(imageUrl);
         memberRepository.save(member);
-        return ResponseDto.success("회원정보를 수정하였습니다.");
-
+        return ResponseDto.success("이미지를 수정하였습니다.");
     }
 
     // 파일 업로드 url 값 가져오기
     public String getFileUrl(MultipartFile file, int num) {
         try {
-            if (num == 2) return awsS3Service.uploadFiles(file, "picboy/gif");
-            return awsS3Service.uploadFiles(file, "picboy/images");
-
+            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
         } catch (IOException e) {
             return null;
         }

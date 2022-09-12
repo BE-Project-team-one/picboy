@@ -55,8 +55,11 @@ public class Member extends Timestamped {
         this.phoneNumber = requestDto.getPhoneNumber();
     }
 
-    public void update(String nickname, String profileImg){
+    public void updateNickname(String nickname){
         this.nickname = nickname;
+    }
+
+    public void updateImg(String profileImg){
         this.profileImg = profileImg;
     }
 }

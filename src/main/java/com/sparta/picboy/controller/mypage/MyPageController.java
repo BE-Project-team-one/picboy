@@ -62,12 +62,17 @@ public class MyPageController {
         return myPageService.getUserInfo(nickname);
     }
 
-    //회원정보 수정
-    @PutMapping("/mypage/update-info")
+    //닉네임 수정
+    @PutMapping("/mypage/update-nickname")
     public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal UserDetails userinfo,
-                                         @RequestPart MypageRequestDto requestDto,
+                                         @RequestParam String nickname){
+        return myPageService.updateNickname(userinfo,nickname);
+    }
+    //프로필이미지 수정
+    @PutMapping("/mypage/update-image")
+    public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal UserDetails userinfo,
                                          @RequestPart MultipartFile file){
-        return myPageService.updateUserInfo(userinfo,requestDto,file);
+        return myPageService.updateimage(userinfo,file);
     }
 
 
