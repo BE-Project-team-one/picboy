@@ -10,6 +10,7 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.post.PostRequestDto;
 import com.sparta.picboy.dto.response.RandomTopicResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.post.RandomTopicRepository;
@@ -41,13 +42,13 @@ public class PostWriteService {
     public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto, MultipartFile file) {
 
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), "", 1, member);
         post = postRepository.save(post);
 
         String imageUrl = getFileUrl(file, 1, post.getId());
-        if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
+        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         // 삭제 날짜 설정
         post.updateExpiredAt(post.getCreatedAt());
@@ -67,7 +68,7 @@ public class PostWriteService {
         int randomNum = random.nextInt(randomTopicList.size()) + 1;
 
         RandomTopic randomTopic = randomTopicRepository.findById((long) randomNum).orElse(null);
-        if(randomTopic == null) return ResponseDto.fail("NOT_FOUND_TOPIC", "추전할 제시어가 없습니다.");
+        if(randomTopic == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_TOPIC);
         RandomTopicResponseDto randomTopicResponseDto = new RandomTopicResponseDto(randomTopic.getTopic());
 
         return ResponseDto.success(randomTopicResponseDto);
@@ -79,14 +80,14 @@ public class PostWriteService {
     @Transactional
     public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
-        if (post.getStatus() == 2) return ResponseDto.fail("", "이미 완료된 게시물입니다.");
+        if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
+        if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
         String imageUrl = getFileUrl(file, 1, postId);
-        if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
+        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         post.frameUpdate(post.getFrameNum() + 1);
         post.imgUpdate(imageUrl);
@@ -124,10 +125,10 @@ public class PostWriteService {
     @Transactional
     public ResponseDto<?> gifSave(Long postId, MultipartFile file) {
         Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
+        if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
 
         String imageUrl = getFileUrl(file, 2, null);
-        if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
+        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         post.updateGif(imageUrl);
 
@@ -150,7 +151,7 @@ public class PostWriteService {
     // 게시물 삭제
     public ResponseDto<?> postDelete(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) return ResponseDto.fail("NOT_FIND_POST", "게시물을 찾을 수 없습니다.");
+        if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
 
         postRepository.delete(post);
         awsS3Service.removeFolder("picboy/images/post" + post.getId());
