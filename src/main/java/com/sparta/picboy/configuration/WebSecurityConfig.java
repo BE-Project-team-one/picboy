@@ -42,21 +42,21 @@ public class WebSecurityConfig {
                 .antMatchers("/h2-console/**");
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setAllowCredentials(true);
-        configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("Refresh-Token");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        configuration.addAllowedOriginPattern("*");
+//        configuration.addAllowedHeader("*");
+//        configuration.addAllowedMethod("*");
+//        configuration.setAllowCredentials(true);
+//        configuration.addExposedHeader("Authorization");
+//        configuration.addExposedHeader("Refresh-Token");
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -73,6 +73,7 @@ public class WebSecurityConfig {
                         .antMatchers("/user/**").permitAll() // 로그인,회원가입은 토큰없이도 가능
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
+                        .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());
 

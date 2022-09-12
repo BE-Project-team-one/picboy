@@ -28,7 +28,7 @@ public class PostWriteController {
 
     //제시어 랜덤 생성
     @GetMapping("/post/random-topic")
-    public ResponseDto<?> randomTopio() {
+    public ResponseDto<?> randomTopic() {
         return postWriteService.randomTopic();
     }
 
@@ -45,5 +45,12 @@ public class PostWriteController {
     public ResponseDto<?> gifSave(@PathVariable Long postid,
                                   @RequestParam("file")MultipartFile file) {
         return postWriteService.gifSave(postid,file);
+    }
+
+
+    // 게시물 삭제
+    @DeleteMapping("/post/{postId}")
+    public ResponseDto<?> postDelete(@PathVariable Long postId) {
+        return  postWriteService.postDelete(postId);
     }
 }

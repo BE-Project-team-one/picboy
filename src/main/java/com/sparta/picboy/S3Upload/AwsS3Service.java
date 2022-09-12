@@ -1,8 +1,7 @@
 package com.sparta.picboy.S3Upload;
 
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,7 +27,14 @@ public class AwsS3Service {
         return upload(uploadFile, dirName);
     }
     public String upload(File uploadFile, String filePath) {
-        String fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   // S3에 저장된 파일 이름
+        String fileName = "";
+
+        if(filePath.length() >= 14) {
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   // S3에 저장된 파일 이름
+        } else {
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(7);   // S3에 저장된 파일 이름
+        }
+
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -60,4 +66,20 @@ public class AwsS3Service {
         }
         return Optional.empty();
     }
+
+
+    // 버킷 게시물 이미지 폴더 삭제
+    public void removeFolder(String folderName){
+        ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request().withBucketName(bucket).withPrefix(folderName+"/");
+        ListObjectsV2Result listObjectsV2Result = amazonS3Client.listObjectsV2(listObjectsV2Request);
+
+        for (S3ObjectSummary objectSummary : listObjectsV2Result.getObjectSummaries()) {
+            DeleteObjectRequest request = new DeleteObjectRequest(bucket, objectSummary.getKey());
+            amazonS3Client.deleteObject(request);
+          //  System.out.println("Deleted " + objectSummary.getKey());
+        }
+    }
+
+
+
 }

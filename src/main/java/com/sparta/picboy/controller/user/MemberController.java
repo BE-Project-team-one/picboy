@@ -22,22 +22,16 @@ public class MemberController {
     }
 
     // 아이디 중복 체크
-    @GetMapping("user/id-double-check")
-    public ResponseDto<?> idDoubleCheck(@RequestBody SignupRequestDto requestDto){
-        return memberService.idDoubleCheck(requestDto);
+    @GetMapping("/user/id-double-check/{username}")
+    public ResponseDto<?> idDoubleCheck(@PathVariable String username){
+        return memberService.idDoubleCheck(username);
     }
 
     // 닉네임 중복 체크
-    @GetMapping("user/nickname-double-check")
-    public ResponseDto<?> nickDoubleCheck(@RequestBody SignupRequestDto requestDto){
-        return memberService.nickDoubleCheck(requestDto);
+    @GetMapping("/user/nickname-double-check/{nickname}")
+    public ResponseDto<?> nickDoubleCheck(@PathVariable String nickname){
+        return memberService.nickDoubleCheck(nickname);
     }
-
-    // 휴대폰 인증 코드 보내기
-
-
-    // 휴대폰 인증 번호 체크
-
 
     // 일반 회원 로그인
     @PostMapping("/user/login")
