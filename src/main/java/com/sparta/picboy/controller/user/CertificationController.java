@@ -15,7 +15,7 @@ public class CertificationController {
     private final CertificationService certificationService;
 
     // 휴대폰 인증 코드 보내기
-    @GetMapping("/user/phonenumber-send")
+    @PostMapping("/user/phonenumber-send")
     public ResponseDto<?> sendSMS(@RequestBody CertificationRequestDto requestDto) {
         Random rand  = new Random();
         String numStr = "";
