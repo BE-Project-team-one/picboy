@@ -63,7 +63,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
-        http.cors();
+//        http.cors();
         http.csrf().disable();
 
         http
