@@ -33,12 +33,6 @@ public class MemberController {
         return memberService.nickDoubleCheck(nickname);
     }
 
-    // 휴대폰 인증 코드 보내기
-
-
-    // 휴대폰 인증 번호 체크
-
-
     // 일반 회원 로그인
     @PostMapping("/user/login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse httpServletResponse){
