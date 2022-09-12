@@ -21,12 +21,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
 //                .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("*")
-                .allowedMethods(
-                        HttpMethod.GET.name(),
-                        HttpMethod.HEAD.name(),
-                        HttpMethod.POST.name(),
-                        HttpMethod.PUT.name(),
-                        HttpMethod.DELETE.name());
+                .allowedMethods("*");
+//                .allowedMethods(
+//                        HttpMethod.GET.name(),
+//                        HttpMethod.HEAD.name(),
+//                        HttpMethod.POST.name(),
+//                        HttpMethod.PUT.name(),
+//                        HttpMethod.DELETE.name());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
