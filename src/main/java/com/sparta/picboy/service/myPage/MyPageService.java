@@ -9,6 +9,7 @@ import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageUserInfoResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.HidePostRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
@@ -69,7 +70,7 @@ public class MyPageService {
     public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum) {
 //        String nickname = requestDto.getNickname();
         if(!memberRepository.existsByNickname(nickname))
-            return ResponseDto.fail("NOT_FOUND", "회원정보를 가져올 수 없습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         List<Post> postList = new ArrayList<>();
         switch (categoryNum) {
             case 1 : //최신순
@@ -266,7 +267,7 @@ public class MyPageService {
     public ResponseDto getPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElse(null);
         if(post == null){
-            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         List<String> postNickList = new ArrayList<>();
@@ -280,7 +281,7 @@ public class MyPageService {
         //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
         if (!memberRepository.existsByNickname(nickname)){
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않은 닉네임입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
@@ -307,7 +308,7 @@ public class MyPageService {
     @Transactional
     public ResponseDto<?> updateNickname(UserDetails userinfo, String nickname) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         member.updateNickname(nickname);
         memberRepository.save(member);
         return ResponseDto.success("닉네임을 수정하였습니다.");
@@ -316,9 +317,9 @@ public class MyPageService {
     @Transactional
     public ResponseDto<?> updateimage(UserDetails userinfo, MultipartFile file) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         String imageUrl = getFileUrl(file, 1);
-        if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
+        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
         member.updateImg(imageUrl);
         memberRepository.save(member);
         return ResponseDto.success("이미지를 수정하였습니다.");
