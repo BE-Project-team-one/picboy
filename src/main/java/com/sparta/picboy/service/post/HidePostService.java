@@ -6,7 +6,6 @@ import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.repository.post.HidePostRepository;
-import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
