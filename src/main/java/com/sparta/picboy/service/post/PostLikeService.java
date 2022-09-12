@@ -5,6 +5,7 @@ import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.PostLikeRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -31,13 +32,13 @@ public class PostLikeService {
 
         Optional<Member> memberCheck = memberRepository.findByUsername(username);
         if (memberCheck.isEmpty()) { // 그럴일은 없지만 혹시나 유저를 찾지 못했을 경우
-            return ResponseDto.fail("USER_NOT_FOUND", "로그인한 유저의 정보를 불러올 수 없습니다. 잘못된 접근입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
         Member member = memberRepository.findByUsername(username).orElseThrow();
 
         Optional<Post> postCheck = postRepository.findById(postid);
         if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
-            return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
         Post post = postRepository.findById(postid).orElseThrow();
 

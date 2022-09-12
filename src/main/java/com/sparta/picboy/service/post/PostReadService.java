@@ -7,6 +7,7 @@ import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.*;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.comment.CommentRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
@@ -73,7 +74,7 @@ public class PostReadService {
 
         // 그럴 일이 없겠지만 혹여나 로그인한 유저의 정보를 못가져 왔을때를 위한 오류
         if (member.isEmpty()) {
-            return ResponseDto.fail("USER_INFO_NOTFOUND", "존재하지 않는 회원이 로그인 되어있습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
         String username = member.get().getUsername();
@@ -134,7 +135,7 @@ public class PostReadService {
 
         Optional<Post> postCheck = postRepository.findById(postid);
         if(postCheck.isEmpty()) { // 찾는 게시물이 존재하지 않을때
-            return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 ID 입니다");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
         Post post = postRepository.findById(postid).orElseThrow();
 
@@ -254,7 +255,7 @@ public class PostReadService {
 
         Optional<Post> postCheck = postRepository.findById(postid);
         if (postCheck.isEmpty()) { // 존재하지 않는 게시물을 요청했을 때
-            return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
         Post post = postRepository.findById(postid).orElseThrow();
 
