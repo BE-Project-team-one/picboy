@@ -13,6 +13,7 @@ import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -248,6 +249,7 @@ public class PostReadService {
     }
 
     // 완료된 움짤 디테일 페이지 조회
+    @Transactional
     public ResponseDto<?> readCompletionDetail(Long postid) {
 
         Optional<Post> postCheck = postRepository.findById(postid);
@@ -255,6 +257,11 @@ public class PostReadService {
             return ResponseDto.fail("POST_NOT_FOUND", "존재하지 않는 게시물 입니다.");
         }
         Post post = postRepository.findById(postid).orElseThrow();
+
+        // 조회수 1 증가
+        int viewCountCal = post.getViewCount() + 1;
+        post.updateViewCount(viewCountCal);
+        postRepository.save(post);
 
         Long id = post.getId();
         int frameTotal = post.getFrameTotal();
@@ -278,6 +285,7 @@ public class PostReadService {
         }
 
         int likeCount = post.getLikeCount();
+        int viewCount = post.getViewCount();
 
         // 댓글 리스트 작성
         List<Comment> commentList = commentRepository.findAllByPost(post);
@@ -295,7 +303,7 @@ public class PostReadService {
 
         }
 
-        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, commentListResponseDtoList);
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, commentListResponseDtoList);
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 
