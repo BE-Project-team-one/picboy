@@ -38,7 +38,7 @@ public class MemberService {
     // 아이디 중복 체크
     public ResponseDto<?> idDoubleCheck(String username) {
         if(memberRepository.findByUsername(username).isPresent()){
-            return ResponseDto.fail("403", "이미 존재하는 아이디입니다.");
+            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME);
             }
         return ResponseDto.success("사용 가능한 아이디입니다.");
     }
@@ -46,7 +46,7 @@ public class MemberService {
     // 닉네임 중복 체크
     public ResponseDto<?> nickDoubleCheck(String nickname) {
         if((memberRepository.findByNickname(nickname).isPresent())){
-            return ResponseDto.fail("403", "이미 존재하는 닉네임입니다.");
+            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_NICKNAME);
         }
         return ResponseDto.success("사용 가능한 닉네임입니다.");
     }
