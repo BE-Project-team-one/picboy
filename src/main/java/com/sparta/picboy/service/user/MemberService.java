@@ -42,8 +42,7 @@ public class MemberService {
 
         if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail("403", "이미 존재하는 아이디입니다.");
-            }else{
-        }
+            }
         return ResponseDto.success("사용 가능한 아이디입니다.");
     }
     
@@ -51,7 +50,6 @@ public class MemberService {
     public ResponseDto<?> nickDoubleCheck(String nickname) {
         if((memberRepository.findByNickname(nickname).isPresent())){
             return ResponseDto.fail("403", "이미 존재하는 닉네임입니다.");
-        }else{
         }
         return ResponseDto.success("사용 가능한 닉네임입니다.");
     }
@@ -68,7 +66,7 @@ public class MemberService {
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
 
-        httpServletResponse.addHeader("AUTHORIZATION", "Bearer " + tokenDto.getAccessToken());
+        httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
 
         // 바디에 토큰값 보내주기

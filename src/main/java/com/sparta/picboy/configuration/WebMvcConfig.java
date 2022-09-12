@@ -15,7 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000")  //클라이언트에서 허용
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders("AUTHORIZATION")
+                .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("Refresh-Token")
                 .allowedMethods(
                         HttpMethod.GET.name(),
