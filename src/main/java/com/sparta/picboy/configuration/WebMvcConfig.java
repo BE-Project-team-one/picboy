@@ -1,8 +1,9 @@
 package com.sparta.picboy.configuration;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,12 +12,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")  //클라이언트에서 허용
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.AUTHORIZATION)
-                .exposedHeaders("Refresh-Token")
+//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("*")
                 .allowedMethods(
                         HttpMethod.GET.name(),
@@ -24,6 +26,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         HttpMethod.POST.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name());
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
     }
 }
