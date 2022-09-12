@@ -61,8 +61,9 @@ public class MemberService {
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow();
 
         if(!Pattern.matches(member.getUsername(),requestDto.getUsername()) ||
-        passwordEncoder.matches(member.getPassword(), requestDto.getPassword()))
-            ResponseDto.fail("401", "입력 정보가 잘못되었습니다.");
+        !passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+            return ResponseDto.fail("401", "입력 정보가 잘못되었습니다.");
+        }
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
 
