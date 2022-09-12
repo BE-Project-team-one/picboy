@@ -6,6 +6,7 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.comment.CommentRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.comment.CommentResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.comment.CommentRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -27,13 +28,12 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> createComment (UserDetails userinfo, Long postId, CommentRequestDto requestDto) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElseThrow(
-                ()-> new IllegalArgumentException("유저를 찾을 수 없습니다"));
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
-            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
 
         String content = requestDto.getContent();
@@ -50,18 +50,18 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> deleteComment(UserDetails userinfo, Long postId, Long commentId){
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(comment == null){
-            return ResponseDto.fail("NOT_FOUND", "댓글이 존재하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_COMMENT);
         }
 
         Post post = comment.getPost();
         Long writerId = comment.getMember().getId();
         Long userId = member.getId();
         if (!writerId.equals(userId)) {
-            return ResponseDto.fail("CANT_DELETE","작성자만 삭제할 수 있습니다.");
+            return ResponseDto.fail(ErrorCode.ONLY_AUTHOR_ACCESSIBLE);
         } else {
             commentRepository.delete(comment);
             List<Comment> commentList = commentRepository.findAllByPost(post);
@@ -73,11 +73,11 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> updateComment(UserDetails userinfo, Long commentId, CommentRequestDto requestDto){
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(comment == null){
-            return ResponseDto.fail("NOT_FOUND","댓글이 존재하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_COMMENT);
         }
 
 
@@ -86,7 +86,7 @@ public class CommentService {
         Long userId = member.getId();
 
         if (!writerId.equals(userId)) {
-            return ResponseDto.fail("CANT_UPDATE","작성자만 수정할 수 있습니다.");
+            return ResponseDto.fail(ErrorCode.ONLY_AUTHOR_ACCESSIBLE);
         } else {
             comment.update(requestDto.getContent());
             commentRepository.save(comment);
@@ -97,7 +97,7 @@ public class CommentService {
     public ResponseDto getComment (Long postId){
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않은 게시물입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
 
         List<Comment> commentList = commentRepository.findAllByPost(post);

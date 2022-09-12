@@ -9,6 +9,7 @@ import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageUserInfoResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.HidePostRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
@@ -41,24 +42,35 @@ public class MyPageService {
 
     private final AwsS3Service awsS3Service;
 
-    public Map<String, Object> getMypage(Long memberId, long page){
-        Member member = memberRepository.findById(memberId).orElse(null);
-        PageRequest pageRequest = PageRequest.of((int) page, 24);
-        Slice<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+    public Map<String, Object> getMypage(int page){
+
+        PageRequest pageRequest = PageRequest.of(page, 24);
+        Slice<Post> posts = postRepository.findAll(pageRequest);
 
         Map<String, Object> data = new HashMap<>();
         data.put("isList", posts.isLast());
+        System.out.println(data);
         return data;
     }
+
+//    public Map<String, Object> getMypage(Long memberId, long page){
+//        Member member = memberRepository.findById(memberId).orElse(null);
+//        PageRequest pageRequest = PageRequest.of((int) page, 24);
+//        Slice<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
+//
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("isList", posts.isLast());
+//        return data;
+//    }
 
 
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto getMypagePost(MypageRequestDto requestDto, int tabNum, int categoryNum) {
-        String nickname = requestDto.getNickname();
+    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum) {
+//        String nickname = requestDto.getNickname();
         if(!memberRepository.existsByNickname(nickname))
-            return ResponseDto.fail("NOT_FOUND", "회원정보를 가져올 수 없습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         List<Post> postList = new ArrayList<>();
         switch (categoryNum) {
             case 1 : //최신순
@@ -78,7 +90,7 @@ public class MyPageService {
                         case 1 : //작성글 조회
                             List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname);
                             for (Post post : postListAll2) {
-                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){ ; // 숨김 제외
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){  // 숨김 제외
                                     postList.add(post);}
                             }
                             break;
@@ -205,7 +217,7 @@ public class MyPageService {
                             }
                             break;
                     }
-                    break; // 댓글 순
+                    break;
         }
 
         List<MypageResponseDto> responseDtoList = new ArrayList<>();
@@ -255,7 +267,7 @@ public class MyPageService {
     public ResponseDto getPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElse(null);
         if(post == null){
-            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         List<String> postNickList = new ArrayList<>();
@@ -265,17 +277,17 @@ public class MyPageService {
         return ResponseDto.success(postNickList);
     }
 
-    public ResponseDto<?> getUserInfo(MypageRequestDto requestDto){
-        String nickname = requestDto.getNickname();
+    public ResponseDto<?> getUserInfo(String nickname){
+        //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
         if (!memberRepository.existsByNickname(nickname)){
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않은 닉네임입니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
         List<Post> postList = new ArrayList<>();
-        List<Post>postListAll3 = postRepository.findAllByOrderByCommentCountDesc();
-        for (Post post : postListAll3) {
+        List<Post>postListAll = postRepository.findAllByOrderByCreatedAtDesc();
+        for (Post post : postListAll) {
             if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                 //if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
                 //if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
@@ -294,26 +306,29 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> updateUserInfo(UserDetails userinfo, MypageRequestDto requestDto, MultipartFile file) {
-        System.out.println(userinfo.getUsername());
+    public ResponseDto<?> updateNickname(UserDetails userinfo, String nickname) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
-        String nickname = requestDto.getNickname();
-        String imageUrl = getFileUrl(file, 1);
-        if (imageUrl == null) return ResponseDto.fail("FAIL_UPLOAD", "파일 업로드를 실패했습니다.");
-
-        member.update(nickname, imageUrl);
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        member.updateNickname(nickname);
         memberRepository.save(member);
-        return ResponseDto.success("회원정보를 수정하였습니다.");
+        return ResponseDto.success("닉네임을 수정하였습니다.");
+    }
 
+    @Transactional
+    public ResponseDto<?> updateimage(UserDetails userinfo, MultipartFile file) {
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        String imageUrl = getFileUrl(file, 1);
+        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
+        member.updateImg(imageUrl);
+        memberRepository.save(member);
+        return ResponseDto.success("이미지를 수정하였습니다.");
     }
 
     // 파일 업로드 url 값 가져오기
     public String getFileUrl(MultipartFile file, int num) {
         try {
-            if (num == 2) return awsS3Service.uploadFiles(file, "picboy/gif");
-            return awsS3Service.uploadFiles(file, "picboy/images");
-
+            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
         } catch (IOException e) {
             return null;
         }

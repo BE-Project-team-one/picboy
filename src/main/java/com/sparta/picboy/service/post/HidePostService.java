@@ -5,6 +5,7 @@ import com.sparta.picboy.domain.post.HidePost;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.HidePostRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -28,10 +29,10 @@ public class HidePostService {
     @Transactional
     public ResponseDto updateHidePost(UserDetails userinfo, Long postId) {
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
-        if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
+        if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
-            return ResponseDto.fail("NOT_FOUND", "게시글을 찾을 수 업습니다.");
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
 
         Optional<HidePost> optionalHidPost = hidePostRepository.findByMemberAndPost(member, post);
