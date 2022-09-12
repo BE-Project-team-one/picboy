@@ -72,6 +72,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/user/**").permitAll() // 로그인,회원가입은 토큰없이도 가능
+                        .antMatchers(HttpMethod.OPTIONS,"/*").permitAll() // 이거 혹시 될라나?
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
