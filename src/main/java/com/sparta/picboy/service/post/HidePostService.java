@@ -24,17 +24,16 @@ public class HidePostService {
 
     private final MemberRepository memberRepository;
 
-    private final PostRelayRepository postRelayRepository;
-
     private final HidePostRepository hidePostRepository;
 
     @Transactional
     public ResponseDto updateHidePost(UserDetails userinfo, Long postId) {
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")
-        );
+        Post post = postRepository.findById(postId).orElse(null);
+        if(post == null){
+            return ResponseDto.fail("NOT_FOUND", "게시글을 찾을 수 업습니다.");
+        }
 
         Optional<HidePost> optionalHidPost = hidePostRepository.findByMemberAndPost(member, post);
         HidePost hidePost = optionalHidPost.orElse(null);

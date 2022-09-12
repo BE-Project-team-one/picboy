@@ -46,13 +46,13 @@ public class MyPageController {
     public ResponseDto getMypage(@RequestBody MypageRequestDto requestDto,
                              @PathVariable int tabNum,
                              @PathVariable int categoryNum){
-        return myPageService.test4(requestDto, tabNum, categoryNum);
+        return myPageService.getMypagePost(requestDto, tabNum, categoryNum);
     }
 
     //참여자 정보 가져오기
     @GetMapping("/post/join-list/{postid}")
     public ResponseDto joinList(@PathVariable Long postid){
-        return myPageService.viewPartipants(postid);
+        return myPageService.getPartipants(postid);
     }
 
     //회원정보 가져오기

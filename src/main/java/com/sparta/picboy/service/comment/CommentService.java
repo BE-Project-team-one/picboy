@@ -31,8 +31,10 @@ public class CommentService {
                 ()-> new IllegalArgumentException("유저를 찾을 수 없습니다"));
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        Post post = postRepository.findById(postId).orElse(null);
+        if(post == null){
+            return ResponseDto.fail("NOT_FOUND", "게시글이 존재하지 않습니다.");
+        }
 
         String content = requestDto.getContent();
 
@@ -50,9 +52,10 @@ public class CommentService {
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(()->new IllegalArgumentException("댓글을 찾을 수 없습니다.")
-                );
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if(comment == null){
+            return ResponseDto.fail("NOT_FOUND", "댓글이 존재하지 않습니다.");
+        }
 
         Post post = comment.getPost();
         Long writerId = comment.getMember().getId();
@@ -72,9 +75,11 @@ public class CommentService {
         Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail("NOT_FIND_MEMBER", "유저를 찾을 수 없습니다.");
 
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(()->new IllegalArgumentException("댓글을 찾을 수 없습니다.")
-                );
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if(comment == null){
+            return ResponseDto.fail("NOT_FOUND","댓글이 존재하지 않습니다.");
+        }
+
 
 
         Long writerId = comment.getMember().getId();
@@ -89,9 +94,11 @@ public class CommentService {
         }
     }
 
-    public ResponseDto<?> getComment (Long postId){
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+    public ResponseDto getComment (Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+        if(post == null){
+            return ResponseDto.fail("NOT_FOUND", "존재하지 않은 게시물입니다.");
+        }
 
         List<Comment> commentList = commentRepository.findAllByPost(post);
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
