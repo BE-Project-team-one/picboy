@@ -89,7 +89,7 @@ public class MyPageService {
                         case 1 : //작성글 조회
                             List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname);
                             for (Post post : postListAll2) {
-                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){ ; // 숨김 제외
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){  // 숨김 제외
                                     postList.add(post);}
                             }
                             break;
