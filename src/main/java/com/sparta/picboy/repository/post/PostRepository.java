@@ -2,6 +2,7 @@ package com.sparta.picboy.repository.post;
 
 import com.sparta.picboy.domain.post.Post;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -73,4 +74,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    List<Post> findAllByMember_NicknameOrderByLikeCountDesc(String nickname); //좋아요순(닉네임)
    List<Post> findAllByMember_NicknameOrderByCommentCountDesc(String nickname); //댓글순(닉네임)
 
+
+    List<Post> findAllByOrderByCreatedAtDesc(Pageable pageable); // 최신순
+    List<Post> findAllByOrderByLikeCountDesc(Pageable pageable); // 좋아요순
+    List<Post> findAllByOrderByCommentCountDesc(Pageable pageable); // 댓글순
+
+    List<Post> findAllByMember_NicknameOrderByCreatedAtDesc(String nickname, Pageable pageable); //최신순(닉네임)
+    List<Post> findAllByMember_NicknameOrderByLikeCountDesc(String nickname, Pageable pageable); //좋아요순(닉네임)
+    List<Post> findAllByMember_NicknameOrderByCommentCountDesc(String nickname, Pageable pageable); //댓글순(닉네임)
 }

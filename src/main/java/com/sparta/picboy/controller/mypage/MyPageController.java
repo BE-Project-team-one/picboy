@@ -5,6 +5,7 @@ import com.sparta.picboy.service.post.HidePostService;
 import com.sparta.picboy.service.myPage.MyPageService;
 import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +46,11 @@ public class MyPageController {
     // 마이페이지 게시글 조회
     @GetMapping("/mypage/post/{tabNum}/{categoryNum}")
     public ResponseDto getMypage(@RequestParam String nickname,
-                             @PathVariable int tabNum,
-                             @PathVariable int categoryNum){
-        return myPageService.getMypagePost(nickname, tabNum, categoryNum);
+                                 @PathVariable int tabNum,
+                                 @PathVariable int categoryNum,
+                                 @RequestParam int page,
+                                 @RequestParam int size){
+        return myPageService.getMypagePost(nickname, tabNum, categoryNum, page, size);
     }
 
     //참여자 정보 가져오기
