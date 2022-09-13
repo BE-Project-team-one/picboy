@@ -67,15 +67,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
    // mypage-------------------------------------------------------------------------------
 
-   Slice<Post> findAllByOrderByCreatedAtDesc(PageRequest pageRequest); // 무한스크롤
-   List<Post> findAllByOrderByCreatedAtDesc(); // 최신순
-   List<Post> findAllByOrderByLikeCountDesc(); // 좋아요순
-   List<Post> findAllByOrderByCommentCountDesc(); // 댓글순
-   List<Post> findAllByMember_NicknameOrderByCreatedAtDesc(String nickname); //최신순(닉네임)
-   List<Post> findAllByMember_NicknameOrderByLikeCountDesc(String nickname); //좋아요순(닉네임)
-   List<Post> findAllByMember_NicknameOrderByCommentCountDesc(String nickname); //댓글순(닉네임)
-
-
+    List<Post> findAllByOrderByCreatedAtDesc(); // 최신순
     List<Post> findAllByMember_NicknameOrderByCreatedAtDesc(String nickname, Pageable pageable); // 최신순
     List<Post> findAllByMember_NicknameOrderByLikeCountDesc(String nickname, Pageable pageable); // 좋아요순
     List<Post> findAllByMember_NicknameOrderByCommentCountDesc(String nickname, Pageable pageable); // 댓글순
