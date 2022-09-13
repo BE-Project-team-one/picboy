@@ -3,23 +3,15 @@ package com.sparta.picboy.dto.response.post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class PostProceedingResponseDto {
 
-    private Long id;
-    private String imgUrl;
-    private String topic;
-    private String nickname;
-    private int status;
+    private PostProceedingMediumDto postProceedingMediumDtoList;
 
-    public PostProceedingResponseDto(Long id, String imgUrl, String topic, String nickname, int status) {
-        this.id = id;
-        this.imgUrl = imgUrl;
-        this.topic = topic;
-        this.nickname = nickname;
-        this.status = status;
-
+    public PostProceedingResponseDto(PostProceedingMediumDto postProceedingMediumDtoList) {
+        this.postProceedingMediumDtoList = postProceedingMediumDtoList;
     }
-
 }

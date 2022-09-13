@@ -142,8 +142,38 @@ public class PostReadService {
             String topic = post.getTopic();
             String nickname = post.getMember().getNickname();
             int status = post.getStatus();
+            String profileImg = post.getMember().getProfileImg();
 
-            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status);
+            List<Member> members = new ArrayList<>();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            for (PostRelay postRelay : postRelayList) {
+
+                Member member = postRelay.getMember();
+                members.remove(member);
+                members.add(member);
+
+            }
+
+            int participantCount = members.size();
+
+            List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
+
+            // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
+            for (Member memberList : members) {
+
+                String usernames = memberList.getUsername();
+                String nicknames = memberList.getNickname();
+                String profileImgs = memberList.getProfileImg();
+
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                participantResponseDtoList.add(participantResponseDto);
+
+            }
+
+            PostProceedingMediumDto postProceedingMediumDto = new PostProceedingMediumDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
+            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(postProceedingMediumDto);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
 
         }
