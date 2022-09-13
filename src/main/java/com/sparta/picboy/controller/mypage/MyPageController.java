@@ -60,10 +60,10 @@ public class MyPageController {
     }
 
     //회원정보 가져오기
-    @GetMapping("/mypage/user-info")
-    public ResponseDto getUserInfo(@RequestParam String nickname){
-        return myPageService.getUserInfo(nickname);
-    }
+//    @GetMapping("/mypage/user-info")
+//    public ResponseDto getUserInfo(@RequestParam String nickname){
+//        return myPageService.getUserInfo(nickname);
+//    }
 
     //닉네임 수정
     @PutMapping("/mypage/update-nickname")

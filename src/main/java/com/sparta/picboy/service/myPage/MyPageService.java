@@ -21,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -82,7 +84,7 @@ public class MyPageService {
             case 1 : //최신순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+                            List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
@@ -102,7 +104,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+                            List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) // 닉네임과 포스트으로 조회
                                     if(!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -115,7 +117,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+                            List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
@@ -129,7 +131,7 @@ public class MyPageService {
             case 2 : // 좋아요 순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByLikeCountDesc(pageable);
+                            List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
@@ -150,7 +152,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByLikeCountDesc(pageable);
+                            List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -164,7 +166,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByLikeCountDesc(pageable);
+                            List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {  // 숨김만 조회
@@ -178,7 +180,7 @@ public class MyPageService {
             case 3 :// 코멘트 순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByCommentCountDesc(pageable);
+                            List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
@@ -199,7 +201,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByCommentCountDesc(pageable);
+                            List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                                     if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -213,7 +215,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByCommentCountDesc(pageable);
+                            List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
@@ -225,13 +227,7 @@ public class MyPageService {
                     }
                     break;
         }
-        Member member = memberRepository.findByNickname(nickname).orElse(null);
-        MypageUserInfoResponseDto userInfoResponseDto = new MypageUserInfoResponseDto(
-                member.getUsername(),
-                member.getNickname(),
-                member.getProfileImg(),
-                postList.size()
-        );
+
 
         List<MypageResponseDto> responseDtoList = new ArrayList<>();
         for (Post post : postList){
@@ -271,7 +267,18 @@ public class MyPageService {
                 ));
             }
         }
-        MypageResultResponseDto mypageResultResponseDto = new MypageResultResponseDto(userInfoResponseDto,responseDtoList);
+
+        //Member member = memberRepository.findByNickname(nickname).orElse(null);
+        MypageUserInfoResponseDto userInfoResponseDto = getUserInfo(nickname);
+//                new MypageUserInfoResponseDto(
+//                member.getUsername(),
+//                member.getNickname(),
+//                member.getProfileImg(),
+//                postList.size()
+//        );
+        MypageResultResponseDto mypageResultResponseDto = new MypageResultResponseDto(
+                userInfoResponseDto,
+                responseDtoList);
         return ResponseDto.success(mypageResultResponseDto);
     }
 
@@ -295,11 +302,11 @@ public class MyPageService {
         return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
-    public ResponseDto<?> getUserInfo(String nickname){
+    public MypageUserInfoResponseDto getUserInfo(String nickname){
         //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
         if (!memberRepository.existsByNickname(nickname)){
-            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+            new ResponseEntity("NOT_FOUND_MEMBER", HttpStatus.NOT_FOUND);
         }
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
@@ -320,7 +327,7 @@ public class MyPageService {
                 member.getProfileImg(),
                 postList.size()
         );
-        return ResponseDto.success(userInfoResponseDto);
+        return userInfoResponseDto;
     }
 
     @Transactional
