@@ -3,6 +3,7 @@ package com.sparta.picboy.service.user;
 import com.sparta.picboy.domain.user.Certification;
 import com.sparta.picboy.dto.request.user.CertificationRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.user.CertificationRepository;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.java_sdk.api.Message;
@@ -60,7 +61,7 @@ public class CertificationService {
 
         Certification certification = certificationRepository.findByNumStr(requestDto.getNumStr()).orElse(null);
         if(certification == null || !Pattern.matches(requestDto.getPhoneNum(), certification.getPhoneNum())){
-            return ResponseDto.fail("403", "인증 번호가 일치 하지 않습니다.");
+            return ResponseDto.fail(ErrorCode.CERTIFICATION_NOT_MATCH);
         }
 
         if(Pattern.matches(requestDto.getNumStr(),certification.getNumStr()) &&

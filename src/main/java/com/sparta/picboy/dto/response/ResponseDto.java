@@ -17,10 +17,6 @@ public class ResponseDto<T> { // 웹에서 Response 항목에 들어가는 틀�
     return new ResponseDto<>(true, data, null);
   }
 
-  public static <T> ResponseDto<T> fail(String code, String message) {
-    return new ResponseDto<>(false, null,null);
-  }
-
   public static <T> ResponseDto<T> fail(ErrorCode errorCode) {
     return new ResponseDto<>(false, null, new ErrorResponse(errorCode));
   }
