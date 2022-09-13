@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class MypageUserInfoResponseDto {
-    private String username;
+public class MypagePaticipantsResponseDto {
     private String nickname;
-    private String profilImg;
-    private int postCount;
+    private String img;
 }

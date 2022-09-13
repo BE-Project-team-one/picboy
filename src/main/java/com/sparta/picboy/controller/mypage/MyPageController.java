@@ -48,8 +48,9 @@ public class MyPageController {
     public ResponseDto getMypage(@RequestParam String nickname,
                                  @PathVariable int tabNum,
                                  @PathVariable int categoryNum,
-                                 Pageable pageable){
-        return myPageService.getMypagePost(nickname, tabNum, categoryNum, pageable);
+                                 @RequestParam int page,
+                                 @RequestParam int size){
+        return myPageService.getMypagePost(nickname, tabNum, categoryNum, page, size);
     }
 
     //참여자 정보 가져오기

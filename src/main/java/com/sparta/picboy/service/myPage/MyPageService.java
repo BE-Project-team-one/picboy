@@ -7,7 +7,9 @@ import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.dto.response.mypage.MypagePaticipantsResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
+import com.sparta.picboy.dto.response.mypage.MypageResultResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageUserInfoResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.HidePostRepository;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,9 +71,10 @@ public class MyPageService {
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum, Pageable pageable) {
+    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum, int page, int size) {
         //Pageable pageable = PageRequest.of(page, 20);
 //        String nickname = requestDto.getNickname();
+        Pageable pageable = PageRequest.of(page, size);
         if(!memberRepository.existsByNickname(nickname))
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         List<Post> postList = new ArrayList<>();
@@ -221,6 +225,13 @@ public class MyPageService {
                     }
                     break;
         }
+        Member member = memberRepository.findByNickname(nickname).orElse(null);
+        MypageUserInfoResponseDto userInfoResponseDto = new MypageUserInfoResponseDto(
+                member.getUsername(),
+                member.getNickname(),
+                member.getProfileImg(),
+                postList.size()
+        );
 
         List<MypageResponseDto> responseDtoList = new ArrayList<>();
         for (Post post : postList){
@@ -243,7 +254,6 @@ public class MyPageService {
                         postNickList.size() - 1, // 글쓴이 외 참여자 수
                         post.getExpiredAt(),
                         post.getStatus()
-
                 ));
             } else { // 그외 움짤 img
                 responseDtoList.add(new MypageResponseDto(
@@ -258,11 +268,11 @@ public class MyPageService {
                         postNickList.size() - 1, // 글쓴이 외 참여자 수
                         post.getExpiredAt(),
                         post.getStatus()
-
                 ));
             }
         }
-        return ResponseDto.success(responseDtoList);
+        MypageResultResponseDto mypageResultResponseDto = new MypageResultResponseDto(userInfoResponseDto,responseDtoList);
+        return ResponseDto.success(mypageResultResponseDto);
     }
 
     //게시글 참여자 조회
@@ -273,10 +283,16 @@ public class MyPageService {
         }
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         List<String> postNickList = new ArrayList<>();
+        List<MypagePaticipantsResponseDto> mypagePaticipantsResponseDtoList = new ArrayList<>();
         for (PostRelay postRelay : postRelayList)
-            if (!postNickList.contains(postRelay.getMember().getNickname())) //참여자 중복 닉 제외
+            if (!postNickList.contains(postRelay.getMember().getNickname())){ //참여자 중복 닉 제외
                 postNickList.add(postRelay.getMember().getNickname()); // 참여자 닉 리스트 생성
-        return ResponseDto.success(postNickList);
+                mypagePaticipantsResponseDtoList.add(new MypagePaticipantsResponseDto(
+                        postRelay.getMember().getNickname(),
+                        postRelay.getMember().getProfileImg()
+                ));
+            }
+        return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
     public ResponseDto<?> getUserInfo(String nickname){
