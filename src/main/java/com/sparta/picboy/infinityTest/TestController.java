@@ -15,7 +15,6 @@ public class TestController {
     @GetMapping("/post/test")
     public ResponseDto<?> test(@RequestParam int size, @RequestParam int page) {
         return testService.test(page, size);
-
     }
 
     }
