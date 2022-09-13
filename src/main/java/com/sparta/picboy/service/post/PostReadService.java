@@ -172,8 +172,7 @@ public class PostReadService {
 
             }
 
-            PostProceedingMediumDto postProceedingMediumDto = new PostProceedingMediumDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
-            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(postProceedingMediumDto);
+            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
 
         }

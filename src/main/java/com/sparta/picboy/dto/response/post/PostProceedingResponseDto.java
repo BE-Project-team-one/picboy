@@ -9,9 +9,23 @@ import java.util.List;
 @NoArgsConstructor
 public class PostProceedingResponseDto {
 
-    private PostProceedingMediumDto postProceedingMediumDtoList;
+    private Long id;
+    private String imgUrl;
+    private String topic;
+    private String nickname;
+    private int status;
+    private String profileImg;
+    private List<ParticipantResponseDto> participantResponseDtoList;
+    private int participantCount;
 
-    public PostProceedingResponseDto(PostProceedingMediumDto postProceedingMediumDtoList) {
-        this.postProceedingMediumDtoList = postProceedingMediumDtoList;
+    public PostProceedingResponseDto(Long id, String imgUrl, String topic, String nickname, int status, String profileImg, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+        this.id = id;
+        this.imgUrl = imgUrl;
+        this.topic = topic;
+        this.nickname = nickname;
+        this.status = status;
+        this.profileImg = profileImg;
+        this.participantResponseDtoList = participantResponseDtoList;
+        this.participantCount = participantCount;
     }
 }
