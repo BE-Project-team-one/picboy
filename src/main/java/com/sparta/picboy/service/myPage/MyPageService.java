@@ -73,7 +73,7 @@ public class MyPageService {
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum, int page, int size) {
+    public ResponseDto getMypageAndUserInfoPost(String nickname, int tabNum, int categoryNum, int page, int size) {
         //Pageable pageable = PageRequest.of(page, 20);
 //        String nickname = requestDto.getNickname();
         Pageable pageable = PageRequest.of(page, size);
@@ -282,6 +282,204 @@ public class MyPageService {
         return ResponseDto.success(mypageResultResponseDto);
     }
 
+
+    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum, int page, int size) {
+        //Pageable pageable = PageRequest.of(page, 20);
+//        String nickname = requestDto.getNickname();
+        Pageable pageable = PageRequest.of(page, size);
+        if(!memberRepository.existsByNickname(nickname))
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        List<Post> postList = new ArrayList<>();
+        switch (categoryNum) {
+            case 1 : //최신순
+                switch (tabNum) {
+                    case 0 :  // 전체조회
+                        List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
+                        for (Post post : postListAll1) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
+                                    if (!postList.contains(post)) {// 중복 제외
+                                        postList.add(post);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 1 : //작성글 조회
+                        List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
+                        for (Post post : postListAll2) {
+                            if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){  // 숨김 제외
+                                postList.add(post);}
+                        }
+                        break;
+
+                    case 2 : //참여글 조회
+                        List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
+                        for (Post post : postListAll3) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) // 닉네임과 포스트으로 조회
+                                if(!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
+                                    if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
+                                        if (!postList.contains(post)) { // 중복 제외
+                                            postList.add(post);
+                                        }
+                                    }
+                                }
+                        }
+                        break;
+                    case 3 : // 숨김글 조회
+                        List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
+                        for (Post post : postListAll4) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
+                                if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
+                                    postList.add(post);
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 2 : // 좋아요 순
+                switch (tabNum) {
+                    case 0 :  // 전체조회
+                        List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
+                        for (Post post : postListAll1) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
+                                    if (!postList.contains(post)) {// 중복 제외
+                                        postList.add(post);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 1 : //작성글 조회
+                        List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
+                        for (Post post : postListAll2) {
+                            if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
+                                postList.add(post);
+                            }
+                        }
+                        break;
+
+                    case 2 : //참여글 조회
+                        List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
+                        for (Post post : postListAll3) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
+                                if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
+                                    if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
+                                        if (!postList.contains(post)) {// 중복 제외
+                                            postList.add(post);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 3 : // 숨김글 조회
+                        List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
+                        for (Post post : postListAll4) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
+                                if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {  // 숨김만 조회
+                                    postList.add(post);
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+            case 3 :// 코멘트 순
+                switch (tabNum) {
+                    case 0 :  // 전체조회
+                        List<Post>postListAll1 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
+                        for (Post post : postListAll1) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
+                                if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
+                                    if (!postList.contains(post)) { // 중복 제외
+                                        postList.add(post);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 1 : //작성글 조회
+                        List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
+                        for (Post post : postListAll2) {
+                            if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
+                                postList.add(post);
+                            }
+                        }
+                        break;
+
+                    case 2 : //참여글 조회
+                        List<Post>postListAll3 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
+                        for (Post post : postListAll3) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
+                                if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
+                                    if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
+                                        if (!postList.contains(post)) { // 중복 제외
+                                            postList.add(post);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 3 : // 숨김글 조회
+                        List<Post>postListAll4 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
+                        for (Post post : postListAll4) {
+                            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
+                                if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
+                                    postList.add(post);
+                                }
+                            }
+                        }
+                        break;
+                }
+                break;
+        }
+
+
+        List<MypageResponseDto> responseDtoList = new ArrayList<>();
+        for (Post post : postList){
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            List<String> postNickList = new ArrayList<>();
+            for (PostRelay postRelay : postRelayList)
+                if (!postNickList.contains(postRelay.getMember().getNickname())) //참여자 중복 닉 제외
+                    postNickList.add(postRelay.getMember().getNickname()); // 참여자 닉 리스트 생성
+
+            if (post.getStatus() == 2) { // 완성된 움짤 gif
+                responseDtoList.add(new MypageResponseDto(
+                        post.getId(),
+                        post.getGifUrl(), // gif
+                        post.getLikeCount(),
+                        post.getCommentCount(),
+                        post.getViewCount(),
+                        post.getReportCount(),
+                        post.getTopic(),
+                        post.getMember().getNickname(),
+                        postNickList.size() - 1, // 글쓴이 외 참여자 수
+                        post.getExpiredAt(),
+                        post.getStatus()
+                ));
+            } else { // 그외 움짤 img
+                responseDtoList.add(new MypageResponseDto(
+                        post.getId(),
+                        post.getImgUrl(), // img
+                        post.getLikeCount(),
+                        post.getCommentCount(),
+                        post.getViewCount(),
+                        post.getReportCount(),
+                        post.getTopic(),
+                        post.getMember().getNickname(),
+                        postNickList.size() - 1, // 글쓴이 외 참여자 수
+                        post.getExpiredAt(),
+                        post.getStatus()
+                ));
+            }
+        }
+        return ResponseDto.success(responseDtoList);
+    }
+    
     //게시글 참여자 조회
     public ResponseDto getPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElse(null);
