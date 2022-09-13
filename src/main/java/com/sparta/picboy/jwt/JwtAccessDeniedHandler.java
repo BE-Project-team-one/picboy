@@ -2,6 +2,7 @@ package com.sparta.picboy.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().println(
                 new ObjectMapper().writeValueAsString(
-                        ResponseDto.fail("FORBIDDEN", "로그인이 필요합니다.")
+                        ResponseDto.fail(ErrorCode.FORBIDDEN)
                 )
         );
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
