@@ -16,6 +16,7 @@ import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,8 @@ public class MyPageService {
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum) {
+    public ResponseDto getMypagePost(String nickname, int tabNum, int categoryNum, Pageable pageable) {
+        //Pageable pageable = PageRequest.of(page, 20);
 //        String nickname = requestDto.getNickname();
         if(!memberRepository.existsByNickname(nickname))
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
@@ -76,7 +78,7 @@ public class MyPageService {
             case 1 : //최신순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByCreatedAtDesc();
+                            List<Post>postListAll1 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
@@ -88,7 +90,7 @@ public class MyPageService {
                             }
                             break;
                         case 1 : //작성글 조회
-                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname);
+                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCreatedAtDesc(nickname, pageable);
                             for (Post post : postListAll2) {
                                 if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)){  // 숨김 제외
                                     postList.add(post);}
@@ -96,7 +98,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByCreatedAtDesc();
+                            List<Post>postListAll3 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) // 닉네임과 포스트으로 조회
                                     if(!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -109,7 +111,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByCreatedAtDesc();
+                            List<Post>postListAll4 = postRepository.findAllByOrderByCreatedAtDesc(pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
@@ -123,7 +125,7 @@ public class MyPageService {
             case 2 : // 좋아요 순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByLikeCountDesc();
+                            List<Post>postListAll1 = postRepository.findAllByOrderByLikeCountDesc(pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
@@ -135,7 +137,7 @@ public class MyPageService {
                             }
                             break;
                         case 1 : //작성글 조회
-                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname);
+                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByLikeCountDesc(nickname, pageable);
                             for (Post post : postListAll2) {
                                 if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
                                     postList.add(post);
@@ -144,7 +146,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByLikeCountDesc();
+                            List<Post>postListAll3 = postRepository.findAllByOrderByLikeCountDesc(pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -158,7 +160,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByLikeCountDesc();
+                            List<Post>postListAll4 = postRepository.findAllByOrderByLikeCountDesc(pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {  // 숨김만 조회
@@ -172,7 +174,7 @@ public class MyPageService {
             case 3 :// 코멘트 순
                     switch (tabNum) {
                         case 0 :  // 전체조회
-                            List<Post>postListAll1 = postRepository.findAllByOrderByCommentCountDesc();
+                            List<Post>postListAll1 = postRepository.findAllByOrderByCommentCountDesc(pageable);
                             for (Post post : postListAll1) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {// 닉네임과 포스트으로 조회
                                     if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
@@ -184,7 +186,7 @@ public class MyPageService {
                             }
                             break;
                         case 1 : //작성글 조회
-                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname);
+                            List<Post>postListAll2 = postRepository.findAllByMember_NicknameOrderByCommentCountDesc(nickname, pageable);
                             for (Post post : postListAll2) {
                                 if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김 제외
                                     postList.add(post);
@@ -193,7 +195,7 @@ public class MyPageService {
                             break;
 
                         case 2 : //참여글 조회
-                            List<Post>postListAll3 = postRepository.findAllByOrderByCommentCountDesc();
+                            List<Post>postListAll3 = postRepository.findAllByOrderByCommentCountDesc(pageable);
                             for (Post post : postListAll3) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
                                     if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
@@ -207,7 +209,7 @@ public class MyPageService {
                             }
                             break;
                         case 3 : // 숨김글 조회
-                            List<Post>postListAll4 = postRepository.findAllByOrderByCommentCountDesc();
+                            List<Post>postListAll4 = postRepository.findAllByOrderByCommentCountDesc(pageable);
                             for (Post post : postListAll4) {
                                 if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) {
                                     if (hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) { // 숨김만 조회
@@ -318,15 +320,30 @@ public class MyPageService {
     public ResponseDto<?> updateimage(UserDetails userinfo, MultipartFile file) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
-        String imageUrl = getFileUrl(file, 1);
+        String thisImgUrl = member.getProfileImg();
+        String deleteUrl = thisImgUrl.substring(thisImgUrl.indexOf("picboy/mypageImg"));
+
+        System.out.println(deleteUrl);
+        //deleteUrl : picboy/mypageImg/4354c745-097f-4230-8f32-03e2347ae3d2-mg
+        awsS3Service.deleteImage(deleteUrl);
+        //amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        String imageUrl = getFileUrl(file);
         if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
         member.updateImg(imageUrl);
         memberRepository.save(member);
+
+        //substring 예제
+        //String finds = "abc-def";
+        //String ans =  finds.substring(0,3); //abc
+        //String ans2 =  finds.substring(4); //def
+
+
+
         return ResponseDto.success("이미지를 수정하였습니다.");
     }
 
     // 파일 업로드 url 값 가져오기
-    public String getFileUrl(MultipartFile file, int num) {
+    public String getFileUrl(MultipartFile file) {
         try {
             return awsS3Service.uploadFiles(file, "picboy/mypageImg");
         } catch (IOException e) {
