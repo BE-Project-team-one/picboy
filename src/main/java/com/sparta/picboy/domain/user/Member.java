@@ -37,6 +37,12 @@ public class Member extends Timestamped {
     @Column
     private String authority; // 권한
 
+    @Column
+    private Long kakaoId;
+
+    @Column
+    private String email;
+
     public Member(String username, String nickname, String password, String profileImg, int status, String phoneNumber, String authority) {
         this.username = username;
         this.nickname = nickname;
@@ -52,6 +58,20 @@ public class Member extends Timestamped {
         this.nickname = requestDto.getNickname();
         this.password = password;
         this.phoneNumber = requestDto.getPhoneNumber();
+    }
+
+    public Member(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    public Member(String username, String nickname, String encodedPassword, String email, Long kakaoId) {
+        this.username = username;
+        this.nickname = nickname;
+        this.password = encodedPassword;
+        this.kakaoId = kakaoId;
+        this.email = email;
     }
 
     public void updateNickname(String nickname){

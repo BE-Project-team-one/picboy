@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-//@Repository
+@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByNickname(String nickname);
 
@@ -15,5 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //mypage------------------------------
     boolean existsByNickname(String nickname);
 
+    Optional<Member> findByKakaoId(Long kakaoId);
 }
 
