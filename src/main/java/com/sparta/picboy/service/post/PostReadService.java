@@ -13,6 +13,10 @@ import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,23 +98,41 @@ public class PostReadService {
 
 
     // 진행중인 움짤 페이지 목록 조회
-    public ResponseDto<?> readProceeding(Long tabNum) {
+    public ResponseDto<?> readProceeding(Long tabNum, int size, int page) {
 
         if (tabNum == 0) { // 게시글 전체
-            List<Post> postList = postRepository.findAllByStatus(1);
+
+            String sortAt = "createdAt";
+            Sort.Direction direction = Sort.Direction.DESC;
+            Sort sort = Sort.by(direction, sortAt);
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            Page<Post> postList = postRepository.findAllByStatus(1,pageable);
             return ResponseDto.success(sortProceedingCategory(postList));
         } else if (tabNum == 1) { // 제시어 o
-            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatus(1);
+
+            String sortAt = "createdAt";
+            Sort.Direction direction = Sort.Direction.DESC;
+            Sort sort = Sort.by(direction, sortAt);
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatus(1, pageable);
             return ResponseDto.success(sortProceedingCategory(postList));
         } else { // tabNum == 2 제시어 x
-            List<Post> postList = postRepository.findAllByTopicIsNullAndStatus(1);
+
+            String sortAt = "createdAt";
+            Sort.Direction direction = Sort.Direction.DESC;
+            Sort sort = Sort.by(direction, sortAt);
+            Pageable pageable = PageRequest.of(page, size, sort);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatus(1, pageable);
             return ResponseDto.success(sortProceedingCategory(postList));
         }
 
     }
 
     // 진행중인 움짤 카테고리 정렬 중복 매서드 처리
-    public List<PostProceedingResponseDto> sortProceedingCategory(List<Post> postList) {
+    public List<PostProceedingResponseDto> sortProceedingCategory(Page<Post> postList) {
 
         List<PostProceedingResponseDto> postProceedingResponseDtoList = new ArrayList<>();
         for (Post post : postList) {
@@ -120,8 +142,37 @@ public class PostReadService {
             String topic = post.getTopic();
             String nickname = post.getMember().getNickname();
             int status = post.getStatus();
+            String profileImg = post.getMember().getProfileImg();
 
-            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status);
+            List<Member> members = new ArrayList<>();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            for (PostRelay postRelay : postRelayList) {
+
+                Member member = postRelay.getMember();
+                members.remove(member);
+                members.add(member);
+
+            }
+
+            int participantCount = members.size();
+
+            List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
+
+            // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
+            for (Member memberList : members) {
+
+                String usernames = memberList.getUsername();
+                String nicknames = memberList.getNickname();
+                String profileImgs = memberList.getProfileImg();
+
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                participantResponseDtoList.add(participantResponseDto);
+
+            }
+
+            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
 
         }
@@ -174,55 +225,82 @@ public class PostReadService {
 
 
     // 완료된 움짤 페이지 목록 전체 조회
-    public ResponseDto<?> readCompletion(Long categoryNum) {
+    public ResponseDto<?> readCompletion(Long categoryNum, int size, int page) {
 
         if (categoryNum == 1) { // 최신 순 정렬
-            List<Post> postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else if (categoryNum == 2) { // 좋아요 순 정렬
-            List<Post> postList = postRepository.findAllByStatusOrderByLikeCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else { // categoryNum == 3 댓글 수 순 정렬
-            List<Post> postList = postRepository.findAllByStatusOrderByCommentCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByStatusOrderByCommentCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
     }
 
     // 완료된 움짤 페이지 목록 제시어 o 조회
-    public ResponseDto<?> readCompletionTopicOk(Long categoryNum) {
+    public ResponseDto<?> readCompletionTopicOk(Long categoryNum, int size, int page) {
 
         if (categoryNum == 1) { // 최신 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else if (categoryNum == 2) { // 좋아요 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else { // categoryNum == 3 댓글 수 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
     }
 
     // 완료된 움짤 페이지 목록 제시어 x 조회
-    public ResponseDto<?> readCompletionTopicNull(Long categoryNum) {
+    public ResponseDto<?> readCompletionTopicNull(Long categoryNum, int size, int page) {
 
         if (categoryNum == 1) { // 최신 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else if (categoryNum == 2) { // 좋아요 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         } else { // categoryNum == 3 댓글 수 순 정렬
-            List<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2);
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
     }
 
     // 완료된 움짤 카테고리 정렬 중복 매서드 처리
-    public List<PostCompletionResponseDto> sortCompletionCategory(List<Post> postList) {
+    public List<PostCompletionResponseDto> sortCompletionCategory(Page<Post> postList) {
         List<PostCompletionResponseDto> postCompletionResponseDtoList = new ArrayList<>();
         for (Post post : postList) {
 
@@ -242,7 +320,36 @@ public class PostReadService {
             int viewCount = post.getViewCount();
             int status = post.getStatus(); // 반드시 2의 값을 가질것임
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, imgUrl, likeCount, topic, nickname, commentCount, repotCount, date, viewCount, status);
+            List<Member> members = new ArrayList<>();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            for (PostRelay postRelays : postRelayList) {
+
+                Member member = postRelays.getMember();
+                members.remove(member);
+                members.add(member);
+
+            }
+
+            int participantCount = members.size();
+
+            List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
+
+            // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
+            for (Member memberList : members) {
+
+                String usernames = memberList.getUsername();
+                String nicknames = memberList.getNickname();
+                String profileImgs = memberList.getProfileImg();
+
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                participantResponseDtoList.add(participantResponseDto);
+
+            }
+
+
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, imgUrl, likeCount, topic, nickname, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
         }
 

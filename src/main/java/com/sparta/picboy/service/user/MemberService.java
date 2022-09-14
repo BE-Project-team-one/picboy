@@ -39,7 +39,6 @@ public class MemberService {
 
     // 아이디 중복 체크
     public ResponseDto<?> idDoubleCheck(String username) {
-
         if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME);
             }
@@ -58,12 +57,6 @@ public class MemberService {
     @Transactional
     public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
 
-//        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow();
-
-//        if(!Pattern.matches(member.getUsername(),requestDto.getUsername()) ||
-//        !passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-//            return ResponseDto.fail("401", "입력 정보가 잘못되었습니다.");
-//        }
         // DB에 존재하는 아이디 인지 확인
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null);
         if (member == null) {

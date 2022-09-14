@@ -22,13 +22,13 @@ public class MemberController {
     }
 
     // 아이디 중복 체크
-    @GetMapping("/user/id-double-check/{username}")
+    @GetMapping("user/id-double-check/{username}")
     public ResponseDto<?> idDoubleCheck(@PathVariable String username){
         return memberService.idDoubleCheck(username);
     }
 
     // 닉네임 중복 체크
-    @GetMapping("/user/nickname-double-check/{nickname}")
+    @GetMapping("user/nickname-double-check/{nickname}")
     public ResponseDto<?> nickDoubleCheck(@PathVariable String nickname){
         return memberService.nickDoubleCheck(nickname);
     }

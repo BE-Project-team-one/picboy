@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -18,8 +19,10 @@ public class PostCompletionResponseDto {
     private LocalDateTime date; // 생성날짜 = 움짤 완성된 날짜
     private int viewCount;
     private int status; // 반드시 2 의 값을 가짐
+    private List<ParticipantResponseDto> participantResponseDtoList;
+    private int participantCount;
 
-    public PostCompletionResponseDto(Long id, String imgUrl, int likeCount, String topic, String nickname, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status) {
+    public PostCompletionResponseDto(Long id, String imgUrl, int likeCount, String topic, String nickname, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
         this.id = id;
         this.imgUrl = imgUrl;
         this.likeCount = likeCount;
@@ -30,5 +33,7 @@ public class PostCompletionResponseDto {
         this.date = date;
         this.viewCount = viewCount;
         this.status = status;
+        this.participantResponseDtoList = participantResponseDtoList;
+        this.participantCount = participantCount;
     }
 }

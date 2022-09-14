@@ -32,8 +32,8 @@ public class PostReadController {
 
     // 진행중인 움짤 페이지 목록 조회
     @GetMapping("/post/gif/images/{tabNum}")
-    public ResponseDto<?> readProceeding(@PathVariable Long tabNum) {
-        return postReadService.readProceeding(tabNum);
+    public ResponseDto<?> readProceeding(@PathVariable Long tabNum, @RequestParam int size, @RequestParam int page) {
+        return postReadService.readProceeding(tabNum, size, page);
 
     }
 
@@ -46,22 +46,22 @@ public class PostReadController {
 
     // 완료된 움짤 페이지 목록 조회
     @GetMapping("/post/gif/{categoryNum}")
-    public ResponseDto<?> readCompletion(@PathVariable Long categoryNum) {
-        return postReadService.readCompletion(categoryNum);
+    public ResponseDto<?> readCompletion(@PathVariable Long categoryNum, @RequestParam int size, @RequestParam int page) {
+        return postReadService.readCompletion(categoryNum, size, page);
 
     }
 
     // 완료된 움짤 페이지 제시어 o 목록 조회
     @GetMapping("/post/gif/topic-ok/{categoryNum}")
-    public ResponseDto<?> readCompletionTopicOk(@PathVariable Long categoryNum) {
-        return postReadService.readCompletionTopicOk(categoryNum);
+    public ResponseDto<?> readCompletionTopicOk(@PathVariable Long categoryNum, @RequestParam int size, @RequestParam int page) {
+        return postReadService.readCompletionTopicOk(categoryNum, size, page);
 
     }
 
     // 완료된 움짤 페이지 제시어 x 목록 조회
     @GetMapping("/post/gif/topic-no/{categoryNum}")
-    public ResponseDto<?> readCompletionTopicNull(@PathVariable Long categoryNum) {
-        return postReadService.readCompletionTopicNull(categoryNum);
+    public ResponseDto<?> readCompletionTopicNull(@PathVariable Long categoryNum, @RequestParam int size, @RequestParam int page) {
+        return postReadService.readCompletionTopicNull(categoryNum, size, page);
 
     }
 

@@ -16,9 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -66,12 +63,13 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
-        http.cors();
+//        http.cors();
         http.csrf().disable();
 
         http
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/user/**").permitAll() // 로그인,회원가입은 토큰없이도 가능
+                        .antMatchers(HttpMethod.OPTIONS,"/**").permitAll() // 이거 혹시 될라나?
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()

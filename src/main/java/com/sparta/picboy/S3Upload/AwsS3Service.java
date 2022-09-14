@@ -80,6 +80,11 @@ public class AwsS3Service {
         }
     }
 
+    public void deleteImage(String fileName) {
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
+
+
 
 
 }
