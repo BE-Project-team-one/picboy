@@ -15,7 +15,7 @@ public class CommentResponseDto {
     private String nickname;
     private String comment;
     private String profileImage;
-    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAtAt;
 
     @Getter
     @AllArgsConstructor
