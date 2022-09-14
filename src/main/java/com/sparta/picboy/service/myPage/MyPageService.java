@@ -48,27 +48,6 @@ public class MyPageService {
 
     private final AwsS3Service awsS3Service;
 
-    public Map<String, Object> getMypage(int page){
-
-        PageRequest pageRequest = PageRequest.of(page, 24);
-        Slice<Post> posts = postRepository.findAll(pageRequest);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("isList", posts.isLast());
-        System.out.println(data);
-        return data;
-    }
-
-//    public Map<String, Object> getMypage(Long memberId, long page){
-//        Member member = memberRepository.findById(memberId).orElse(null);
-//        PageRequest pageRequest = PageRequest.of((int) page, 24);
-//        Slice<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageRequest);
-//
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("isList", posts.isLast());
-//        return data;
-//    }
-
 
     // 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
@@ -268,14 +247,14 @@ public class MyPageService {
             }
         }
 
-        //Member member = memberRepository.findByNickname(nickname).orElse(null);
-        MypageUserInfoResponseDto userInfoResponseDto = getUserInfo(nickname);
-//                new MypageUserInfoResponseDto(
-//                member.getUsername(),
-//                member.getNickname(),
-//                member.getProfileImg(),
-//                postList.size()
-//        );
+        Member member = memberRepository.findByNickname(nickname).orElse(null);
+        MypageUserInfoResponseDto userInfoResponseDto =
+                new MypageUserInfoResponseDto(
+                member.getUsername(),
+                member.getNickname(),
+                member.getProfileImg(),
+                postList.size()
+        );
         MypageResultResponseDto mypageResultResponseDto = new MypageResultResponseDto(
                 userInfoResponseDto,
                 responseDtoList);
@@ -479,7 +458,7 @@ public class MyPageService {
         }
         return ResponseDto.success(responseDtoList);
     }
-    
+
     //게시글 참여자 조회
     public ResponseDto getPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElse(null);
@@ -500,7 +479,7 @@ public class MyPageService {
         return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
-    public MypageUserInfoResponseDto getUserInfo(String nickname){
+    public ResponseDto<MypageUserInfoResponseDto> getUserInfo(String nickname){
         //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByNickname(nickname).orElse(null);
         if (!memberRepository.existsByNickname(nickname)){
@@ -525,7 +504,7 @@ public class MyPageService {
                 member.getProfileImg(),
                 postList.size()
         );
-        return userInfoResponseDto;
+        return ResponseDto.success(userInfoResponseDto);
     }
 
     @Transactional

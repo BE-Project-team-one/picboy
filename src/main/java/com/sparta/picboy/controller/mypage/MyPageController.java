@@ -22,20 +22,7 @@ public class MyPageController {
 
     private final HidePostService hidePostService;
 
-    //페이지네이션 작업 중
-    @GetMapping("/api/all/post")
-    public Map<String, Object> getMypage(){//(HttpServletRequest httpServletRequest){
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        //User user= principal.getUser();
-        //Long memberId = Long.valueOf(1);
-        //long page = Long.parseLong(httpServletRequest.getParameter("page"));
-        //getKeepPostList: async (pageParam) => {const res = await instance.get(`/api/all/post?page=${pageParam}`);
-        //const { postList, isLast } = res.data;
-        //return { postList, nextPage: pageParam + 1, isLast };
-        int page = 1;
-        return myPageService.getMypage(page);
-    }
+
     //숨기기/숨기기 취소
     @PostMapping("/mypage/post-hidden/{postId}")
     public ResponseDto hidePost(@AuthenticationPrincipal UserDetails userinfo,
@@ -60,10 +47,10 @@ public class MyPageController {
     }
 
     //회원정보 가져오기
-//    @GetMapping("/mypage/user-info")
-//    public ResponseDto getUserInfo(@RequestParam String nickname){
-//        return myPageService.getUserInfo(nickname);
-//    }
+    @GetMapping("/mypage/user-info")
+    public ResponseDto getUserInfo(@RequestParam String nickname){
+        return myPageService.getUserInfo(nickname);
+    }
 
     //닉네임 수정
     @PutMapping("/mypage/update-nickname")
