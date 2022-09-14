@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -21,7 +22,9 @@ import javax.transaction.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final TokenProvider tokenProvider;
 
     // 일반 회원가입
@@ -64,7 +67,7 @@ public class MemberService {
 
         // 비밀번호 일치여부 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
-            return ResponseDto.fail(ErrorCode.INVALID_VALUE);
+            return ResponseDto.fail(ErrorCode.NOT_CORRECT_PASSWORD);
 
         }
 

@@ -61,7 +61,7 @@ public class CertificationService {
 
         Certification certification = certificationRepository.findByNumStr(requestDto.getNumStr()).orElse(null);
         if(certification == null || !Pattern.matches(requestDto.getPhoneNum(), certification.getPhoneNum())){
-            return ResponseDto.fail(ErrorCode.CERTIFICATION_NOT_MATCH);
+            return ResponseDto.fail(ErrorCode.NOT_CORRECT_CERTIFINUM);
         }
 
         if(Pattern.matches(requestDto.getNumStr(),certification.getNumStr()) &&
