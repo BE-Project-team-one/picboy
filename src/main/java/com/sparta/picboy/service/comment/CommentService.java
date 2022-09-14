@@ -101,7 +101,7 @@ public class CommentService {
         }
     }
 
-    public ResponseDto getComment (Long postId){
+    public ResponseDto<?> getComment (Long postId){
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
