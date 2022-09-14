@@ -45,7 +45,15 @@ public class CommentService {
         post.updateCommentCnt(commentList.size());
         postRepository.save(post);
 
-        return ResponseDto.success(true);
+        CommentResponseDto commentResponse = new CommentResponseDto(
+                comment.getId(),
+                comment.getMember().getNickname(),
+                comment.getComment(),
+                comment.getMember().getProfileImg(),
+                comment.getModifiedAt()
+        );
+
+        return ResponseDto.success(commentResponse);
     }
     @Transactional
     public ResponseDto<?> deleteComment(UserDetails userinfo, Long postId, Long commentId){
@@ -80,8 +88,6 @@ public class CommentService {
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_COMMENT);
         }
 
-
-
         Long writerId = comment.getMember().getId();
         Long userId = member.getId();
 
@@ -115,9 +121,4 @@ public class CommentService {
 
         return ResponseDto.success(commentListDto);
     }
-
-
-
-
-
 }
