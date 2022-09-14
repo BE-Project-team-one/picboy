@@ -111,15 +111,15 @@ public class CommentService {
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for (Comment comment : commentList){
             commentResponseDtos.add(new CommentResponseDto(
-                    comment.getPost().getId(),
+                    comment.getId(),
                     comment.getMember().getNickname(),
                     comment.getComment(),
                     comment.getMember().getProfileImg(),
-                    comment.getCreatedAt()));
+                    comment.getModifiedAt()));
         }
 
-        CommentResponseDto.inner commentListDto = new CommentResponseDto.inner(commentResponseDtos);
+        //CommentResponseDto.inner commentListDto = new CommentResponseDto.inner(commentResponseDtos);
 
-        return ResponseDto.success(commentListDto);
+        return ResponseDto.success(commentResponseDtos);
     }
 }
