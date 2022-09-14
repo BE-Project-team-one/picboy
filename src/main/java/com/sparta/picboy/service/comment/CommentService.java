@@ -28,7 +28,7 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> createComment (UserDetails userinfo, Long postId, CommentRequestDto requestDto) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Post post = postRepository.findById(postId).orElse(null);
@@ -57,7 +57,7 @@ public class CommentService {
     }
     @Transactional
     public ResponseDto<?> deleteComment(UserDetails userinfo, Long postId, Long commentId){
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
@@ -81,7 +81,7 @@ public class CommentService {
     }
     @Transactional
     public ResponseDto<?> updateComment(UserDetails userinfo, Long commentId, CommentRequestDto requestDto){
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);

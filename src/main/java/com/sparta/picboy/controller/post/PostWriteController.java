@@ -41,11 +41,11 @@ public class PostWriteController {
     }
 
     //gif 파일 저장
-    @PostMapping("/post/gif-file/{postid}")
-    public ResponseDto<?> gifSave(@PathVariable Long postid,
-                                  @RequestParam("file")MultipartFile file) {
-        return postWriteService.gifSave(postid,file);
-    }
+//    @PostMapping("/post/gif-file/{postid}")
+//    public ResponseDto<?> gifSave(@PathVariable Long postid,
+//                                  @RequestParam("file")MultipartFile file) {
+//        return postWriteService.gifSave(postid,file);
+//    }
 
 
     // 게시물 삭제
