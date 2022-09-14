@@ -32,7 +32,7 @@ public class GifSequenceWriter {
         IIOMetadataNode root = (IIOMetadataNode) metadata.getAsTree(metaFormatName);
 
         IIOMetadataNode graphicsControlExtensionNode = getNode(root, "GraphicControlExtension");
-        graphicsControlExtensionNode.setAttribute("disposalMethod", "none");
+        graphicsControlExtensionNode.setAttribute("disposalMethod", "restoreToBackgroundColor");
         graphicsControlExtensionNode.setAttribute("userInputFlag", "FALSE");
         graphicsControlExtensionNode.setAttribute("transparentColorFlag", "FALSE");
         graphicsControlExtensionNode.setAttribute("delayTime", Integer.toString(delay / 10));
