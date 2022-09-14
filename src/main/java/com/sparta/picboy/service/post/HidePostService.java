@@ -28,7 +28,7 @@ public class HidePostService {
 
     @Transactional
     public ResponseDto updateHidePost(UserDetails userinfo, Long postId) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
