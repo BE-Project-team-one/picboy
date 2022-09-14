@@ -76,6 +76,7 @@ public class CommentService {
             post.updateCommentCnt(commentList.size());
             postRepository.save(post);
             return ResponseDto.success("삭제되었습니다.");
+
         }
     }
     @Transactional
