@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 
@@ -33,7 +34,15 @@ public class CertificationService {
 
     // 휴대폰 인증 코드 받기
     @Transactional
-    public ResponseDto<?> certifiedPhoneNumber(CertificationRequestDto requestDto, String numStr) {
+    public ResponseDto<?> certifiedPhoneNumber(CertificationRequestDto requestDto) {
+
+        Random random  = new Random();
+        String numStr = "";
+        for(int i=0; i<4; i++) {
+            String ran = Integer.toString(random.nextInt(10));
+            numStr+=ran;
+        }
+
         Message coolsms = new Message(api_key, api_secret);
 
         // 4 params(to, from, type, text) are mandatory. must be filled

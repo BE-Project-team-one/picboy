@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -91,4 +90,5 @@ public class MemberService {
 
         return ResponseDto.success(loginResponseDto);
     }
+
 }
