@@ -5,6 +5,7 @@ import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
+import com.sparta.picboy.dto.request.mypage.MypageImageRequestDto;
 import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypagePaticipantsResponseDto;
@@ -518,11 +519,11 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> updateimage(UserDetails userinfo, MultipartFile file) {
+    public ResponseDto<?> updateimage(UserDetails userinfo, MypageImageRequestDto requestDto) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         if (member.getProfileImg().equals(null)) {
-            String imageUrl = getFileUrl(file);
+            String imageUrl = getFileUrl(requestDto.getImg());
             if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
             member.updateImg(imageUrl);
             memberRepository.save(member);
@@ -533,7 +534,7 @@ public class MyPageService {
             //deleteUrl : picboy/mypageImg/4354c745-097f-4230-8f32-03e2347ae3d2-mg
             awsS3Service.deleteImage(deleteUrl);
             //amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
-            String imageUrl = getFileUrl(file);
+            String imageUrl = getFileUrl(requestDto.getImg());
             if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
             member.updateImg(imageUrl);
             memberRepository.save(member);
@@ -548,12 +549,11 @@ public class MyPageService {
     }
 
     // 파일 업로드 url 값 가져오기
-    public String getFileUrl(MultipartFile file) {
-//        try {
-//            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
-//        } catch (IOException e) {
-//            return null;
-//        }
-        return null;
+    public String getFileUrl(String file) {
+        try {
+            return awsS3Service.uploadFiles(file, "picboy/images/post");
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

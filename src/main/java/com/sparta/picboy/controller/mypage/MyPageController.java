@@ -1,5 +1,6 @@
 package com.sparta.picboy.controller.mypage;
 
+import com.sparta.picboy.dto.request.mypage.MypageImageRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.service.post.HidePostService;
 import com.sparta.picboy.service.myPage.MyPageService;
@@ -61,8 +62,8 @@ public class MyPageController {
     //프로필이미지 수정
     @PutMapping("/mypage/update-image")
     public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal UserDetails userinfo,
-                                         @RequestPart MultipartFile file){
-        return myPageService.updateimage(userinfo,file);
+                                         @RequestBody MypageImageRequestDto requestDto){
+        return myPageService.updateimage(userinfo,requestDto);
     }
 
 
