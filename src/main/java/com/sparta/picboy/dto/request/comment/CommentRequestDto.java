@@ -1,4 +1,4 @@
-package com.sparta.picboy.controller.user.comment;
+package com.sparta.picboy.dto.request.comment;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
