@@ -8,6 +8,7 @@ import com.sparta.picboy.domain.RandomTopic;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
+import com.sparta.picboy.dto.request.post.PostDelayRequestDto;
 import com.sparta.picboy.dto.request.post.PostRequestDto;
 import com.sparta.picboy.dto.response.RandomTopicResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
@@ -46,7 +47,7 @@ public class PostWriteService {
 
     // 게시물 생성
     @Transactional
-    public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto, MultipartFile file) {
+    public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto) {
 
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
@@ -54,7 +55,7 @@ public class PostWriteService {
         Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), "", 1, member);
         post = postRepository.save(post);
 
-        String imageUrl = getFileUrl(file, post.getId());
+        String imageUrl = getFileUrl(postRequestDto.getFile(), post.getId());
         if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         // 삭제 날짜 설정
@@ -85,7 +86,7 @@ public class PostWriteService {
 
     // 이어 그리기 생성
     @Transactional
-    public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
+    public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
@@ -93,7 +94,7 @@ public class PostWriteService {
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
-        String imageUrl = getFileUrl(file, postId);
+        String imageUrl = getFileUrl(postDelayRequestDto.getFile(), postId);
         if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         post.frameUpdate(post.getFrameNum() + 1);
@@ -144,7 +145,7 @@ public class PostWriteService {
 
 
     // 파일 업로드 url 값 가져오기
-    public String getFileUrl(MultipartFile file, Long postId) {
+    public String getFileUrl(String file, Long postId) {
         try {
             return awsS3Service.uploadFiles(file, "picboy/images/post" + postId);
         } catch (IOException e) {

@@ -548,10 +548,11 @@ public class MyPageService {
 
     // 파일 업로드 url 값 가져오기
     public String getFileUrl(MultipartFile file) {
-        try {
-            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
-        } catch (IOException e) {
-            return null;
-        }
+//        try {
+//            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
+//        } catch (IOException e) {
+//            return null;
+//        }
+        return null;
     }
 }
