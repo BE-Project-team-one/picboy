@@ -40,8 +40,6 @@ public class Member extends Timestamped {
     @Column
     private Long kakaoId;
 
-    @Column
-    private String email;
 
     public Member(String username, String nickname, String password, String profileImg, int status, String phoneNumber, String authority) {
         this.username = username;
@@ -60,18 +58,16 @@ public class Member extends Timestamped {
         this.phoneNumber = requestDto.getPhoneNumber();
     }
 
-    public Member(String username, String password, String email) {
+    public Member(String username, String password) {
         this.username = username;
         this.password = password;
-        this.email = email;
     }
 
-    public Member(String username, String nickname, String encodedPassword, String email, Long kakaoId) {
+    public Member(String username, String nickname, String encodedPassword, Long kakaoId) {
         this.username = username;
         this.nickname = nickname;
         this.password = encodedPassword;
         this.kakaoId = kakaoId;
-        this.email = email;
     }
 
     public void updateNickname(String nickname){

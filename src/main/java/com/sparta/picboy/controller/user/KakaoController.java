@@ -1,6 +1,7 @@
 package com.sparta.picboy.controller.user;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.service.user.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,7 @@ public class KakaoController {
     private final KakaoService kakaoService;
 
     @GetMapping("/user/kakao/callback")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse) throws JsonProcessingException {
-        System.out.println("code = "+ code);
-        kakaoService.kakaoLogin(code, httpServletResponse);
-        return "redirect:/";
+    public Member kakaoLogin(@RequestParam String code, HttpServletResponse httpServletResponse) throws JsonProcessingException {
+        return kakaoService.kakaoLogin(code, httpServletResponse);
     }
-
 }
