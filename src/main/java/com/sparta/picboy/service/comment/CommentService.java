@@ -3,7 +3,7 @@ package com.sparta.picboy.service.comment;
 import com.sparta.picboy.domain.comment.Comment;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
-import com.sparta.picboy.dto.request.comment.CommentRequestDto;
+import com.sparta.picboy.controller.user.comment.CommentRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.comment.CommentResponseDto;
 import com.sparta.picboy.exception.ErrorCode;

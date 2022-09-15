@@ -1,7 +1,7 @@
 package com.sparta.picboy.controller.comment;
 
 import com.sparta.picboy.dto.response.ResponseDto;
-import com.sparta.picboy.dto.request.comment.CommentRequestDto;
+import com.sparta.picboy.controller.user.comment.CommentRequestDto;
 import com.sparta.picboy.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
