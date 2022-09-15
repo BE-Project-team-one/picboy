@@ -56,7 +56,7 @@ public class CommentService {
         return ResponseDto.success(commentResponse);
     }
     @Transactional
-    public ResponseDto<?> deleteComment(UserDetails userinfo, Long postId, Long commentId){
+    public ResponseDto<?> deleteComment(UserDetails userinfo, Long commentId){
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
