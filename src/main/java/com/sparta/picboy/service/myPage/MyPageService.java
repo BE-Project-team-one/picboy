@@ -508,9 +508,10 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> updateNickname(UserDetails userinfo, String nickname) {
+    public ResponseDto<?> updateNickname(UserDetails userinfo, MypageRequestDto requestDto) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        String nickname = requestDto.getNickname();
         member.updateNickname(nickname);
         memberRepository.save(member);
         return ResponseDto.success("닉네임을 수정하였습니다.");

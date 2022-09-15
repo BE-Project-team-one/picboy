@@ -55,8 +55,8 @@ public class MyPageController {
     //닉네임 수정
     @PutMapping("/mypage/update-nickname")
     public ResponseDto<?> updateUserInfo(@AuthenticationPrincipal UserDetails userinfo,
-                                         @RequestParam String nickname){
-        return myPageService.updateNickname(userinfo,nickname);
+                                         @RequestBody MypageRequestDto requestDto){
+        return myPageService.updateNickname(userinfo,requestDto);
     }
     //프로필이미지 수정
     @PutMapping("/mypage/update-image")
