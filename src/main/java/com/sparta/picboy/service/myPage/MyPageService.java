@@ -522,7 +522,8 @@ public class MyPageService {
     public ResponseDto<?> updateimage(UserDetails userinfo, MypageImageRequestDto requestDto) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
-        if (member.getProfileImg().equals(null)) {
+        System.out.println(member.getProfileImg());
+        if (member.getProfileImg() == null) {
             String imageUrl = getFileUrl(requestDto.getImg());
             if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
             member.updateImg(imageUrl);
@@ -551,7 +552,7 @@ public class MyPageService {
     // 파일 업로드 url 값 가져오기
     public String getFileUrl(String file) {
         try {
-            return awsS3Service.uploadFiles(file, "picboy/images/post");
+            return awsS3Service.uploadFiles(file, "picboy/mypageImg");
         } catch (IOException e) {
             return null;
         }
