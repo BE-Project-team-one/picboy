@@ -10,6 +10,7 @@ public class ParticipantResponseDto {
     private String nickname;
     private String profileImg;
 
+
     public ParticipantResponseDto(String username, String nickname, String profileImg) {
         this.username = username;
         this.nickname = nickname;
