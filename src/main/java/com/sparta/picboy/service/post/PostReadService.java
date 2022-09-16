@@ -305,7 +305,7 @@ public class PostReadService {
         for (Post post : postList) {
 
             Long id = post.getId();
-            String imgUrl = post.getImgUrl();
+            String imgUrl = post.getGifUrl();
             int likeCount = post.getLikeCount();
             String topic = post.getTopic();
             String nickname = post.getMember().getNickname();
