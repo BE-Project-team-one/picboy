@@ -23,15 +23,14 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/comment/{postId}/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     public ResponseDto<?> deleteComment(@AuthenticationPrincipal UserDetails userinfo,
-                                     @PathVariable Long postId,
                                      @PathVariable Long commentId) {
-        return commentService.deleteComment(userinfo, postId, commentId);
+        return commentService.deleteComment(userinfo, commentId);
     }
 
     // 댓글 수정
-    @PutMapping("/comment/{postId}/{commentId}")
+    @PutMapping("/comment/{commentId}")
     public ResponseDto<?> updateComment(@AuthenticationPrincipal UserDetails userinfo,
                                      @PathVariable Long commentId,
                                      @RequestBody CommentRequestDto requestDto) {

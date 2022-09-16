@@ -73,6 +73,9 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
+                        .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
+                        .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
+                        .antMatchers("/main/best-top10").permitAll()
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());
 

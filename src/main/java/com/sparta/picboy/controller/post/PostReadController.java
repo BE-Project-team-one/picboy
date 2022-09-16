@@ -4,6 +4,7 @@ import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.service.post.PostReadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

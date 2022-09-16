@@ -3,10 +3,12 @@ package com.sparta.picboy.service.post;
 import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.WebSocket.AlarmService;
 import com.sparta.picboy.WebSocket.MessageDto;
+import com.sparta.picboy.converter.GifSequenceWriter;
 import com.sparta.picboy.domain.RandomTopic;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
+import com.sparta.picboy.dto.request.post.PostDelayRequestDto;
 import com.sparta.picboy.dto.request.post.PostRequestDto;
 import com.sparta.picboy.dto.response.RandomTopicResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
@@ -21,7 +23,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 @Service
@@ -39,7 +47,7 @@ public class PostWriteService {
 
     // 게시물 생성
     @Transactional
-    public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto, MultipartFile file) {
+    public ResponseDto<?> createPost(UserDetails userinfo, PostRequestDto postRequestDto) {
 
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
@@ -47,7 +55,7 @@ public class PostWriteService {
         Post post = new Post(postRequestDto.getTopic(), 1, postRequestDto.getFrameTotal(), "", 1, member);
         post = postRepository.save(post);
 
-        String imageUrl = getFileUrl(file, 1, post.getId());
+        String imageUrl = getFileUrl(postRequestDto.getFile(), post.getId());
         if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         // 삭제 날짜 설정
@@ -78,7 +86,7 @@ public class PostWriteService {
 
     // 이어 그리기 생성
     @Transactional
-    public ResponseDto<?> relayPost(Long postId, MultipartFile file, UserDetails userinfo) {
+    public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
@@ -86,26 +94,30 @@ public class PostWriteService {
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
-        String imageUrl = getFileUrl(file, 1, postId);
+        String imageUrl = getFileUrl(postDelayRequestDto.getFile(), postId);
         if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
 
         post.frameUpdate(post.getFrameNum() + 1);
         post.imgUpdate(imageUrl);
 
-        if (post.getFrameNum() == post.getFrameTotal()) {
-            post.statusUpdate(2);
-
-            // 임시 데이터 삽입 (나중에 지워야함)
-            post.updateGif("https://myblog-image.s3.ap-northeast-2.amazonaws.com/picboy/gif/369f4778-c39a-4088-92f7-aa8c13de7349-gif");
-
-        }
-
         PostRelay postRelay = new PostRelay(post.getFrameNum(), post.getImgUrl(), member, post);
         postRelayRepository.save(postRelay);
 
+        if (post.getFrameNum() == post.getFrameTotal()) {
+            post.statusUpdate(2);
+
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+
+            try {
+                createGif(post,postRelayList);
+            } catch (IOException e) {
+                // gif 생성 실패 오류 메시지 만들기
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+
         // 게시물이 완성됬을 때 알람메시지 작동
         if(post.getStatus() == 2) {
-
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
             Set<Member> memberSet = new HashSet<>();
 
@@ -123,28 +135,26 @@ public class PostWriteService {
 
     //게시물에 완성된 gif 파일 저장
     @Transactional
-    public ResponseDto<?> gifSave(Long postId, MultipartFile file) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
+    public void gifSave(Post post, File file) {
+        // String imageUrl = getFileUrl(file, 2, null);
+        String gifUrl = getFileGifUrl(file);
+        if (gifUrl == null) return;
 
-        String imageUrl = getFileUrl(file, 2, null);
-        if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
-
-        post.updateGif(imageUrl);
-
-        return ResponseDto.success("움짤 저장 성공");
+        post.updateGif(gifUrl);
     }
 
 
     // 파일 업로드 url 값 가져오기
-    public String getFileUrl(MultipartFile file, int num, Long postId) {
+    public String getFileUrl(String file, Long postId) {
         try {
-            if (num == 2) return awsS3Service.uploadFiles(file, "picboy/gif");
             return awsS3Service.uploadFiles(file, "picboy/images/post" + postId);
-
         } catch (IOException e) {
             return null;
         }
+    }
+    // gif url 값 가져오기 테스트
+    public String getFileGifUrl(File file) {
+        return awsS3Service.upload(file,"picboy/gif");
     }
 
     @Transactional
@@ -166,5 +176,31 @@ public class PostWriteService {
         alarmService.alarmByMessage(messageDto);
 
         return ResponseDto.success("게시물이 삭제되었습니다.");
+    }
+
+
+    //gif 파일 생성
+    @Transactional
+    public void createGif(Post post, List<PostRelay> postRelayList) throws IOException {
+        URL[] images = new URL[postRelayList.size()];
+        for(int i = 0; i < postRelayList.size(); i++) {
+            images[i] = new URL(postRelayList.get(i).getImgUrl());
+        }
+        BufferedImage first = ImageIO.read(new URL(images[0].toString()));
+
+        File convertFile = new File(System.getProperty("user.dir") + "/" + "temporaryFile.gif");
+        ImageOutputStream output = new FileImageOutputStream(convertFile);
+        GifSequenceWriter writer = new GifSequenceWriter(output, first.getType(), 350, true);
+        writer.writeToSequence(first);
+
+        for (URL image : images) {
+            BufferedImage next = ImageIO.read(image);
+            writer.writeToSequence(next);
+        }
+
+        writer.close();
+        output.close();
+
+        gifSave(post, convertFile);
     }
 }

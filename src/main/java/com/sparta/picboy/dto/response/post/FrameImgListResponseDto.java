@@ -1,5 +1,6 @@
 package com.sparta.picboy.dto.response.post;
 
+import com.sparta.picboy.domain.post.PostRelay;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +17,12 @@ public class FrameImgListResponseDto {
         this.frameNum = frameNum;
         this.nickname = nickname;
         this.profileimg = profileimg;
+    }
+
+    public FrameImgListResponseDto(PostRelay postRelay) {
+        this.imgUrl = postRelay.getImgUrl();
+        this.frameNum = postRelay.getFrameNum();
+        this.nickname = postRelay.getMember().getNickname();
+        this.profileimg = postRelay.getMember().getProfileImg();
     }
 }

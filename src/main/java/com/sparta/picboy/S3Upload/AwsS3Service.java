@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,8 +22,8 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
+    public String uploadFiles(String file, String dirName) throws IOException {
+        File uploadFile = convert(file)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         return upload(uploadFile, dirName);
     }
@@ -67,6 +68,20 @@ public class AwsS3Service {
         return Optional.empty();
     }
 
+    // 로컬에 Base64 업로드 하기
+    private Optional<File> convert(String stringImage) throws IOException {
+        byte[] bytes = decodeBase64(stringImage);
+        File convertFile = new File(System.getProperty("user.dir") + "/" + "ServerImageFile.png");
+        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+            try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
+                fos.write(bytes);
+            }
+            return Optional.of(convertFile);
+        }
+
+        return Optional.empty();
+    }
+
 
     // 버킷 게시물 이미지 폴더 삭제
     public void removeFolder(String folderName){
@@ -82,6 +97,13 @@ public class AwsS3Service {
 
     public void deleteImage(String fileName) {
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
+
+    // base64 file decoder
+    public byte[] decodeBase64(String encodedFile) {
+        String substring = encodedFile.substring(encodedFile.indexOf(",") + 1);
+        Base64.Decoder decoder = Base64.getDecoder();
+        return decoder.decode(substring);
     }
 
 

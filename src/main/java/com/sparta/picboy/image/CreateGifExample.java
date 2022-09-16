@@ -1,5 +1,6 @@
 package com.sparta.picboy.image;
 
+import com.sparta.picboy.converter.GifSequenceWriter;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;

@@ -28,7 +28,7 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> createComment (UserDetails userinfo, Long postId, CommentRequestDto requestDto) {
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Post post = postRepository.findById(postId).orElse(null);
@@ -45,11 +45,19 @@ public class CommentService {
         post.updateCommentCnt(commentList.size());
         postRepository.save(post);
 
-        return ResponseDto.success(true);
+        CommentResponseDto commentResponse = new CommentResponseDto(
+                comment.getId(),
+                comment.getMember().getNickname(),
+                comment.getComment(),
+                comment.getMember().getProfileImg(),
+                comment.getModifiedAt()
+        );
+
+        return ResponseDto.success(commentResponse);
     }
     @Transactional
-    public ResponseDto<?> deleteComment(UserDetails userinfo, Long postId, Long commentId){
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+    public ResponseDto<?> deleteComment(UserDetails userinfo, Long commentId){
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
@@ -68,19 +76,18 @@ public class CommentService {
             post.updateCommentCnt(commentList.size());
             postRepository.save(post);
             return ResponseDto.success("삭제되었습니다.");
+
         }
     }
     @Transactional
     public ResponseDto<?> updateComment(UserDetails userinfo, Long commentId, CommentRequestDto requestDto){
-        Member member = memberRepository.findByNickname(userinfo.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(comment == null){
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_COMMENT);
         }
-
-
 
         Long writerId = comment.getMember().getId();
         Long userId = member.getId();
@@ -94,7 +101,7 @@ public class CommentService {
         }
     }
 
-    public ResponseDto getComment (Long postId){
+    public ResponseDto<?> getComment (Long postId){
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
@@ -104,20 +111,15 @@ public class CommentService {
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for (Comment comment : commentList){
             commentResponseDtos.add(new CommentResponseDto(
-                    comment.getPost().getId(),
+                    comment.getId(),
                     comment.getMember().getNickname(),
                     comment.getComment(),
                     comment.getMember().getProfileImg(),
-                    comment.getCreatedAt()));
+                    comment.getModifiedAt()));
         }
 
-        CommentResponseDto.inner commentListDto = new CommentResponseDto.inner(commentResponseDtos);
+        //CommentResponseDto.inner commentListDto = new CommentResponseDto.inner(commentResponseDtos);
 
-        return ResponseDto.success(commentListDto);
+        return ResponseDto.success(commentResponseDtos);
     }
-
-
-
-
-
 }
