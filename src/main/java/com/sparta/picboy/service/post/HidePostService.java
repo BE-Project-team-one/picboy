@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,14 +28,14 @@ public class HidePostService {
     private final HidePostRepository hidePostRepository;
 
     @Transactional
-    public ResponseDto updateHidePost(UserDetails userinfo, Long postId) {
+    public ResponseDto<?> updateHidePost(UserDetails userinfo, Long postId) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-        if(member.getUsername() != post.getMember().getUsername()) {
+        if(!Objects.equals(member.getUsername(), post.getMember().getUsername())) {
             return ResponseDto.fail(ErrorCode.ONLY_AUTHOR_ACCESSIBLE);}
 
 
