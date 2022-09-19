@@ -4,7 +4,6 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
-import com.sparta.picboy.dto.response.LoginResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
@@ -74,14 +73,13 @@ public class MemberService {
 
         httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
+        httpServletResponse.addHeader("AccessTokenExpiredTime", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
 
         // 바디에 토큰값 보내주기
         String authorization = "Bearer " + tokenDto.getAccessToken();
         String refreshToken = tokenDto.getRefreshToken();
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto(authorization, refreshToken);
-
-        return ResponseDto.success(loginResponseDto);
+        return ResponseDto.success("로그인 완료");
     }
 
 }
