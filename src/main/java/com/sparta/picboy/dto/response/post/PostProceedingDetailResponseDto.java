@@ -1,5 +1,6 @@
 package com.sparta.picboy.dto.response.post;
 
+import com.sparta.picboy.domain.post.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,5 +32,18 @@ public class PostProceedingDetailResponseDto {
         this.expiredAt = expiredAt;
         this.createdAt = createdAt;
         this.frameImgList = frameImgList;
+    }
+
+    public PostProceedingDetailResponseDto(Post post, List<FrameImgListResponseDto> frameImgListResponseDtoList) {
+        this.id = post.getId();
+        this.frameTotal = post.getFrameTotal();
+        this.frameNum = post.getFrameNum();
+        this.topic = post.getTopic();
+        this.imgUrl = post.getImgUrl();
+        this.nickname = post.getMember().getNickname();
+        this.profileImg = post.getMember().getProfileImg();
+        this.expiredAt = post.getExpiredAt();
+        this.createdAt = post.getCreatedAt();
+        this.frameImgList = frameImgListResponseDtoList;
     }
 }

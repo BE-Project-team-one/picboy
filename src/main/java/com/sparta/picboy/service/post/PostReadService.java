@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,14 +53,13 @@ public class PostReadService {
             for (PostRelay postRelay : postRelayList) {
 
                 // memberList 에 프레임별로 멤버를 add 해줄건데 중복 없에기 위한 작업을 진행. 지우고 넣는 방식 채택
-                memberList.remove(postRelay.getMember());
-                memberList.add(postRelay.getMember());
+                memberList.remove(postRelay.getMember()); //x 여태있던 멤버리스트를 다 지우고
+                memberList.add(postRelay.getMember()); //x 추가된 멤버를 더해서 멤버리스트를 추가한다
 
             }
 
-
             // 리스폰스는 '작성자 외 n 명' 이라서 작성자는 따로 빼고 연산
-            memberList.remove(post.getMember());
+            memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
             int memberCount = memberList.size();
 
             PostMainTop10ResponseDto postMainTop10ResponseDto = new PostMainTop10ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
@@ -91,11 +91,6 @@ public class PostReadService {
 
     }
 
-
-
-
-
-
     // 진행중인 움짤 페이지 목록 조회
     public ResponseDto<?> readProceeding(Long tabNum, int size, int page) {
 
@@ -111,7 +106,10 @@ public class PostReadService {
         // 주제어 x
         if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAt(1, pageable);
 
+        //x pageable을 controller에서 받아주면 안되는건가?
+
         return ResponseDto.success(sortProceedingCategory(postList));
+
 
     }
 
@@ -128,33 +126,32 @@ public class PostReadService {
             int status = post.getStatus();
             String profileImg = post.getMember().getProfileImg();
 
-            List<Member> members = new ArrayList<>();
+            List<Member> memberList = new ArrayList<>();
 
             // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
             for (PostRelay postRelay : postRelayList) {
 
                 Member member = postRelay.getMember();
-                members.remove(member);
-                members.add(member);
-
+                memberList.remove(member);
+                memberList.add(member);
+                //x 중복을 걸러주는 로직이라고 하는데 잘 모르겠음
             }
 
-            int participantCount = members.size();
+            int participantCount = memberList.size();
 
             List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
 
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
-            for (Member memberList : members) {
+            for (Member member : memberList) {
 
-                String usernames = memberList.getUsername();
-                String nicknames = memberList.getNickname();
-                String profileImgs = memberList.getProfileImg();
-
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                //x 변수명이 겹치는 것 때문에 usernames라고 s 를 붙인것 같으니 인자를 변수로 받지않고 바로받으면 되지 않는가?
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getUsername(),
+                                                                                           member.getNickname(),
+                                                                                           member.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
-            }
+            } //x username이 존재해야하는가?
 
             PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
@@ -174,38 +171,18 @@ public class PostReadService {
         }
         Post post = postRepository.findById(postid).orElseThrow();
 
-
-        Long id = post.getId();
-        int frameTotal = post.getFrameTotal();
-        int frameNum = post.getFrameNum();
-        String topic = post.getTopic();
-        String imgUrl = post.getImgUrl();
-        String nickname = post.getMember().getNickname();
-        String profileImg = post.getMember().getProfileImg();
-        LocalDateTime expiredAt = post.getExpiredAt();
-        LocalDateTime createdAt = post.getCreatedAt();
-
         // 프레임 리스트 작성
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         List<FrameImgListResponseDto> frameImgListResponseDtoList = new ArrayList<>();
         for (PostRelay postRelay : postRelayList) {
 
-            String relayImgUrl = postRelay.getImgUrl();
-            int relayFrameNum = postRelay.getFrameNum();
-            String relayNickname = postRelay.getMember().getNickname();
-            String relayProfileImg = postRelay.getMember().getProfileImg();
-
-            FrameImgListResponseDto frameImgListResponseDto = new FrameImgListResponseDto(relayImgUrl, relayFrameNum, relayNickname, relayProfileImg);
+            FrameImgListResponseDto frameImgListResponseDto = new FrameImgListResponseDto(postRelay);
             frameImgListResponseDtoList.add(frameImgListResponseDto);
         }
 
-        PostProceedingDetailResponseDto postProceedingDetailResponseDto = new PostProceedingDetailResponseDto(id, frameTotal, frameNum, topic, imgUrl, nickname, profileImg, expiredAt, createdAt, frameImgListResponseDtoList);
+        PostProceedingDetailResponseDto postProceedingDetailResponseDto = new PostProceedingDetailResponseDto(post, frameImgListResponseDtoList);
         return ResponseDto.success(postProceedingDetailResponseDto);
     }
-
-
-
-
 
 
     // 완료된 움짤 페이지 목록 전체 조회
