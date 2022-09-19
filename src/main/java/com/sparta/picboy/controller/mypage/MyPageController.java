@@ -28,24 +28,25 @@ public class MyPageController {
 
     // 마이페이지 게시글 조회
     @GetMapping("/mypage/post/{tabNum}/{categoryNum}")
-    public ResponseDto<?> getMypage(@RequestParam String nickname,
-                                 @PathVariable int tabNum,
+    public ResponseDto<?> getMypage(@PathVariable int tabNum,
                                  @PathVariable int categoryNum,
+                                 @RequestParam Long memberId,
                                  @RequestParam int page,
                                  @RequestParam int size){
-        return myPageService.getMypagePost(nickname, tabNum, categoryNum, page, size);
+
+        return myPageService.getMypagePost(memberId, tabNum, categoryNum, page, size);
     }
 
     //참여자 정보 가져오기
-    @GetMapping("/post/join-list/{postid}")
-    public ResponseDto<?> joinList(@PathVariable Long postid){
-        return myPageService.getPartipants(postid);
+    @GetMapping("/post/join-list/{postId}")
+    public ResponseDto<?> joinList(@PathVariable Long postId){
+        return myPageService.getPartipants(postId);
     }
 
     //회원정보 가져오기
     @GetMapping("/mypage/user-info")
-    public ResponseDto<?> getUserInfo(@RequestParam String nickname){
-        return myPageService.getUserInfo(nickname);
+    public ResponseDto<?> getUserInfo(@RequestParam Long memberId){
+        return myPageService.getUserInfo(memberId);
     }
 
     //닉네임 수정

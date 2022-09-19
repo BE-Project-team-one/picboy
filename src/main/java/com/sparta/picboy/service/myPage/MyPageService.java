@@ -45,9 +45,9 @@ public class MyPageService {
     // 마이페이지 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto<?> getMypagePost(String nickname, int tabNum, int categoryNum, int page, int size) {
+    public ResponseDto<?> getMypagePost(Long memberId, int tabNum, int categoryNum, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseDto.success(postQueryDsl.categorySort(nickname,tabNum, categoryNum,pageable));
+        return ResponseDto.success(postQueryDsl.categorySort(memberId,tabNum, categoryNum,pageable));
     }
 
 
@@ -71,20 +71,18 @@ public class MyPageService {
         return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
-    public ResponseDto<MypageUserInfoResponseDto> getUserInfo(String nickname){
+    public ResponseDto<MypageUserInfoResponseDto> getUserInfo(Long memberId){
         //String nickname = requestDto.getNickname();
-        Member member = memberRepository.findByNickname(nickname).orElse(null);
-        if (!memberRepository.existsByNickname(nickname)){
-            new ResponseEntity("NOT_FOUND_MEMBER", HttpStatus.NOT_FOUND);
+        Member member = memberRepository.findById(memberId).orElse(null);
+        if(member == null) {
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
         // 총개시글 추출 : “게시물 갯수” ← 쓴글 + 참여한글
         List<Post> postList = new ArrayList<>();
         List<Post>postListAll = postRepository.findAllByOrderByCreatedAtDesc();
         for (Post post : postListAll) {
-            if (postRelayRepository.existsByMember_NicknameAndPost(nickname, post)) { // 닉네임과 포스트으로 조회
-                //if (!post.getMember().getNickname().equals(nickname)) {// 최초 작성자 제외
-                //if (!hidePostRepository.existsByMember_NicknameAndPost(nickname, post)) {// 숨김 제외
+            if (postRelayRepository.existsByMember_IdAndPost(memberId, post)) { // 닉네임과 포스트으로 조회
                 if (!postList.contains(post)) { // 중복 제외
                     postList.add(post);
                 }

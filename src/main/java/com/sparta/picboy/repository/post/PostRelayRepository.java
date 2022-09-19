@@ -14,6 +14,6 @@ public interface PostRelayRepository extends JpaRepository<PostRelay, Long> {
     PostRelay findByPostAndFrameNum(Post post, int frameNum);
 
     // mypage(JCK)
-    boolean existsByMember_NicknameAndPost(String nickname, Post post);
+    boolean existsByMember_IdAndPost(Long id, Post post);
 }
 
