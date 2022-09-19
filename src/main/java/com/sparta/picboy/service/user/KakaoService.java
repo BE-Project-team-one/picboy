@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
-import com.sparta.picboy.dto.request.user.KakaoUserInfoDto;
+import com.sparta.picboy.dto.response.user.KakaoMemberInfo;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class KakaoService {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
         // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoMemberInfo kakaoUserInfo = getKakaoUserInfo(accessToken);
         // 3. "카카오 사용자 정보"로 필요시 회원가입
         Member kakaoMember = registerKakaoUserIfNeeded(kakaoUserInfo);
         // 4. 강제 로그인 처리
@@ -86,7 +86,7 @@ public class KakaoService {
         return jsonNode.get("access_token").asText();
     }
 
-    private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
+    private KakaoMemberInfo getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -111,10 +111,10 @@ public class KakaoService {
         String email = jsonNode.get("kakao_account")
                 .get("email").asText();
 
-        return new KakaoUserInfoDto(id, nickname, email);
+        return new KakaoMemberInfo(id, nickname, email);
     }
 
-    private Member registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+    private Member registerKakaoUserIfNeeded(KakaoMemberInfo kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         Member kakaoMember = memberRepository.findByKakaoId(kakaoId)

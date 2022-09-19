@@ -137,7 +137,6 @@ public class TokenProvider {
             log.info("토큰이 재발급 되었습니다.");
             return true;
 
-
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
