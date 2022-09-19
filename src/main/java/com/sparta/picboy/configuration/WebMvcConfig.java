@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("Authorization")
                 .exposedHeaders("Refresh-Token")
-//                .exposedHeaders("*")
+                .exposedHeaders("*")
                 .allowedMethods("*");
 //                .allowedMethods(
 //                        HttpMethod.GET.name(),
