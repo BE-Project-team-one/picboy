@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,22 +106,10 @@ public class PostReadService {
         // 주제어 x
         if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAt(1, pageable);
 
-<<<<<<< HEAD
-            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatus(1, pageable);
-            return ResponseDto.success(sortProceedingCategory(postList));
-        } else { // tabNum == 2 제시어 x
+        //x pageable을 controller에서 받아주면 안되는건가?
 
-            String sortAt = "createdAt";
-            Sort.Direction direction = Sort.Direction.DESC;
-            Sort sort = Sort.by(direction, sortAt);
-            Pageable pageable = PageRequest.of(page, size, sort);
-
-            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatus(1, pageable);
-            return ResponseDto.success(sortProceedingCategory(postList));
-        }//x pageable을 controller에서 받아주면 안되는건가?
-=======
         return ResponseDto.success(sortProceedingCategory(postList));
->>>>>>> a7ab14a3712795d85c41ed935949f6c853e7be93
+
 
     }
 
