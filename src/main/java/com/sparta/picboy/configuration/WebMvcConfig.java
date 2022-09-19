@@ -1,6 +1,7 @@
 package com.sparta.picboy.configuration;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -18,8 +19,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
-//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
-                .exposedHeaders("*")
+                .exposedHeaders(HttpHeaders.AUTHORIZATION)
+//                .exposedHeaders("*")
                 .allowedMethods("*");
 //                .allowedMethods(
 //                        HttpMethod.GET.name(),
