@@ -40,14 +40,6 @@ public class PostWriteController {
         return postWriteService.relayPost(postid,postDelayRequestDto,userinfo);
     }
 
-    //gif 파일 저장
-//    @PostMapping("/post/gif-file/{postid}")
-//    public ResponseDto<?> gifSave(@PathVariable Long postid,
-//                                  @RequestParam("file")MultipartFile file) {
-//        return postWriteService.gifSave(postid,file);
-//    }
-
-
     // 게시물 삭제
     @DeleteMapping("/post/{postId}")
     public ResponseDto<?> postDelete(@PathVariable Long postId) {
