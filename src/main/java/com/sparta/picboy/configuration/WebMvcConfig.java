@@ -18,9 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000", "https://picboy.co.kr")  //클라이언트에서 허용
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders(HttpHeaders.AUTHORIZATION)
+//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
 //                .exposedHeaders("Authorization")
-                .exposedHeaders("Refresh-Token")
+                .exposedHeaders("Refresh-Token","Authorization")
                 .allowedMethods("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
