@@ -126,6 +126,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         if(categoryNum == 1) return post.createdAt.desc();
         if(categoryNum == 2) return post.likeCount.desc();
         if(categoryNum == 3) return post.commentCount.desc();
+        if(categoryNum == 4) return post.viewCount.desc();
         return null;
     }
 
