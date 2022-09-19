@@ -18,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .exposedHeaders("Refresh-Token","Authorization","AccessTokenExpiredTime")
+                //x exposedHeaders("*")은 모든 헤더값을 반환한다고 하는데, 이렇게했을 때 헤더값에 값이 안읽어와짐 그래서 직접 "name"을 넣어주었더니 됐음
                 .allowedMethods("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -53,13 +53,13 @@ public class PostReadService {
             for (PostRelay postRelay : postRelayList) {
 
                 // memberList 에 프레임별로 멤버를 add 해줄건데 중복 없에기 위한 작업을 진행. 지우고 넣는 방식 채택
-                memberList.remove(postRelay.getMember());
-                memberList.add(postRelay.getMember());
+                memberList.remove(postRelay.getMember()); //x 여태있던 멤버리스트를 다 지우고
+                memberList.add(postRelay.getMember()); //x 추가된 멤버를 더해서 멤버리스트를 추가한다
 
             }
 
             // 리스폰스는 '작성자 외 n 명' 이라서 작성자는 따로 빼고 연산
-            memberList.remove(post.getMember());
+            memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
             int memberCount = memberList.size();
 
             PostMainTop10ResponseDto postMainTop10ResponseDto = new PostMainTop10ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
