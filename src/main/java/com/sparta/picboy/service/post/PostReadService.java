@@ -239,11 +239,17 @@ public class PostReadService {
 
             Page<Post> postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 3 댓글 수 순 정렬
+        } else if (categoryNum == 3) { // 댓글 수 순 정렬
 
             Pageable pageable = PageRequest.of(page, size);
 
             Page<Post> postList = postRepository.findAllByStatusOrderByCommentCountDesc(2, pageable);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 4 조회 수 순 정렬
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByStatusOrderByViewCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
@@ -264,11 +270,17 @@ public class PostReadService {
 
             Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 3 댓글 수 순 정렬
+        } else if (categoryNum == 3) { // 댓글 순 정렬
 
             Pageable pageable = PageRequest.of(page, size);
 
             Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2, pageable);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 4 조회 수 순 정렬
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
@@ -289,11 +301,17 @@ public class PostReadService {
 
             Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 3 댓글 수 순 정렬
+        } else if (categoryNum == 3) { // 댓글 수 순 정렬
 
             Pageable pageable = PageRequest.of(page, size);
 
             Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2, pageable);
+            return ResponseDto.success(sortCompletionCategory(postList));
+        } else { // categoryNum == 4 조회 수 순 정렬
+
+            Pageable pageable = PageRequest.of(page, size);
+
+            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByViewCountDesc(2, pageable);
             return ResponseDto.success(sortCompletionCategory(postList));
         }
 
