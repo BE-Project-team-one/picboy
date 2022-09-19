@@ -65,6 +65,7 @@ public class MyPageService {
                 postNickList.add(postRelay.getMember().getNickname()); // 참여자 닉 리스트 생성
                 mypagePaticipantsResponseDtoList.add(new MypagePaticipantsResponseDto(
                         postRelay.getMember().getNickname(),
+                        postRelay.getMember().getUsername(),
                         postRelay.getMember().getProfileImg()
                 ));
             }
