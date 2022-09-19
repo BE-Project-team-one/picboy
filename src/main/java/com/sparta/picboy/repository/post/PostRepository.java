@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    // 게시물 좋아요 순 Top 10 가져오기기
+    // 게시물 좋아요 순 Top 4 가져오기기
    List<Post> findTop10ByStatusOrderByLikeCountDesc(int status);
 
    // 게시물 status 값으로 분류 전체 가져오기
@@ -29,6 +29,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 게시물 status 값으로 가져오고 댓글순 정렬
     Page<Post> findAllByStatusOrderByCommentCountDesc(int status, Pageable pageable);
+
+    // 게시물 status 값으로 가져오고 조회수순 정렬
+    Page<Post> findAllByStatusOrderByViewCountDesc(int status, Pageable pageable);
 
     // 게시물 중에서 제시어가 있는것만 가져오기
     Page<Post> findAllByTopicIsNotNullAndStatus(int status, Pageable pageable);
@@ -50,6 +53,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 게시물 중에서 제시어가 있는것들 중에서 댓글순 정렬
     Page<Post> findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(int status, Pageable pageable);
 
+    // 게시물 중에서 제시어가 있는것들 중에서 댓글순 정렬
+    Page<Post> findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(int status, Pageable pageable);
+
 
 
 
@@ -63,6 +69,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 게시물 중에서 제시어가 없는것들 중에서 댓글순 정렬
     Page<Post> findAllByTopicIsNullAndStatusOrderByCommentCountDesc(int status, Pageable pageable);
+
+    // 게시물 중에서 제시어가 없는것들 중에서 조회순 정렬
+    Page<Post> findAllByTopicIsNullAndStatusOrderByViewCountDesc(int status, Pageable pageable);
 
 
    // mypage-------------------------------------------------------------------------------

@@ -137,7 +137,7 @@ public class PostWriteService {
     @Transactional
     public void gifSave(Post post, File file) {
         // String imageUrl = getFileUrl(file, 2, null);
-        String gifUrl = getFileGifUrl(file);
+        String gifUrl = getFileGifUrl(file,post.getId());
         if (gifUrl == null) return;
 
         post.updateGif(gifUrl);
@@ -153,8 +153,8 @@ public class PostWriteService {
         }
     }
     // gif url 값 가져오기 테스트
-    public String getFileGifUrl(File file) {
-        return awsS3Service.upload(file,"picboy/gif");
+    public String getFileGifUrl(File file, Long postId) {
+        return awsS3Service.upload(file,"picboy/gif/post" + postId);
     }
 
     @Transactional

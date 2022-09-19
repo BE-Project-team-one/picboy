@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MypagePaticipantsResponseDto {
     private String nickname;
+    private String username;
     private String img;
 }

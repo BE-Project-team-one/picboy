@@ -1,19 +1,14 @@
 package com.sparta.picboy.controller.mypage;
 
 import com.sparta.picboy.dto.request.mypage.MypageImageRequestDto;
-import com.sparta.picboy.dto.response.ResponseDto;
-import com.sparta.picboy.service.post.HidePostService;
-import com.sparta.picboy.service.myPage.MyPageService;
 import com.sparta.picboy.dto.request.mypage.MypageRequestDto;
+import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.service.myPage.MyPageService;
+import com.sparta.picboy.service.post.HidePostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,31 +21,32 @@ public class MyPageController {
 
     //숨기기/숨기기 취소
     @PostMapping("/mypage/post-hidden/{postId}")
-    public ResponseDto hidePost(@AuthenticationPrincipal UserDetails userinfo,
+    public ResponseDto<?> hidePost(@AuthenticationPrincipal UserDetails userinfo,
             @PathVariable Long postId){
         return hidePostService.updateHidePost(userinfo, postId);
     }
 
     // 마이페이지 게시글 조회
     @GetMapping("/mypage/post/{tabNum}/{categoryNum}")
-    public ResponseDto getMypage(@RequestParam String nickname,
-                                 @PathVariable int tabNum,
+    public ResponseDto<?> getMypage(@PathVariable int tabNum,
                                  @PathVariable int categoryNum,
+                                 @RequestParam String username,
                                  @RequestParam int page,
                                  @RequestParam int size){
-        return myPageService.getMypagePost(nickname, tabNum, categoryNum, page, size);
+
+        return myPageService.getMypagePost(username, tabNum, categoryNum, page, size);
     }
 
     //참여자 정보 가져오기
-    @GetMapping("/post/join-list/{postid}")
-    public ResponseDto joinList(@PathVariable Long postid){
-        return myPageService.getPartipants(postid);
+    @GetMapping("/post/join-list/{postId}")
+    public ResponseDto<?> joinList(@PathVariable Long postId){
+        return myPageService.getPartipants(postId);
     }
 
     //회원정보 가져오기
     @GetMapping("/mypage/user-info")
-    public ResponseDto getUserInfo(@RequestParam String nickname){
-        return myPageService.getUserInfo(nickname);
+    public ResponseDto<?> getUserInfo(@RequestParam String username){
+        return myPageService.getUserInfo(username);
     }
 
     //닉네임 수정
@@ -65,7 +61,6 @@ public class MyPageController {
                                          @RequestBody MypageImageRequestDto requestDto){
         return myPageService.updateimage(userinfo,requestDto);
     }
-
 
 
 }
