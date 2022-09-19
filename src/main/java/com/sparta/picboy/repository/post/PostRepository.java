@@ -2,9 +2,7 @@ package com.sparta.picboy.repository.post;
 
 import com.sparta.picboy.domain.post.Post;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,8 +13,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 게시물 좋아요 순 Top 4 가져오기기
    List<Post> findTop10ByStatusOrderByLikeCountDesc(int status);
 
-   // 게시물 status 값으로 분류 전체 가져오기
-    Page<Post> findAllByStatus(int status, Pageable pageable);
 
     // 게시물 1개 post_id 로 찾기
     Optional<Post> findById(Long postid);
@@ -34,10 +30,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByStatusOrderByViewCountDesc(int status, Pageable pageable);
 
     // 게시물 중에서 제시어가 있는것만 가져오기
-    Page<Post> findAllByTopicIsNotNullAndStatus(int status, Pageable pageable);
+    Page<Post> findAllByTopicIsNotNullAndStatusOrderByCreatedAt(int status, Pageable pageable);
 
     // 게시물 중에서 제시어가 없는것만 가져오기
-    Page<Post> findAllByTopicIsNullAndStatus(int status, Pageable pageable);
+    Page<Post> findAllByTopicIsNullAndStatusOrderByCreatedAt(int status, Pageable pageable);
 
 
 
@@ -74,12 +70,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByTopicIsNullAndStatusOrderByViewCountDesc(int status, Pageable pageable);
 
 
-   // mypage-------------------------------------------------------------------------------
 
     List<Post> findAllByOrderByCreatedAtDesc(); // 최신순
-    List<Post> findAllByMember_NicknameOrderByCreatedAtDesc(String nickname, Pageable pageable); // 최신순
-    List<Post> findAllByMember_NicknameOrderByLikeCountDesc(String nickname, Pageable pageable); // 좋아요순
-    List<Post> findAllByMember_NicknameOrderByCommentCountDesc(String nickname, Pageable pageable); // 댓글순
+
 
 
 }

@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,22 +93,19 @@ public class PostReadService {
     // 진행중인 움짤 페이지 목록 조회
     public ResponseDto<?> readProceeding(Long tabNum, int size, int page) {
 
-        if (tabNum == 0) { // 게시글 전체
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postList = null;
 
-            String sortAt = "createdAt";
-            Sort.Direction direction = Sort.Direction.DESC;
-            Sort sort = Sort.by(direction, sortAt);
-            Pageable pageable = PageRequest.of(page, size, sort);
+        // 게시글 전체
+        if (tabNum == 0) postList = postRepository.findAllByStatusOrderByCreatedAtDesc(1,pageable);
 
-            Page<Post> postList = postRepository.findAllByStatus(1,pageable);
-            return ResponseDto.success(sortProceedingCategory(postList));
-        } else if (tabNum == 1) { // 제시어 o
+        // 주제어 o
+        if (tabNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAt(1, pageable);
 
-            String sortAt = "createdAt";
-            Sort.Direction direction = Sort.Direction.DESC;
-            Sort sort = Sort.by(direction, sortAt);
-            Pageable pageable = PageRequest.of(page, size, sort);
+        // 주제어 x
+        if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAt(1, pageable);
 
+<<<<<<< HEAD
             Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatus(1, pageable);
             return ResponseDto.success(sortProceedingCategory(postList));
         } else { // tabNum == 2 제시어 x
@@ -122,6 +118,9 @@ public class PostReadService {
             Page<Post> postList = postRepository.findAllByTopicIsNullAndStatus(1, pageable);
             return ResponseDto.success(sortProceedingCategory(postList));
         }//x pageable을 controller에서 받아주면 안되는건가?
+=======
+        return ResponseDto.success(sortProceedingCategory(postList));
+>>>>>>> a7ab14a3712795d85c41ed935949f6c853e7be93
 
     }
 
@@ -200,93 +199,66 @@ public class PostReadService {
     // 완료된 움짤 페이지 목록 전체 조회
     public ResponseDto<?> readCompletion(Long categoryNum, int size, int page) {
 
-        if (categoryNum == 1) { // 최신 순 정렬
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postList = null;
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 최신 순 정렬
+        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 2) { // 좋아요 순 정렬
+        // 좋아요 순 정렬
+        if (categoryNum == 2) postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 댓글 수 순 정렬
+        if (categoryNum == 3) postList = postRepository.findAllByStatusOrderByCommentCountDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 3) { // 댓글 수 순 정렬
+        // 조회 수 순 정렬
+        if (categoryNum == 4) postList = postRepository.findAllByStatusOrderByViewCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByStatusOrderByCommentCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 4 조회 수 순 정렬
-
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByStatusOrderByViewCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        }
+        return ResponseDto.success(sortCompletionCategory(postList));
 
     }
 
     // 완료된 움짤 페이지 목록 제시어 o 조회
     public ResponseDto<?> readCompletionTopicOk(Long categoryNum, int size, int page) {
 
-        if (categoryNum == 1) { // 최신 순 정렬
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postList = null;
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 최신 순 정렬
+        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 2) { // 좋아요 순 정렬
+        // 좋아요 순 정렬
+        if (categoryNum == 2) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 댓글 순 정렬
+        if (categoryNum == 3) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 3) { // 댓글 순 정렬
+        //  조회 수 순 정렬
+        if (categoryNum == 4) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 4 조회 수 순 정렬
-
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        }
+        return ResponseDto.success(sortCompletionCategory(postList));
 
     }
 
     // 완료된 움짤 페이지 목록 제시어 x 조회
     public ResponseDto<?> readCompletionTopicNull(Long categoryNum, int size, int page) {
 
-        if (categoryNum == 1) { // 최신 순 정렬
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> postList = null;
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 최신 순 정렬
+        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 2) { // 좋아요 순 정렬
+        // 좋아요 순 정렬
+        if (categoryNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
+        // 댓글 수 순 정렬
+        if (categoryNum == 3) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2, pageable);
 
-            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else if (categoryNum == 3) { // 댓글 수 순 정렬
+        //  조회 수 순 정렬
+        if (categoryNum == 4) postList = postRepository.findAllByTopicIsNullAndStatusOrderByViewCountDesc(2, pageable);
 
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        } else { // categoryNum == 4 조회 수 순 정렬
-
-            Pageable pageable = PageRequest.of(page, size);
-
-            Page<Post> postList = postRepository.findAllByTopicIsNullAndStatusOrderByViewCountDesc(2, pageable);
-            return ResponseDto.success(sortCompletionCategory(postList));
-        }
+        return ResponseDto.success(sortCompletionCategory(postList));
 
     }
 

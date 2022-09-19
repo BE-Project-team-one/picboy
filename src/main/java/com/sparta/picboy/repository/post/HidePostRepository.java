@@ -12,5 +12,4 @@ public interface HidePostRepository extends JpaRepository<HidePost, Long> {
 
     Optional<HidePost> findByMemberAndPost(Member member, Post post);
 
-    boolean existsByMember_NicknameAndPost(String nickname, Post post);
 }
