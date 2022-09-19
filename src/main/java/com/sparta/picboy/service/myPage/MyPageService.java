@@ -45,9 +45,9 @@ public class MyPageService {
     // 마이페이지 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
-    public ResponseDto<?> getMypagePost(Long memberId, int tabNum, int categoryNum, int page, int size) {
+    public ResponseDto<?> getMypagePost(String username, int tabNum, int categoryNum, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseDto.success(postQueryDsl.categorySort(memberId,tabNum, categoryNum,pageable));
+        return ResponseDto.success(postQueryDsl.categorySort(username,tabNum, categoryNum,pageable));
     }
 
 
@@ -71,9 +71,9 @@ public class MyPageService {
         return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
-    public ResponseDto<MypageUserInfoResponseDto> getUserInfo(Long memberId){
+    public ResponseDto<MypageUserInfoResponseDto> getUserInfo(String username){
         //String nickname = requestDto.getNickname();
-        Member member = memberRepository.findById(memberId).orElse(null);
+        Member member = memberRepository.findByUsername(username).orElse(null);
         if(member == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
@@ -82,7 +82,7 @@ public class MyPageService {
         List<Post> postList = new ArrayList<>();
         List<Post>postListAll = postRepository.findAllByOrderByCreatedAtDesc();
         for (Post post : postListAll) {
-            if (postRelayRepository.existsByMember_IdAndPost(memberId, post)) { // 닉네임과 포스트으로 조회
+            if (postRelayRepository.existsByMember_UsernameAndPost(username, post)) { // 닉네임과 포스트으로 조회
                 if (!postList.contains(post)) { // 중복 제외
                     postList.add(post);
                 }

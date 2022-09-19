@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 public interface PostRepositoryCustom {
 
     // 아이디로 post 찾기
-    Page<MypageResponseDto> categorySort(Long postId, int tabNum, int categoryNum, Pageable pageable);
+    Page<MypageResponseDto> categorySort(String username, int tabNum, int categoryNum, Pageable pageable);
 }

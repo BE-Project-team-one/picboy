@@ -27,7 +27,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
     //카테고리 정렬 메소드
     @Override
-    public Page<MypageResponseDto> categorySort(Long memberId,int tabNum, int categoryNum, Pageable pageable) {
+    public Page<MypageResponseDto> categorySort(String username,int tabNum, int categoryNum, Pageable pageable) {
         //Q클래스를 이용한다.
         QPost post = QPost.post;
         QPostRelay postRelay = QPostRelay.postRelay;
@@ -42,15 +42,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
            // 내가 참여한 전체 게시물물
            if(tabNum == 0) builder.and(null);
            // 내가 작성한 게시물
-           if(tabNum == 1) builder.and(post.member.id.eq(memberId));
+           if(tabNum == 1) builder.and(post.member.username.eq(username));
            // 내가 참여한 게시물
-           if(tabNum == 2) builder.and(post.member.id.ne(memberId));
+           if(tabNum == 2) builder.and(post.member.username.ne(username));
 
            builder2.and(
                    post.id.notIn(queryFactory.select(hidePost.post.id)
                            .from(hidePost)
                            .innerJoin(hidePost.member, member)
-                           .where(hidePost.member.id.eq(memberId))
+                           .where(hidePost.member.username.eq(username))
                            .fetch())
            );
        } else {
@@ -59,7 +59,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                    post.id.in(queryFactory.select(hidePost.post.id)
                            .from(hidePost)
                            .innerJoin(hidePost.member, member)
-                           .where(hidePost.member.id.eq(memberId))
+                           .where(hidePost.member.username.eq(username))
                            .fetch())
            );
            builder2.and(null);
@@ -71,7 +71,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .innerJoin(post.member, member)
                 .innerJoin(postRelay.member, member)
                 .where(
-                        postRelay.member.id.eq(memberId)
+                        postRelay.member.username.eq(username)
                         .and(post.status.in(1,2))
                                 .and(builder)
                                 .and(builder2)

@@ -30,11 +30,11 @@ public class MyPageController {
     @GetMapping("/mypage/post/{tabNum}/{categoryNum}")
     public ResponseDto<?> getMypage(@PathVariable int tabNum,
                                  @PathVariable int categoryNum,
-                                 @RequestParam Long memberId,
+                                 @RequestParam String username,
                                  @RequestParam int page,
                                  @RequestParam int size){
 
-        return myPageService.getMypagePost(memberId, tabNum, categoryNum, page, size);
+        return myPageService.getMypagePost(username, tabNum, categoryNum, page, size);
     }
 
     //참여자 정보 가져오기
@@ -45,8 +45,8 @@ public class MyPageController {
 
     //회원정보 가져오기
     @GetMapping("/mypage/user-info")
-    public ResponseDto<?> getUserInfo(@RequestParam Long memberId){
-        return myPageService.getUserInfo(memberId);
+    public ResponseDto<?> getUserInfo(@RequestParam String username){
+        return myPageService.getUserInfo(username);
     }
 
     //닉네임 수정
