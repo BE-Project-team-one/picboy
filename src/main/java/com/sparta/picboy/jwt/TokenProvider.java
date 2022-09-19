@@ -4,6 +4,7 @@ import com.sparta.picboy.domain.Authority;
 import com.sparta.picboy.domain.RefreshToken;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
+import com.sparta.picboy.repository.user.MemberRepository;
 import com.sparta.picboy.repository.user.RefreshTokenRepository;
 import com.sparta.picboy.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -17,6 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,16 +34,18 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24;            // 1일 (테스트용)
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 7일
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;           // 30분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 2;  // 2시간
 
     private final Key key;
+    private final MemberRepository memberRepository;
 
-    public TokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService, RefreshTokenRepository refreshTokenRepository) {
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
         this.userDetailsService = userDetailsService;
         this.refreshTokenRepository = refreshTokenRepository;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.memberRepository = memberRepository;
     }
 
 //    public TokenDto generateTokenDto(Authentication authentication) { //토큰을 만들자
@@ -94,9 +99,55 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String token) { // 해당 함수 호출 시, 제공된 토큰의 유효성을 검사해서 true,false 리턴해줌
+    public boolean validateToken(String accessToken, String refreshToken, HttpServletResponse httpServletResponse) { // 해당 함수 호출 시, 제공된 토큰의 유효성을 검사해서 true,false 리턴해줌
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token); // 토큰 디코드
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken); // 토큰 디코드
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+
+            // 만료된건 알겠고, 우선 만료된 토큰에서 유저 이름빼오자
+            Authentication authentication = getAuthentication(accessToken);
+            String username = authentication.getName();
+            Member member = memberRepository.findByUsername(username).orElse(null);
+            if (member == null) { // 토큰에 저장된 유저네임은 db에 존재하지 않는데?
+                return false;
+            }
+
+            // 위에서 찾은 유저네임으로 리프레쉬 토큰이 존재하는지 확인
+            RefreshToken refreshTokens = refreshTokenRepository.findByMember_Username(username);
+
+            // refreshTokens 유효성 검사
+            if (!refreshTokenValidation(refreshToken)) {
+                return false;
+            }
+
+            // 헤더에 있는 리프레쉬 토큰과 DB에 저장된 리프레쉬 토큰이 같은지 확인
+            if (!refreshTokens.getValue().equals(refreshToken)) {
+                return false;
+            }
+
+            TokenDto tokenDto = accessTokenReissuance(member);
+            httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+            httpServletResponse.addHeader("Refresh-Token", refreshToken);
+
+            log.info("토큰이 재발급 되었습니다.");
+            return true;
+
+
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }
+        return false;
+    }
+    public boolean validateToken(String accessToken) {
+
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken); // 토큰 디코드
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -108,7 +159,49 @@ public class TokenProvider {
             log.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+
     }
+
+    // refreshToken 유효성 검사 매서드
+    public boolean refreshTokenValidation(String refreshToken) {
+
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken); // 토큰 디코드
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 리프레쉬 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 리프레쉬 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 리프레쉬 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 리프레쉬 토큰이 잘못되었습니다.");
+        }
+        return false;
+
+    }
+
+    // AccessToken 재발급 매서드
+    public TokenDto accessTokenReissuance(Member member) {
+
+        long now = (new Date().getTime());
+
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setSubject(member.getUsername())
+                .claim(AUTHORITIES_KEY, Authority.ROLE_USER.toString())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return TokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .build();
+
+    }
+
 
     private Claims parseClaims(String accessToken) {
         try {

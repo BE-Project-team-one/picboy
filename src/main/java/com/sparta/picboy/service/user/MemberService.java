@@ -4,7 +4,6 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
-import com.sparta.picboy.dto.response.LoginResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -80,8 +78,6 @@ public class MemberService {
         String authorization = "Bearer " + tokenDto.getAccessToken();
         String refreshToken = tokenDto.getRefreshToken();
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto(authorization, refreshToken);
-
-        return ResponseDto.success(loginResponseDto);
+        return ResponseDto.success("로그인 완료");
     }
 }
