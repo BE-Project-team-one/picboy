@@ -132,6 +132,7 @@ public class TokenProvider {
             TokenDto tokenDto = accessTokenReissuance(member);
             httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
             httpServletResponse.addHeader("Refresh-Token", refreshToken);
+            httpServletResponse.addHeader("AccessTokenExpiredTime", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
 
             log.info("토큰이 재발급 되었습니다.");
             return true;

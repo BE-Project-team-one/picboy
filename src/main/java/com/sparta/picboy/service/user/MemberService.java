@@ -73,6 +73,7 @@ public class MemberService {
 
         httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
+        httpServletResponse.addHeader("AccessTokenExpiredTime", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
 
         // 바디에 토큰값 보내주기
         String authorization = "Bearer " + tokenDto.getAccessToken();
