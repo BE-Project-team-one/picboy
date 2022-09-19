@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 게시물 좋아요 순 Top 4 가져오기기
-   List<Post> findTop4ByStatusOrderByLikeCountDesc(int status);
+   List<Post> findTop10ByStatusOrderByLikeCountDesc(int status);
 
    // 게시물 status 값으로 분류 전체 가져오기
     Page<Post> findAllByStatus(int status, Pageable pageable);
