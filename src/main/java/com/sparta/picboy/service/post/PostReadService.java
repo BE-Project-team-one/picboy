@@ -369,6 +369,7 @@ public class PostReadService {
 
         int likeCount = post.getLikeCount();
         int viewCount = post.getViewCount();
+        int reportCount = post.getReportCount();
 
         // 댓글 리스트 작성
         List<Comment> commentList = commentRepository.findAllByPost(post);
@@ -386,7 +387,7 @@ public class PostReadService {
 
         }
 
-        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, commentListResponseDtoList);
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, reportCount, commentListResponseDtoList);
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 
