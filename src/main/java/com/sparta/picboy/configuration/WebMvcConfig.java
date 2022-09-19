@@ -15,11 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:3000")
-                .allowedOriginPatterns("*")
+                .allowedOrigins("http://localhost:3000", "https://picboy.co.kr") //클라이언트에서 허용
+//                .allowedOriginPatterns("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
-//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("Authorization")
                 .exposedHeaders("Refresh-Token")
