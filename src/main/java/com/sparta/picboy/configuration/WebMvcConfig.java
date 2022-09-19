@@ -19,6 +19,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("*")
                 .allowedHeaders("*")
                 .allowCredentials(true)
+//                .exposedHeaders(HttpHeaders.AUTHORIZATION)
+                .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders(HttpHeaders.AUTHORIZATION)
                 .exposedHeaders("Authorization")
                 .exposedHeaders("Refresh-Token")
