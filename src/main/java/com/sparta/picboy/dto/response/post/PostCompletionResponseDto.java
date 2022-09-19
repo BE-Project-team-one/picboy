@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PostCompletionResponseDto {
     private Long id;
-    private String imgUrl;
+    private String gifUrl;
     private int likeCount;
     private String topic;
     private String nickname;
@@ -22,9 +22,9 @@ public class PostCompletionResponseDto {
     private List<ParticipantResponseDto> participantResponseDtoList;
     private int participantCount;
 
-    public PostCompletionResponseDto(Long id, String imgUrl, int likeCount, String topic, String nickname, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
         this.id = id;
-        this.imgUrl = imgUrl;
+        this.gifUrl = gifUrl;
         this.likeCount = likeCount;
         this.topic = topic;
         this.nickname = nickname;
