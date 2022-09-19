@@ -5,6 +5,7 @@ import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.dto.response.post.LoginRestponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -79,6 +80,8 @@ public class MemberService {
         String authorization = "Bearer " + tokenDto.getAccessToken();
         String refreshToken = tokenDto.getRefreshToken();
 
-        return ResponseDto.success("로그인 완료");
+        LoginRestponseDto loginRestponseDto = new LoginRestponseDto(authorization, refreshToken);
+
+        return ResponseDto.success(loginRestponseDto);
     }
 }
