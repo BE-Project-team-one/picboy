@@ -61,7 +61,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
                         .antMatchers("/main/best-top10").permitAll()
-//                        .antMatchers(HttpMethod.GET,"/oauth/**").permitAll() // 혹시 이거때문?
+//                        .antMatchers(HttpMethod.GET,"/oauth/**").permitAll() // 혹시 이거때문??
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());
 
