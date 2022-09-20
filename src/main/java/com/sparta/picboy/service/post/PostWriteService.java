@@ -152,7 +152,7 @@ public class PostWriteService {
             return null;
         }
     }
-    // gif url 값 가져오기 테스트
+    // gif url 값 가져오기
     public String getFileGifUrl(File file, Long postId) {
         return awsS3Service.upload(file,"picboy/gif/post" + postId);
     }
