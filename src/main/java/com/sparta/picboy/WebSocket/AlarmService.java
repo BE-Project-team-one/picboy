@@ -17,7 +17,6 @@ public class AlarmService {
 
 
     public void alarmByMessage(MessageDto messageDto) {
-
         for(Member member : messageDto.getMemberSet()) {
             Alert alert = new Alert(messageDto.getContent(),member);
             alertRepository.save(alert);;
