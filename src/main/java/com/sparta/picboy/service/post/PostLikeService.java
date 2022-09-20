@@ -40,6 +40,7 @@ public class PostLikeService {
         if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
+
         Post post = postRepository.findById(postid).orElseThrow();
 
 
