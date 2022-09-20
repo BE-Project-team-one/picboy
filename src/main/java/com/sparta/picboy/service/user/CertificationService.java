@@ -60,7 +60,13 @@ public class CertificationService {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
         }
-        certificationRepository.save(new Certification(requestDto.getPhoneNum(), numStr));
+
+        Certification certification = certificationRepository.findByPhoneNum(requestDto.getPhoneNum());
+        if (certification == null){
+            certificationRepository.save(new Certification(requestDto.getPhoneNum(), numStr));
+        }else{
+            certification.update(numStr);
+        }
         return ResponseDto.success("인증 번호가 전송되었습니다.");
     }
 

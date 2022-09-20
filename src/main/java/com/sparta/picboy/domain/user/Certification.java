@@ -27,4 +27,8 @@ public class Certification {
         this.numStr = numStr;
         this.phoneNum = phoneNum;
     }
+
+    public void update(String numStr) {
+        this.numStr = numStr;
+    }
 }
