@@ -14,6 +14,7 @@ public class PostCompletionResponseDto {
     private int likeCount;
     private String topic;
     private String nickname;
+    private String profileImg;
     private int commentCount;
     private int reportCount;
     private LocalDateTime date; // 생성날짜 = 움짤 완성된 날짜
@@ -22,12 +23,13 @@ public class PostCompletionResponseDto {
     private List<ParticipantResponseDto> participantResponseDtoList;
     private int participantCount;
 
-    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
         this.id = id;
         this.gifUrl = gifUrl;
         this.likeCount = likeCount;
         this.topic = topic;
         this.nickname = nickname;
+        this.profileImg = profileImg;
         this.commentCount = commentCount;
         this.reportCount = reportCount;
         this.date = date;
