@@ -2,6 +2,7 @@ package com.sparta.picboy.service.post;
 
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.domain.comment.Comment;
+import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
@@ -9,6 +10,7 @@ import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.*;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.comment.CommentRepository;
+import com.sparta.picboy.repository.post.PostLikeRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -16,9 +18,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ public class PostReadService {
     private final PostRelayRepository postRelayRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
+    private final PostLikeRepository postLikeRepository;
 
 
     // 메인페이지 베스트 움짤 Top 10
@@ -308,11 +314,34 @@ public class PostReadService {
 
     // 완료된 움짤 디테일 페이지 조회
     @Transactional
-    public ResponseDto<?> readCompletionDetail(Long postid) {
+    public ResponseDto<?> readCompletionDetail(Long postid, boolean login) {
 
         Post post = postRepository.findById(postid).orElse(null);
-        if (post == null) { // 존재하지 않는 게시물을 요청했을 때
+        if(post == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
+        }
+
+        boolean liked = false;
+
+        if (login) { // 로그인 했음
+
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails userDetails = (UserDetails)principal;
+
+            Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
+            if (member == null) {
+                ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+
+            }
+
+            if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요 안한 게시물
+                liked = false;
+
+            } else {
+                liked = true;
+
+            }
+
         }
 
         // 조회수 1 증가
@@ -361,7 +390,7 @@ public class PostReadService {
 
         }
 
-        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, reportCount, commentListResponseDtoList);
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, liked, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, reportCount, commentListResponseDtoList);
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 

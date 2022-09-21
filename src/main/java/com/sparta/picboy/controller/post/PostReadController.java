@@ -67,8 +67,14 @@ public class PostReadController {
 
     // 완료된 움짤 디테일 페이지
     @GetMapping("/post/gif/detail/{postid}")
-    public ResponseDto<?> readCompletionDetail(@PathVariable Long postid) {
-        return postReadService.readCompletionDetail(postid);
+    public ResponseDto<?> readCompletionDetail(@PathVariable Long postid ,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean login = true;
+        if (userDetails == null) {
+            login = false;
+            return postReadService.readCompletionDetail(postid, login);
+        }
+
+        return postReadService.readCompletionDetail(postid, login);
 
     }
 
