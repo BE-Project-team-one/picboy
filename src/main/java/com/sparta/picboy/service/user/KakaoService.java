@@ -127,8 +127,7 @@ public class KakaoService {
             // username: kakao nickname
             String nickname = kakaoUserInfo.getNickname();
             // email: kakao email
-            String username = kakaoUserInfo.getEmail();
-            if(username == null) username = UUID.randomUUID().toString();
+            String username = UUID.randomUUID().toString();
             // role: 일반 사용자
             kakaoMember = new Member(username, nickname, encodedPassword, kakaoId);
             memberRepository.save(kakaoMember);
