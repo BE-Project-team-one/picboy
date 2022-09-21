@@ -235,7 +235,7 @@ public class PostWriteService {
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
 
-            return ResponseDto.success("좋아요");
+            return ResponseDto.success("신고 완료");
 
         } else { // 신고하기 취소
 
@@ -244,7 +244,7 @@ public class PostWriteService {
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
 
-            return ResponseDto.success("좋아요 취소");
+            return ResponseDto.success("신고 취소");
 
         }
 
