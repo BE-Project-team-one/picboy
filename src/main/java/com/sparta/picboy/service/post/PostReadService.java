@@ -72,17 +72,16 @@ public class PostReadService {
 
     // 로그인 유저 정보 가져오기 <- 병합 후 유저 서비스에 옮겨놓기
     public ResponseDto<?> loginUserInfo(UserDetailsImpl userDetails) {
-        Optional<Member> member = memberRepository.findByUsername(userDetails.getUsername());
-
+        Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
         // 그럴 일이 없겠지만 혹여나 로그인한 유저의 정보를 못가져 왔을때를 위한 오류
-        if (member.isEmpty()) {
+        if (member == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
-        String username = member.get().getUsername();
-        String nickname = member.get().getNickname();
-        String profileImg = member.get().getProfileImg();
-        String authority = member.get().getAuthority();
+        String username = member.getUsername();
+        String nickname = member.getNickname();
+        String profileImg = member.getProfileImg();
+        String authority = member.getAuthority();
 
         MemberLoginInfoResponseDto memberLoginInfoResponseDto = new MemberLoginInfoResponseDto(username, nickname, profileImg, authority);
         return ResponseDto.success(memberLoginInfoResponseDto);
@@ -164,11 +163,10 @@ public class PostReadService {
     // 진행중인 움짤 디테일 페이지 조회
     public ResponseDto<?> readProceedingDetail(Long postid) {
 
-        Optional<Post> postCheck = postRepository.findById(postid);
-        if(postCheck.isEmpty()) { // 찾는 게시물이 존재하지 않을때
+        Post post = postRepository.findById(postid).orElse(null);
+        if(post == null) { // 찾는 게시물이 존재하지 않을때
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-        Post post = postRepository.findById(postid).orElseThrow();
 
         // 프레임 리스트 작성
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
@@ -312,11 +310,10 @@ public class PostReadService {
     @Transactional
     public ResponseDto<?> readCompletionDetail(Long postid) {
 
-        Optional<Post> postCheck = postRepository.findById(postid);
-        if (postCheck.isEmpty()) { // 존재하지 않는 게시물을 요청했을 때
+        Post post = postRepository.findById(postid).orElse(null);
+        if (post == null) { // 존재하지 않는 게시물을 요청했을 때
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-        Post post = postRepository.findById(postid).orElseThrow();
 
         // 조회수 1 증가
         int viewCountCal = post.getViewCount() + 1;

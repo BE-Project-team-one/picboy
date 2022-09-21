@@ -15,7 +15,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     // 게시물 1개 post_id 로 찾기
-    Optional<Post> findById(Long postid);
+//    Optional<Post> findById(Long postid); // 안쓰는거 나중에 지우기
 
     // 게시물 status 값으로 가져오고 최신순 정렬
     Page<Post> findAllByStatusOrderByCreatedAtDesc(int status, Pageable pageable);

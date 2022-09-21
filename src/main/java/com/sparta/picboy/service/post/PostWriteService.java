@@ -213,8 +213,7 @@ public class PostWriteService {
     public ResponseDto<?> postReport(Long postId, UserDetails userDetails) {
 
         // 존재하는 유저인지 확인
-        String username = userDetails.getUsername();
-        Member member = memberRepository.findByUsername(username).orElse(null);
+        Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
 
         if (member == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
@@ -222,12 +221,10 @@ public class PostWriteService {
         }
 
         // 존재하는 게시물인지 확인
-        Optional<Post> postCheck = postRepository.findById(postId);
-        if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post == null) { // 게시물이 존재하지 않은경우
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-
-        Post post = postRepository.findById(postId).orElseThrow();
 
         // 신고하기
         if(!postReportRepository.existsByPostAndMember(post, member)) {

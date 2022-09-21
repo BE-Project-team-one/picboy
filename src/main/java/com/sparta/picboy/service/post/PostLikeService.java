@@ -29,18 +29,15 @@ public class PostLikeService {
     public ResponseDto<?> likePost(Long postid, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUsername();
-        Optional<Member> memberCheck = memberRepository.findByUsername(username);
-        if (memberCheck.isEmpty()) { // 그럴일은 없지만 혹시나 유저를 찾지 못했을 경우
+        Member member = memberRepository.findByUsername(username).orElse(null);
+        if (member == null) { // 그럴일은 없지만 혹시나 유저를 찾지 못했을 경우
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
-        Member member = memberRepository.findByUsername(username).orElseThrow();
 
-        Optional<Post> postCheck = postRepository.findById(postid);
-        if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
+        Post post = postRepository.findById(postid).orElse(null);
+        if (post == null) { // 게시물이 존재하지 않은경우
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-
-        Post post = postRepository.findById(postid).orElseThrow();
 
 
         if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요
