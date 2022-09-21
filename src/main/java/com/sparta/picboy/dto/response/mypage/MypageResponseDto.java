@@ -18,7 +18,8 @@ public class MypageResponseDto {
     private int viewCount;
     private int reportCount;
     private String topic;
-    private String nickname;
+    private String nickname; // 최초 작성자
+    private String profileImg; //작성자 이미지
     private int memberCount;
     private LocalDateTime date; // 만료된 날짜 // 정렬 순
     private int status; // 완성/진행/숨김/전체

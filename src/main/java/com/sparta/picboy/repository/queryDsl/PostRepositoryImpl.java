@@ -93,6 +93,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .where(post.id.eq(postRelayList.get(i).getPost().getId()))
                     .fetchOne();
 
+
             // 게시물 참여자 수 구하기 (중복 제거)
             int count = queryFactory.select(postRelay)
                     .from(postRelay)
@@ -111,6 +112,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     resultPost.getReportCount(),
                     resultPost.getTopic(),
                     resultPost.getMember().getNickname(),
+                    resultPost.getMember().getProfileImg(),
                     count - 1, // 글쓴이 외 참여자 수
                     resultPost.getExpiredAt(),
                     resultPost.getStatus()
