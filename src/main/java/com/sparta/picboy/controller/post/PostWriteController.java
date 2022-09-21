@@ -45,4 +45,5 @@ public class PostWriteController {
     public ResponseDto<?> postDelete(@PathVariable Long postId) {
         return  postWriteService.postDelete(postId);
     }
+
 }
