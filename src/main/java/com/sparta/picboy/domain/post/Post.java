@@ -116,4 +116,9 @@ public class Post extends Timestamped {
 
     }
 
+    public void updateReportCnt(int reportCount) {
+        this.reportCount = reportCount;
+
+    }
+
 }

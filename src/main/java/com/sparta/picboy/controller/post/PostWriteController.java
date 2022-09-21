@@ -46,4 +46,11 @@ public class PostWriteController {
         return  postWriteService.postDelete(postId);
     }
 
+    // 신고하기
+    @PostMapping("/post/report/{postId}")
+    public ResponseDto<?> postReport(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+        return postWriteService.postReport(postId, userDetails);
+
+    }
+
 }

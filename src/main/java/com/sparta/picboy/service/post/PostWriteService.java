@@ -5,8 +5,10 @@ import com.sparta.picboy.WebSocket.AlarmService;
 import com.sparta.picboy.WebSocket.MessageDto;
 import com.sparta.picboy.converter.GifSequenceWriter;
 import com.sparta.picboy.domain.RandomTopic;
+import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
+import com.sparta.picboy.domain.post.Report;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.post.PostDelayRequestDto;
 import com.sparta.picboy.dto.request.post.PostRequestDto;
@@ -14,6 +16,7 @@ import com.sparta.picboy.dto.response.RandomTopicResponseDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.PostRelayRepository;
+import com.sparta.picboy.repository.post.PostReportRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.post.RandomTopicRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -42,6 +45,7 @@ public class PostWriteService {
     private final RandomTopicRepository randomTopicRepository;
     private final PostRelayRepository postRelayRepository;
     private final AlarmService alarmService;
+    private final PostReportRepository postReportRepository;
 
 
 
@@ -202,5 +206,50 @@ public class PostWriteService {
         output.close();
 
         gifSave(post, convertFile);
+    }
+
+    // 신고하기
+    @Transactional
+    public ResponseDto<?> postReport(Long postId, UserDetails userDetails) {
+
+        // 존재하는 유저인지 확인
+        String username = userDetails.getUsername();
+        Member member = memberRepository.findByUsername(username).orElse(null);
+
+        if (member == null) {
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+
+        }
+
+        // 존재하는 게시물인지 확인
+        Optional<Post> postCheck = postRepository.findById(postId);
+        if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
+            return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
+        }
+
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        // 신고하기
+        if(!postReportRepository.existsByPostAndMember(post, member)) {
+
+            Report report = new Report(member, post);
+            postReportRepository.save(report);
+
+            List<Report> postReportList = postReportRepository.findAllByPost(post);
+            post.updateReportCnt(postReportList.size());
+
+            return ResponseDto.success("좋아요");
+
+        } else { // 신고하기 취소
+
+            postReportRepository.deleteByPostAndMember(post, member);
+
+            List<Report> postReportList = postReportRepository.findAllByPost(post);
+            post.updateReportCnt(postReportList.size());
+
+            return ResponseDto.success("좋아요 취소");
+
+        }
+
     }
 }

@@ -39,4 +39,9 @@ public class Report {
         this.member = member;
         this.post = post;
     }
+
+    public Report(Member member, Post post) {
+        this.member = member;
+        this.post = post;
+    }
 }
