@@ -48,7 +48,7 @@ public class Member extends Timestamped {
         this.password = password;
         this.phoneNumber = requestDto.getPhoneNumber();
         this.authority = Authority.ROLE_USER.toString();
-        this.status = 0;
+        this.status = 1;
     }
 
     public Member(String username, String nickname, String encodedPassword, Long kakaoId) {
@@ -56,8 +56,8 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = encodedPassword;
         this.kakaoId = kakaoId;
-        this.authority = Authority.ROLE_ADMIN.toString();
-        this.status = 1;
+        this.authority = Authority.ROLE_USER.toString();
+        this.status = 2;
     }
 
     public void updateNickname(String nickname){
