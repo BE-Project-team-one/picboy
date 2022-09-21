@@ -56,7 +56,7 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = encodedPassword;
         this.kakaoId = kakaoId;
-        this.authority = Authority.ROLE_USER.toString();
+        this.authority = Authority.ROLE_ADMIN.toString();
         this.status = 1;
     }
 
