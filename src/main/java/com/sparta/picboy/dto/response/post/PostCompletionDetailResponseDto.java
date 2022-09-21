@@ -17,10 +17,11 @@ public class PostCompletionDetailResponseDto {
     private List<FrameImgListResponseDto> frameImgList;
     private int likeCount;
     private int viewCount;
+    private int reportCount;
     private List<CommentListResponseDto> commentListResponseDtoList;
 
 
-    public PostCompletionDetailResponseDto(Long id, int frameTotal, String topic, String gifUrl, LocalDateTime createdAt, List<FrameImgListResponseDto> frameImgList, int likeCount, int viewCount, List<CommentListResponseDto> commentListResponseDtoList) {
+    public PostCompletionDetailResponseDto(Long id, int frameTotal, String topic, String gifUrl, LocalDateTime createdAt, List<FrameImgListResponseDto> frameImgList, int likeCount, int viewCount, int reportCount, List<CommentListResponseDto> commentListResponseDtoList) {
         this.id = id;
         this.frameTotal = frameTotal;
         this.topic = topic;
@@ -29,6 +30,7 @@ public class PostCompletionDetailResponseDto {
         this.frameImgList = frameImgList;
         this.likeCount = likeCount;
         this.viewCount = viewCount;
+        this.reportCount = reportCount;
         this.commentListResponseDtoList = commentListResponseDtoList;
     }
 }

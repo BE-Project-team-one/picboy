@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -346,6 +345,7 @@ public class PostReadService {
 
         int likeCount = post.getLikeCount();
         int viewCount = post.getViewCount();
+        int reportCount = post.getReportCount();
 
         // 댓글 리스트 작성
         List<Comment> commentList = commentRepository.findAllByPost(post);
@@ -363,7 +363,7 @@ public class PostReadService {
 
         }
 
-        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, commentListResponseDtoList);
+        PostCompletionDetailResponseDto postCompletionDetailResponseDto = new PostCompletionDetailResponseDto(id, frameTotal, topic, gifUrl, createdAt, frameImgListResponseDtoList, likeCount, viewCount, reportCount, commentListResponseDtoList);
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 

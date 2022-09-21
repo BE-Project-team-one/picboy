@@ -18,6 +18,7 @@ public class PostLikeController {
     // 좋아요
     @PostMapping("/post/like/{postid}")
     public ResponseDto<?> likePost(@PathVariable Long postid, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         return postLikeService.likePost(postid, userDetails);
 
     }

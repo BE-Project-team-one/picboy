@@ -29,7 +29,6 @@ public class PostLikeService {
     public ResponseDto<?> likePost(Long postid, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUsername();
-
         Optional<Member> memberCheck = memberRepository.findByUsername(username);
         if (memberCheck.isEmpty()) { // 그럴일은 없지만 혹시나 유저를 찾지 못했을 경우
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
@@ -40,6 +39,7 @@ public class PostLikeService {
         if (postCheck.isEmpty()) { // 게시물이 존재하지 않은경우
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
+
         Post post = postRepository.findById(postid).orElseThrow();
 
 
