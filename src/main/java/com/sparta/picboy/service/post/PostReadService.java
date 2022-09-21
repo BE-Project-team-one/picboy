@@ -23,11 +23,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -314,25 +312,16 @@ public class PostReadService {
 
     // 완료된 움짤 디테일 페이지 조회
     @Transactional
-    public ResponseDto<?> readCompletionDetail(Long postid, boolean login) {
+    public ResponseDto<?> readCompletionDetail(Long postid, UserDetailsImpl userDetails) {
 
         Post post = postRepository.findById(postid).orElse(null);
         if(post == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
 
-        boolean liked = false;
+        boolean liked;
 
-        if (login) { // 로그인 했음
-
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDetails userDetails = (UserDetails)principal;
-
-            Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
-            if (member == null) {
-                ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
-
-            }
+        Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
 
             if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요 안한 게시물
                 liked = false;
@@ -342,7 +331,26 @@ public class PostReadService {
 
             }
 
-        }
+//        if (login == true) { // 로그인 했음
+//
+//            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//            UserDetails userDetails = (UserDetails)principal;
+//
+//            Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
+//            if (member == null) {
+//                ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+//
+//            }
+//
+//            if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요 안한 게시물
+//                liked = false;
+//
+//            } else {
+//                liked = true;
+//
+//            }
+//
+//        }
 
         // 조회수 1 증가
         int viewCountCal = post.getViewCount() + 1;

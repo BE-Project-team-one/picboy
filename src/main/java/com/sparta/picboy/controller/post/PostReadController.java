@@ -69,12 +69,12 @@ public class PostReadController {
     @GetMapping("/post/gif/detail/{postid}")
     public ResponseDto<?> readCompletionDetail(@PathVariable Long postid ,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         boolean login = true;
-        if (userDetails == null) {
-            login = false;
-            return postReadService.readCompletionDetail(postid, login);
-        }
+//        if (userDetails == null) {
+//            login = false;
+//            return postReadService.readCompletionDetail(postid, login);
+//        }
 
-        return postReadService.readCompletionDetail(postid, login);
+        return postReadService.readCompletionDetail(postid, userDetails);
 
     }
 
