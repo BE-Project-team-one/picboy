@@ -1,5 +1,6 @@
 package com.sparta.picboy.dto.response.post;
 
+import com.sparta.picboy.domain.Authority;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,14 +13,12 @@ public class MemberLoginInfoResponseDto {
     private String profileImg;
     private String authority;
 
-    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg, String authority) {
+    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg,String authority) {
         this.username = username;
         this.nickname = nickname;
         this.profileImg = profileImg;
-        this.authority = authority;
-
+        this.authority = Authority.ROLE_USER.toString();
     }
-
 }
 
 // 병합 후 유저 리스폰스에 옮겨놓기

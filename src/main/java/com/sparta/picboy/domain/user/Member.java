@@ -1,5 +1,6 @@
 package com.sparta.picboy.domain.user;
 
+import com.sparta.picboy.domain.Authority;
 import com.sparta.picboy.domain.Timestamped;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import lombok.Getter;
@@ -41,26 +42,13 @@ public class Member extends Timestamped {
     private Long kakaoId;
 
 
-    public Member(String username, String nickname, String password, String profileImg, int status, String phoneNumber, String authority) {
-        this.username = username;
-        this.nickname = nickname;
-        this.password = password;
-        this.profileImg = profileImg;
-        this.status = status;
-        this.phoneNumber = phoneNumber;
-        this.authority = authority;
-    }
-
     public Member(SignupRequestDto requestDto, String password) {  // signup애서 생성자 생성
         this.username = requestDto.getUsername();
         this.nickname = requestDto.getNickname();
         this.password = password;
         this.phoneNumber = requestDto.getPhoneNumber();
-    }
-
-    public Member(String username, String password) {
-        this.username = username;
-        this.password = password;
+        this.authority = Authority.ROLE_USER.toString();
+        this.status = 0;
     }
 
     public Member(String username, String nickname, String encodedPassword, Long kakaoId) {
@@ -68,6 +56,8 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.password = encodedPassword;
         this.kakaoId = kakaoId;
+        this.authority = Authority.ROLE_USER.toString();
+        this.status = 1;
     }
 
     public void updateNickname(String nickname){

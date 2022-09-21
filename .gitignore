@@ -38,6 +38,3 @@ out/
 .vscode/
 
 /application.properties
-/static
-/tempaltes
-/index.html
