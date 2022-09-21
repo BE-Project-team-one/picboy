@@ -46,9 +46,9 @@ public class KakaoService {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(code);
         // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
-        KakaoMemberInfo kakaoUserInfo = getKakaoUserInfo(accessToken);
+        KakaoMemberInfo kakaomemberInfo = getKakaoUserInfo(accessToken);
         // 3. "카카오 사용자 정보"로 필요시 회원가입
-        Member kakaoMember = registerKakaoUserIfNeeded(kakaoUserInfo);
+        Member kakaoMember = registerKakaoUserIfNeeded(kakaomemberInfo);
         // 4. 강제 로그인 처리
         forceLogin(kakaoMember,httpServletResponse);
 
