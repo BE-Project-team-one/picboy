@@ -361,7 +361,7 @@ public class PostReadService {
 
         boolean liked = false;
 
-        if (login == true) { // 로그인 했음
+        if (login) { // 로그인 했음
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDetails userDetails = (UserDetails)principal;
@@ -372,13 +372,8 @@ public class PostReadService {
 
             }
 
-            if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요 안한 게시물
-                liked = false;
-
-            } else {
-                liked = true;
-
-            }
+            // 좋아요 안한 게시물
+            liked = postLikeRepository.existsByPostAndMember(post, member);
 
         }
 
