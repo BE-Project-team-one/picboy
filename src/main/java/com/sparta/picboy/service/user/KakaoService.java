@@ -108,10 +108,10 @@ public class KakaoService {
         Long id = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
-        String email = jsonNode.get("kakao_account")
-                .get("email").asText();
+//        String email = jsonNode.get("kakao_account")
+//                .get("email").asText();
 
-        return new KakaoMemberInfo(id, nickname, email);
+        return new KakaoMemberInfo(id, nickname);
     }
 
     private Member registerKakaoUserIfNeeded(KakaoMemberInfo kakaoUserInfo) {
