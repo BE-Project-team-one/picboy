@@ -1,14 +1,12 @@
 package com.sparta.picboy.service.post;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.WebSocket.AlarmService;
 import com.sparta.picboy.WebSocket.MessageDto;
 import com.sparta.picboy.converter.GifSequenceWriter;
 import com.sparta.picboy.domain.RandomTopic;
-import com.sparta.picboy.domain.post.Likes;
-import com.sparta.picboy.domain.post.Post;
-import com.sparta.picboy.domain.post.PostRelay;
-import com.sparta.picboy.domain.post.Report;
+import com.sparta.picboy.domain.post.*;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.post.PostDelayRequestDto;
 import com.sparta.picboy.dto.request.post.PostRequestDto;
@@ -22,6 +20,7 @@ import com.sparta.picboy.repository.post.RandomTopicRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +47,7 @@ public class PostWriteService {
     private final PostRelayRepository postRelayRepository;
     private final AlarmService alarmService;
     private final PostReportRepository postReportRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
 
 
@@ -91,7 +91,7 @@ public class PostWriteService {
 
 
     // 이어 그리기 생성
-    @Lock(LockModeType.OPTIMISTIC)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
