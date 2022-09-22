@@ -102,8 +102,11 @@ public class PostReadService {
 
         }
 
-        // 4~10 만 남겨두기.
-        postMainTop410ResponseDtoList.remove(postListTop3);
+        postMainTop410ResponseDtoList.remove(0);
+        postMainTop410ResponseDtoList.remove(1);
+        postMainTop410ResponseDtoList.remove(2);
+
+        System.out.println(postMainTop410ResponseDtoList.size());
 
         PostMainTopResponseDto postMainTopResponseDto = new PostMainTopResponseDto(postMainTop3ResponseDtoList, postMainTop410ResponseDtoList);
 
