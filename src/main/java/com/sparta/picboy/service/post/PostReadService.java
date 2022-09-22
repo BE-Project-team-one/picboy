@@ -177,8 +177,11 @@ public class PostReadService {
                 Member member = postRelay.getMember();
                 memberList.remove(member);
                 memberList.add(member);
-                //x 중복을 걸러주는 로직이라고 하는데 잘 모르겠음
             }
+
+            // 참가자 중에서 게시물 작성자 제외하기
+            Member members = post.getMember();
+            memberList.remove(members);
 
             int participantCount = memberList.size();
 
@@ -187,13 +190,10 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member member : memberList) {
 
-                //x 변수명이 겹치는 것 때문에 usernames라고 s 를 붙인것 같으니 인자를 변수로 받지않고 바로받으면 되지 않는가?
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getUsername(),
-                                                                                           member.getNickname(),
-                                                                                           member.getProfileImg());
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getNickname(), member.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
-            } //x username이 존재해야하는가?
+            }
 
             PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
@@ -326,6 +326,10 @@ public class PostReadService {
 
             }
 
+            // 참가자 중에서 게시물 작성자 제외하기
+            Member member = post.getMember();
+            members.remove(member);
+
             int participantCount = members.size();
 
             List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
@@ -333,11 +337,7 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member memberList : members) {
 
-                String usernames = memberList.getUsername();
-                String nicknames = memberList.getNickname();
-                String profileImgs = memberList.getProfileImg();
-
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(memberList.getNickname(), memberList.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
             }

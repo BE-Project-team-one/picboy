@@ -1,5 +1,6 @@
 package com.sparta.picboy.dto.response.post;
 
+import com.sparta.picboy.domain.user.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
