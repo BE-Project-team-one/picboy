@@ -2,7 +2,6 @@ package com.sparta.picboy.service.post;
 
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.domain.comment.Comment;
-import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
@@ -40,8 +39,12 @@ public class PostReadService {
 
     // 메인페이지 베스트 움짤 Top 10
     public ResponseDto<?> mainTop10() {
+        List<Post> postListTop3 = postRepository.findTop3ByStatusOrderByLikeCountDesc(2);
         List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDesc(2);
-        List<PostMainTop10ResponseDto> postMainTop10ResponseDtoList = new ArrayList<>();
+        List<PostMainTop3ResponseDto> postMainTop3ResponseDtoList = new ArrayList<>();
+        List<PostMainTop410ResponseDto> postMainTop410ResponseDtoList = new ArrayList<>();
+
+        // 탑 10 넣기
         for (Post post : postListTop10) {
 
             Long id = post.getId();
@@ -65,12 +68,46 @@ public class PostReadService {
             memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
             int memberCount = memberList.size();
 
-            PostMainTop10ResponseDto postMainTop10ResponseDto = new PostMainTop10ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
-            postMainTop10ResponseDtoList.add(postMainTop10ResponseDto);
+            PostMainTop410ResponseDto postMainTop410ResponseDto = new PostMainTop410ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
+            postMainTop410ResponseDtoList.add(postMainTop410ResponseDto);
 
         }
 
-        return ResponseDto.success(postMainTop10ResponseDtoList);
+        // 탑 3 넣기
+        for (Post post : postListTop3) {
+
+            Long id = post.getId();
+            String gifUrl = post.getGifUrl();
+            int likeCount = post.getLikeCount();
+            String topic = post.getTopic();
+            String nickname = post.getMember().getNickname();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            List<Member> memberList = new ArrayList<>();
+            for (PostRelay postRelay : postRelayList) {
+
+                // memberList 에 프레임별로 멤버를 add 해줄건데 중복 없에기 위한 작업을 진행. 지우고 넣는 방식 채택
+                memberList.remove(postRelay.getMember()); //x 여태있던 멤버리스트를 다 지우고
+                memberList.add(postRelay.getMember()); //x 추가된 멤버를 더해서 멤버리스트를 추가한다
+
+            }
+
+            // 리스폰스는 '작성자 외 n 명' 이라서 작성자는 따로 빼고 연산
+            memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
+            int memberCount = memberList.size();
+
+            PostMainTop3ResponseDto postMainTop3ResponseDto = new PostMainTop3ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
+            postMainTop3ResponseDtoList.add(postMainTop3ResponseDto);
+
+        }
+
+        // 4~10 만 남겨두기.
+        postMainTop410ResponseDtoList.remove(postListTop3);
+
+        PostMainTopResponseDto postMainTopResponseDto = new PostMainTopResponseDto(postMainTop3ResponseDtoList, postMainTop410ResponseDtoList);
+
+        return ResponseDto.success(postMainTopResponseDto);
 
     }
 
