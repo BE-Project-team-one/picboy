@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
+import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -47,7 +48,7 @@ public class PostWriteService {
     private final PostRelayRepository postRelayRepository;
     private final AlarmService alarmService;
     private final PostReportRepository postReportRepository;
-    private final JPAQueryFactory jpaQueryFactory;
+    private final EntityManager entityManager;
 
 
 
@@ -97,7 +98,8 @@ public class PostWriteService {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
-        Post post = postRepository.findById(postId).orElse(null);
+//        Post post = postRepository.findById(postId).orElse(null);
+        Post post = this.entityManager.find(Post.class, postId, LockModeType.PESSIMISTIC_WRITE, Map.of("javax.persistence.lock.timeout", 1L));
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
