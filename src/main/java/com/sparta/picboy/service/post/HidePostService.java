@@ -35,8 +35,6 @@ public class HidePostService {
         if(post == null){
             return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         }
-        if(!Objects.equals(member.getUsername(), post.getMember().getUsername())) {
-            return ResponseDto.fail(ErrorCode.ONLY_AUTHOR_ACCESSIBLE);}
 
 
         Optional<HidePost> optionalHidPost = hidePostRepository.findByMemberAndPost(member, post);

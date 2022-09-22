@@ -91,6 +91,7 @@ public class PostWriteService {
 
 
     // 이어 그리기 생성
+    @Lock(LockModeType.OPTIMISTIC)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
@@ -237,7 +238,7 @@ public class PostWriteService {
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
 
-            return ResponseDto.success("좋아요");
+            return ResponseDto.success("신고 완료");
 
         } else { // 신고하기 취소
 
@@ -246,7 +247,7 @@ public class PostWriteService {
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
 
-            return ResponseDto.success("좋아요 취소");
+            return ResponseDto.success("신고 취소");
 
         }
 

@@ -5,7 +5,6 @@ import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
-import com.sparta.picboy.dto.response.post.LoginRestponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.user.MemberRepository;
@@ -76,13 +75,7 @@ public class MemberService {
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
         httpServletResponse.addHeader("AccessTokenExpiredTime", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
 
-        // 바디에 토큰값 보내주기
-        String authorization = "Bearer " + tokenDto.getAccessToken();
-        String refreshToken = tokenDto.getRefreshToken();
-
-        LoginRestponseDto loginRestponseDto = new LoginRestponseDto(authorization, refreshToken);
-
-        return ResponseDto.success(loginRestponseDto);
+        return ResponseDto.success(true);
     }
 
 }

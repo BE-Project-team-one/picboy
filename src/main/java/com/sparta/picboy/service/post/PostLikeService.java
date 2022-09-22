@@ -5,6 +5,7 @@ import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.dto.response.post.LikeResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.repository.post.PostLikeRepository;
 import com.sparta.picboy.repository.post.PostRepository;
@@ -48,7 +49,10 @@ public class PostLikeService {
             List<Likes> postLikeList = postLikeRepository.findAllByPost(post);
             post.updateLikeCnt(postLikeList.size());
 
-            return ResponseDto.success("좋아요");
+            boolean like = true;
+            LikeResponseDto likeResponseDto = new LikeResponseDto(like);
+
+            return ResponseDto.success(likeResponseDto);
 
         } else { // 좋아요 취소
 
@@ -57,7 +61,10 @@ public class PostLikeService {
             List<Likes> postLikeList = postLikeRepository.findAllByPost(post);
             post.updateLikeCnt(postLikeList.size());
 
-            return ResponseDto.success("좋아요 취소");
+            boolean like = false;
+            LikeResponseDto likeResponseDto = new LikeResponseDto(like);
+
+            return ResponseDto.success(likeResponseDto);
 
         }
 

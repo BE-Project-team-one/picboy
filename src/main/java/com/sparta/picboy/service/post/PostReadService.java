@@ -2,7 +2,6 @@ package com.sparta.picboy.service.post;
 
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.domain.comment.Comment;
-import com.sparta.picboy.domain.post.Likes;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
@@ -23,11 +22,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +39,12 @@ public class PostReadService {
 
     // 메인페이지 베스트 움짤 Top 10
     public ResponseDto<?> mainTop10() {
+        List<Post> postListTop3 = postRepository.findTop3ByStatusOrderByLikeCountDesc(2);
         List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDesc(2);
-        List<PostMainTop10ResponseDto> postMainTop10ResponseDtoList = new ArrayList<>();
+        List<PostMainTop3ResponseDto> postMainTop3ResponseDtoList = new ArrayList<>();
+        List<PostMainTop410ResponseDto> postMainTop410ResponseDtoList = new ArrayList<>();
+
+        // 탑 10 넣기
         for (Post post : postListTop10) {
 
             Long id = post.getId();
@@ -67,12 +68,49 @@ public class PostReadService {
             memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
             int memberCount = memberList.size();
 
-            PostMainTop10ResponseDto postMainTop10ResponseDto = new PostMainTop10ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
-            postMainTop10ResponseDtoList.add(postMainTop10ResponseDto);
+            PostMainTop410ResponseDto postMainTop410ResponseDto = new PostMainTop410ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
+            postMainTop410ResponseDtoList.add(postMainTop410ResponseDto);
 
         }
 
-        return ResponseDto.success(postMainTop10ResponseDtoList);
+        // 탑 3 넣기
+        for (Post post : postListTop3) {
+
+            Long id = post.getId();
+            String gifUrl = post.getGifUrl();
+            int likeCount = post.getLikeCount();
+            String topic = post.getTopic();
+            String nickname = post.getMember().getNickname();
+
+            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
+            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
+            List<Member> memberList = new ArrayList<>();
+            for (PostRelay postRelay : postRelayList) {
+
+                // memberList 에 프레임별로 멤버를 add 해줄건데 중복 없에기 위한 작업을 진행. 지우고 넣는 방식 채택
+                memberList.remove(postRelay.getMember()); //x 여태있던 멤버리스트를 다 지우고
+                memberList.add(postRelay.getMember()); //x 추가된 멤버를 더해서 멤버리스트를 추가한다
+
+            }
+
+            // 리스폰스는 '작성자 외 n 명' 이라서 작성자는 따로 빼고 연산
+            memberList.remove(post.getMember());  //x post 에서 가져온 멤버는 작성자 이므로 제거하면 -1이 됨
+            int memberCount = memberList.size();
+
+            PostMainTop3ResponseDto postMainTop3ResponseDto = new PostMainTop3ResponseDto(id, gifUrl, likeCount, topic, nickname, memberCount);
+            postMainTop3ResponseDtoList.add(postMainTop3ResponseDto);
+
+        }
+
+        postMainTop410ResponseDtoList.remove(0);
+        postMainTop410ResponseDtoList.remove(1);
+        postMainTop410ResponseDtoList.remove(2);
+
+        System.out.println(postMainTop410ResponseDtoList.size());
+
+        PostMainTopResponseDto postMainTopResponseDto = new PostMainTopResponseDto(postMainTop3ResponseDtoList, postMainTop410ResponseDtoList);
+
+        return ResponseDto.success(postMainTopResponseDto);
 
     }
 
@@ -139,8 +177,11 @@ public class PostReadService {
                 Member member = postRelay.getMember();
                 memberList.remove(member);
                 memberList.add(member);
-                //x 중복을 걸러주는 로직이라고 하는데 잘 모르겠음
             }
+
+            // 참가자 중에서 게시물 작성자 제외하기
+            Member members = post.getMember();
+            memberList.remove(members);
 
             int participantCount = memberList.size();
 
@@ -149,13 +190,10 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member member : memberList) {
 
-                //x 변수명이 겹치는 것 때문에 usernames라고 s 를 붙인것 같으니 인자를 변수로 받지않고 바로받으면 되지 않는가?
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getUsername(),
-                                                                                           member.getNickname(),
-                                                                                           member.getProfileImg());
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getNickname(), member.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
-            } //x username이 존재해야하는가?
+            }
 
             PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
@@ -290,6 +328,10 @@ public class PostReadService {
 
             }
 
+            // 참가자 중에서 게시물 작성자 제외하기
+            Member member = post.getMember();
+            members.remove(member);
+
             int participantCount = members.size();
 
             List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
@@ -297,11 +339,7 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member memberList : members) {
 
-                String usernames = memberList.getUsername();
-                String nicknames = memberList.getNickname();
-                String profileImgs = memberList.getProfileImg();
-
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(usernames, nicknames, profileImgs);
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(memberList.getNickname(), memberList.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
             }
@@ -336,13 +374,8 @@ public class PostReadService {
 
             }
 
-            if(!postLikeRepository.existsByPostAndMember(post, member)) { // 좋아요 안한 게시물
-                liked = false;
-
-            } else {
-                liked = true;
-
-            }
+            // 좋아요 안한 게시물
+            liked = postLikeRepository.existsByPostAndMember(post, member);
 
         }
 
@@ -397,5 +430,6 @@ public class PostReadService {
 
 
     }
+
 
 }
