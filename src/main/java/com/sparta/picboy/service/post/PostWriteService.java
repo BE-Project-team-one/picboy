@@ -94,13 +94,6 @@ public class PostWriteService {
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
-        return testMethod(postId, postDelayRequestDto, userinfo);
-
-    }
-
-    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Transactional
-    public ResponseDto<?> testMethod(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
