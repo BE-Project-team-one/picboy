@@ -36,7 +36,8 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용에 대한 허용 (CSRF, FrameOptions 무시)
         return (web) -> web.ignoring()
-                .antMatchers("/h2-console/**");
+                .antMatchers("/h2-console/**")
+                .antMatchers("/resources/**");
     }
 
 
@@ -51,6 +52,7 @@ public class WebSecurityConfig {
 //        http.cors();
         http.csrf().disable();
 
+
         http
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/user/**").permitAll() // 로그인,회원가입은 토큰없이도 가능
@@ -61,6 +63,16 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
                         .antMatchers("/main/best-top10").permitAll()
+                        .antMatchers("/admin/**").permitAll()
+                        .antMatchers("/",
+                                "/css/**",
+                                "/scripts/**",
+                                "/plugin/**",
+                                "/fonts/**",
+                                "/img/**",
+                                "/vendor/**",
+                                "/js/**"
+                                ).permitAll()
 //                        .antMatchers(HttpMethod.GET,"/oauth/**").permitAll() // 혹시 이거때문?
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());

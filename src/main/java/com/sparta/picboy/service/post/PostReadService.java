@@ -228,6 +228,8 @@ public class PostReadService {
         //  조회 수 순 정렬
         if (categoryNum == 4) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(2, pageable);
 
+        System.out.println("여기 들어옴?" + postList);
+
         return ResponseDto.success(sortCompletionCategory(postList));
 
     }
