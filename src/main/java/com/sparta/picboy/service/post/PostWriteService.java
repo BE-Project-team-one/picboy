@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
+import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,6 +47,7 @@ public class PostWriteService {
     private final PostRelayRepository postRelayRepository;
     private final AlarmService alarmService;
     private final PostReportRepository postReportRepository;
+    private final EntityManager entityManager;
 
 
 
@@ -89,13 +91,14 @@ public class PostWriteService {
 
 
     // 이어 그리기 생성
-    @Lock(LockModeType.OPTIMISTIC)
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
-        Post post = postRepository.findById(postId).orElse(null);
+//        Post post = postRepository.findById(postId).orElse(null);
+        Post post = this.entityManager.find(Post.class, postId, LockModeType.PESSIMISTIC_WRITE, Map.of("javax.persistence.lock.timeout", 1L));
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
@@ -235,6 +238,12 @@ public class PostWriteService {
 
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
+
+            // 신고 횟수가 5회 이상일 경우 숨김처리
+            if (post.getReportCount() >= 5) {
+                post.statusUpdate(3);
+                postRepository.save(post);
+            }
 
             return ResponseDto.success("신고 완료");
 

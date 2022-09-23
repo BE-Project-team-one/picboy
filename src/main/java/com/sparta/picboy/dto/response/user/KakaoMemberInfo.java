@@ -8,5 +8,4 @@ import lombok.Getter;
 public class KakaoMemberInfo {
     private Long id;
     private String nickname;
-    private String email;
 }
