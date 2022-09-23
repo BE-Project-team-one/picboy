@@ -5,7 +5,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
-import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.post.PostResponseDto;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +147,31 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
             ));
         }
         return dto;
+    }
+
+    @Override
+    public int readCheckPost(String username) {
+        QAlert alert = QAlert.alert;
+
+        List<Alert> alertList = queryFactory.select(alert)
+                .from(alert)
+                .where(
+                        alert.member.username.eq(username)
+                        .and(alert.flag.eq(false))
+                )
+                .fetch();
+
+        return alertList.size();
+    }
+
+    @Override
+    public void alertAllRead(String username) {
+        QAlert alert = QAlert.alert;
+
+        queryFactory.update(alert)
+                .where(alert.member.username.eq(username))
+                .set(alert.flag, true)
+                .execute();
     }
 
     // 동적 정렬 기준 메소드

@@ -21,6 +21,9 @@ public class Alert extends Timestamped {
     @Column(nullable = false)
     private String content; // 알람 내용
 
+    @Column
+    private boolean flag;
+
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -29,5 +32,6 @@ public class Alert extends Timestamped {
     public Alert(String content, Member member) {
         this.content = content;
         this.member = member;
+        this.flag = false;
     }
 }

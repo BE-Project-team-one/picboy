@@ -16,4 +16,10 @@ public interface PostRepositoryCustom {
 
     // 전체 게시물 조회
     List<PostResponseDto> findAllPost();
+
+    // 읽은 게시글 확인
+    int readCheckPost(String username);
+
+    // 알람 전체 읽음
+    void alertAllRead(String username);
 }
