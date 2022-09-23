@@ -85,8 +85,8 @@ public class PostReadController {
 
     // 게시물 다운로드
     @GetMapping("/download")
-    public ResponseEntity<byte[]> download(@RequestParam String fileName) throws IOException {
-        return awsS3Service.getObject(fileName);
+    public ResponseEntity<byte[]> download(@RequestParam Long postId, @RequestParam String fileName) throws IOException {
+        return awsS3Service.getObject(postId, fileName);
     }
 
 }
