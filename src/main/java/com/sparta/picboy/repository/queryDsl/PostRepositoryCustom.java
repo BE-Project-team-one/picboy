@@ -1,7 +1,9 @@
 package com.sparta.picboy.repository.queryDsl;
 
+import com.sparta.picboy.domain.post.Alert;
 import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
+import com.sparta.picboy.dto.response.post.AlertInboxResponseDto;
 import com.sparta.picboy.dto.response.post.PostResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +24,7 @@ public interface PostRepositoryCustom {
 
     // 알람 전체 읽음
     void alertAllRead(String username);
+
+    List<AlertInboxResponseDto> alertAllGet(String username);
+
 }

@@ -40,16 +40,22 @@ public class AlarmService {
         return ResponseDto.success(false);
     }
 
-    // 전체 알람 읽음 처리
+    // 전체 알람 읽음 처리 update
     public ResponseDto<?> alertAllRead(UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         try {
-            postRepository.readCheckPost(username);
+            postRepository.alertAllRead(username);
             return ResponseDto.success(true);
         } catch (Exception e) {
             return ResponseDto.success(false);
         }
 
+    }
+
+    // 내 알람 전체 가져오기
+    public ResponseDto<?> alertGet(UserDetailsImpl userDetails) {
+        String username = userDetails.getUsername();
+        return ResponseDto.success(postRepository.alertAllGet(username));
     }
 
 

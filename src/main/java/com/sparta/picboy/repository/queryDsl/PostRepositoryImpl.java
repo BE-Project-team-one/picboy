@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
 import com.sparta.picboy.domain.user.QMember;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
+import com.sparta.picboy.dto.response.post.AlertInboxResponseDto;
 import com.sparta.picboy.dto.response.post.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,6 +151,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return dto;
     }
 
+    // 알람 읽음 처리 갯수 확인
     @Override
     public int readCheckPost(String username) {
         QAlert alert = QAlert.alert;
@@ -164,6 +167,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         return alertList.size();
     }
 
+    // 알람 전체 읽음 처리로 update
     @Override
     public void alertAllRead(String username) {
         QAlert alert = QAlert.alert;
@@ -172,6 +176,29 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .where(alert.member.username.eq(username))
                 .set(alert.flag, true)
                 .execute();
+    }
+
+    // 내 알람 전체 가져오기
+    @Override
+    public List<AlertInboxResponseDto> alertAllGet(String username) {
+        QAlert alert = QAlert.alert;
+
+        List<Alert> alertList = queryFactory.selectFrom(alert)
+                .where(alert.member.username.eq(username))
+                .orderBy(alert.createdAt.desc())
+                .fetch();
+
+        List<AlertInboxResponseDto> dtoList = new ArrayList<>();
+        for(Alert a : alertList) {
+            dtoList.add(new AlertInboxResponseDto(
+                    a.getId(),
+                    a.getContent(),
+                    a.getMember().getNickname(),
+                    a.getCreatedAt(),
+                    a.isFlag()
+            ));
+        }
+        return dtoList;
     }
 
     // 동적 정렬 기준 메소드

@@ -30,4 +30,11 @@ public class AlertController {
         if(userDetails == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         return alarmService.alertAllRead(userDetails);
     }
+
+    // 내 알람 전체 가져오기
+    @GetMapping("/user/alert-get")
+    public ResponseDto<?> alertGet(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        return alarmService.alertGet(userDetails);
+    }
 }
