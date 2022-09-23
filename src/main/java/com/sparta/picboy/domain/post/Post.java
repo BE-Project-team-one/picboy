@@ -116,6 +116,7 @@ public class Post extends Timestamped {
 
     }
 
+    // reportCount 업데이트
     public void updateReportCnt(int reportCount) {
         this.reportCount = reportCount;
 

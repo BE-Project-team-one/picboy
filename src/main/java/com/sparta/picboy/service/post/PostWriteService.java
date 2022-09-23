@@ -240,6 +240,12 @@ public class PostWriteService {
             List<Report> postReportList = postReportRepository.findAllByPost(post);
             post.updateReportCnt(postReportList.size());
 
+            // 신고 횟수가 5회 이상일 경우 숨김처리
+            if (post.getReportCount() >= 5) {
+                post.statusUpdate(3);
+                postRepository.save(post);
+            }
+
             return ResponseDto.success("신고 완료");
 
         } else { // 신고하기 취소

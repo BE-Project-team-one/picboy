@@ -30,7 +30,7 @@ public class Member extends Timestamped {
     private String profileImg; // 프로필 이미지
 
     @Column(nullable = false)
-    private int status; // 로그인 상태
+    private int status; // 로그인 상태 1.일반 로그인 2.소셜로그인 3.계정 블락
 
     @Column
     private String phoneNumber; // 휴대폰 번호
