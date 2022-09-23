@@ -2,13 +2,21 @@ package com.sparta.picboy.S3Upload;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
+import com.sparta.picboy.domain.post.Post;
+import com.sparta.picboy.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AwsS3Service {
 
+    private final PostRepository postRepository;
     private final AmazonS3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -91,6 +100,25 @@ public class AwsS3Service {
         String substring = encodedFile.substring(encodedFile.indexOf(",") + 1);
         Base64.Decoder decoder = Base64.getDecoder();
         return decoder.decode(substring);
+    }
+
+    // 파일 다운로드
+    public ResponseEntity<byte[]> getObject(Long postId, String storedFileName) throws IOException {
+        String substring = storedFileName.substring(storedFileName.lastIndexOf("picboy/"));
+        S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, substring));
+        S3ObjectInputStream objectInputStream = o.getObjectContent();
+        byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+        Post post = postRepository.findById(postId).orElseThrow();
+        String fileName = post.getId() + " " + post.getTopic() + ".gif";
+        String encodedFilename = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", encodedFilename);
+
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+
     }
 
 
