@@ -92,25 +92,35 @@
                                     <thead>
                                         <tr>
                                             <th>순번</th>
-                                            <th>Id key</th>
-                                            <th>아이디</th>
-                                            <th>닉네임</th>
+                                            <th>제시어</th>
+                                            <th>마지막 프레임</th>
+                                            <th>총 프레임</th>
+                                            <th>삭제일</th>
+                                            <th>gif 이미지</th>
                                             <th>상태</th>
-                                            <th>휴대폰번호</th>
-                                            <th>권한</th>
-                                            <th>카카오ID</th>
+                                            <th>댓글 수</th>
+                                            <th>좋아요 수</th>
+                                            <th>조회 수</th>
+                                            <th>신고 수</th>
+                                            <th>게시물 작성자</th>
+                                            <th>삭제</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="m, i : ${userList}">
-                                            <td th:text="${i.index+1}">
-                                            <td th:text="${m.Id}">--%>
-                                            <td th:text="${m.username}">
-                                            <td th:text="${m.nickname}">
-                                            <td th:text="${m.status}">
-                                            <td th:text="${m.phoneNumber}">
-                                            <td th:text="${m.authority}">
-                                            <td th:text="${m.kakaoId}">
+                                        <tr th:each="m, i : ${postList}">
+                                            <td th:text="${i.index+1}"></td>
+                                            <td th:text="${m.topic}"></td>
+                                            <td th:text="${m.frameNum}"></td>
+                                            <td th:text="${m.frameTotal}"></td>
+                                            <td th:text="${m.expiredAt}"></td>
+                                            <td th:text="${m.gifUrl}"></td>
+                                            <td th:text="${m.status}"></td>
+                                            <td th:text="${m.commentCount}"></td>
+                                            <td th:text="${m.likeCount}"></td>
+                                            <td th:text="${m.viewCount}"></td>
+                                            <td th:text="${m.reportCount}"></td>
+                                            <td th:text="${m.member.nickname}"></td>
+                                            <td> <button onclick="btnDelete(th='${m.commentCount}')" id="test">삭제</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -155,6 +165,11 @@
     <!-- Page level custom scripts -->
     <script src="/js/demo/datatables-demo.js"></script>
 
+<script>
+    function btnDelete(data) {
+        console.log(data);
+    }
+</script>
 
 
 </body>

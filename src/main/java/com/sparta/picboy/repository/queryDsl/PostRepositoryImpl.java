@@ -5,8 +5,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
+import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
+import com.sparta.picboy.dto.response.post.PostResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,6 +123,33 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         }
         return  new PageImpl<>(responseDtoList, pageable, total);
 
+    }
+
+    // 게시글 전체 조회
+    @Override
+    public List<PostResponseDto> findAllPost() {
+        QPost post = QPost.post;
+
+        List<Post> postList = queryFactory.selectFrom(post).fetch();
+        List<PostResponseDto> dto = new ArrayList<>();
+        for(Post p : postList) {
+            dto.add(new PostResponseDto(
+                    p.getId(),
+                    p.getTopic(),
+                    p.getFrameNum(),
+                    p.getFrameTotal(),
+                    p.getImgUrl(),
+                    p.getExpiredAt(),
+                    p.getStatus(),
+                    p.getGifUrl(),
+                    p.getCommentCount(),
+                    p.getLikeCount(),
+                    p.getViewCount(),
+                    p.getReportCount(),
+                    p.getMember()
+            ));
+        }
+        return dto;
     }
 
     // 동적 정렬 기준 메소드
