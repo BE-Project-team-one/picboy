@@ -2,13 +2,19 @@ package com.sparta.picboy.S3Upload;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,6 +97,23 @@ public class AwsS3Service {
         String substring = encodedFile.substring(encodedFile.indexOf(",") + 1);
         Base64.Decoder decoder = Base64.getDecoder();
         return decoder.decode(substring);
+    }
+
+    // 파일 다운로드
+    public ResponseEntity<byte[]> getObject(String storedFileName) throws IOException {
+        String substring = storedFileName.substring(storedFileName.lastIndexOf("picboy/"));
+        S3Object o = amazonS3Client.getObject(new GetObjectRequest(bucket, substring));
+        S3ObjectInputStream objectInputStream = o.getObjectContent();
+        byte[] bytes = IOUtils.toByteArray(objectInputStream);
+
+        String fileName = substring.substring(substring.lastIndexOf("post")) + ".gif";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+
     }
 
 

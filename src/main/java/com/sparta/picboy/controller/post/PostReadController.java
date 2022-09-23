@@ -1,20 +1,25 @@
 package com.sparta.picboy.controller.post;
 
+import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.service.post.PostReadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 public class PostReadController {
 
     private final PostReadService postReadService;
+    private final AwsS3Service awsS3Service;
 
     // 메인페이지 베스트 움짤 Top 10 보이기
     @GetMapping("/main/best-top10")
@@ -76,6 +81,12 @@ public class PostReadController {
 
         return postReadService.readCompletionDetail(postid, login);
 
+    }
+
+    // 게시물 다운로드
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(@RequestParam String fileName) throws IOException {
+        return awsS3Service.getObject(fileName);
     }
 
 }

@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.OPTIONS,"/**").permitAll() // 이거 혹시 될라나?
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
+                        .antMatchers("/download/**").permitAll()
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
