@@ -23,5 +23,7 @@ public class MypageResponseDto {
     private int memberCount;
     private LocalDateTime date; // 만료된 날짜 // 정렬 순
     private int status; // 완성/진행/숨김/전체
+    private boolean likesFlag; // 좋아요 상태
+    private boolean reportFlag; // 신고 상태
 
 }
