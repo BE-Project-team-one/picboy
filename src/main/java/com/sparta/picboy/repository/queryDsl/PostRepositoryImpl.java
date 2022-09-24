@@ -8,8 +8,7 @@ import com.sparta.picboy.domain.post.*;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
-import com.sparta.picboy.dto.response.post.AlertInboxResponseDto;
-import com.sparta.picboy.dto.response.post.PostResponseDto;
+import com.sparta.picboy.dto.response.post.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,12 +24,12 @@ import java.util.List;
  */
 @Repository
 @RequiredArgsConstructor
-public class PostRepositoryImpl implements PostRepositoryCustom{
+public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     //카테고리 정렬 메소드
     @Override
-    public Page<MypageResponseDto> categorySort(String username,int tabNum, int categoryNum, Pageable pageable) {
+    public Page<MypageResponseDto> categorySort(String username, int tabNum, int categoryNum, Pageable pageable) {
         //Q클래스를 이용한다.
         QPost post = QPost.post;
         QPostRelay postRelay = QPostRelay.postRelay;
@@ -43,32 +42,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         BooleanBuilder builder2 = new BooleanBuilder();
 
 
-       if(tabNum != 3) {
-           // 내가 참여한 전체 게시물물
-           if(tabNum == 0) builder.and(null);
-           // 내가 작성한 게시물
-           if(tabNum == 1) builder.and(post.member.username.eq(username));
-           // 내가 참여한 게시물
-           if(tabNum == 2) builder.and(post.member.username.ne(username));
+        if (tabNum != 3) {
+            // 내가 참여한 전체 게시물물
+            if (tabNum == 0) builder.and(null);
+            // 내가 작성한 게시물
+            if (tabNum == 1) builder.and(post.member.username.eq(username));
+            // 내가 참여한 게시물
+            if (tabNum == 2) builder.and(post.member.username.ne(username));
 
-           builder2.and(
-                   post.id.notIn(queryFactory.select(hidePost.post.id)
-                           .from(hidePost)
-                           .innerJoin(hidePost.member, member)
-                           .where(hidePost.member.username.eq(username))
-                           .fetch())
-           );
-       } else {
-           // 내가 숨긴 게시물
-           builder.and(
-                   post.id.in(queryFactory.select(hidePost.post.id)
-                           .from(hidePost)
-                           .innerJoin(hidePost.member, member)
-                           .where(hidePost.member.username.eq(username))
-                           .fetch())
-           );
-           builder2.and(null);
-       }
+            builder2.and(
+                    post.id.notIn(queryFactory.select(hidePost.post.id)
+                            .from(hidePost)
+                            .innerJoin(hidePost.member, member)
+                            .where(hidePost.member.username.eq(username))
+                            .fetch())
+            );
+        } else {
+            // 내가 숨긴 게시물
+            builder.and(
+                    post.id.in(queryFactory.select(hidePost.post.id)
+                            .from(hidePost)
+                            .innerJoin(hidePost.member, member)
+                            .where(hidePost.member.username.eq(username))
+                            .fetch())
+            );
+            builder2.and(null);
+        }
 
         List<PostRelay> postRelayList = queryFactory.select(postRelay)
                 .from(postRelay)
@@ -77,7 +76,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .innerJoin(postRelay.member, member)
                 .where(
                         postRelay.member.username.eq(username)
-                        .and(post.status.in(1,2))
+                                .and(post.status.in(1, 2))
                                 .and(builder)
                                 .and(builder2)
 
@@ -93,7 +92,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         List<MypageResponseDto> responseDtoList = new ArrayList<>();
 
         // 기존에 list로 가져온 응답 중, 필요한 offset ~ limit까지의 데이터만 담음
-        for (int i = pageable.getPageNumber() * pageable.getPageSize(); i < limit && i < total; i ++) {
+        for (int i = pageable.getPageNumber() * pageable.getPageSize(); i < limit && i < total; i++) {
             Post resultPost = queryFactory.selectFrom(post)
                     .where(post.id.eq(postRelayList.get(i).getPost().getId()))
                     .fetchOne();
@@ -108,19 +107,19 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
             // 내가 좋아요 누른 게시물 찾기
             Likes resultLike = queryFactory.selectFrom(likes)
-                            .where(
-                                    likes.post.eq(resultPost)
+                    .where(
+                            likes.post.eq(resultPost)
                                     .and(likes.member.username.eq(username))
-                            ).fetchOne();
+                    ).fetchOne();
 
             boolean likesFlag = resultLike != null;
 
             // 내가 신고한 게시글
             Report resultReport = queryFactory.selectFrom(report)
-                            .where(
-                                    report.post.eq(resultPost)
+                    .where(
+                            report.post.eq(resultPost)
                                     .and(report.member.username.eq(username))
-                            ).fetchOne();
+                    ).fetchOne();
 
             boolean reportFlag = resultReport != null;
 
@@ -143,7 +142,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     reportFlag
             ));
         }
-        return  new PageImpl<>(responseDtoList, pageable, total);
+        return new PageImpl<>(responseDtoList, pageable, total);
 
     }
 
@@ -154,7 +153,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         List<Post> postList = queryFactory.selectFrom(post).fetch();
         List<PostResponseDto> dto = new ArrayList<>();
-        for(Post p : postList) {
+        for (Post p : postList) {
             dto.add(new PostResponseDto(
                     p.getId(),
                     p.getTopic(),
@@ -183,7 +182,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .from(alert)
                 .where(
                         alert.member.username.eq(username)
-                        .and(alert.flag.eq(false))
+                                .and(alert.flag.eq(false))
                 )
                 .fetch();
 
@@ -218,7 +217,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .fetch();
 
         List<AlertInboxResponseDto> dtoList = new ArrayList<>();
-        for(Alert a : alertList) {
+        for (Alert a : alertList) {
 
 
             dtoList.add(new AlertInboxResponseDto(
@@ -236,12 +235,116 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     // 동적 정렬 기준 메소드
     private OrderSpecifier<?> getOrder(int categoryNum) {
         QPost post = QPost.post;
-        if(categoryNum == 1) return post.completAt.desc();
+        if (categoryNum == 1) return post.createdAt.desc();
+        if (categoryNum == 2) return post.likeCount.desc();
+        if (categoryNum == 3) return post.commentCount.desc();
+        if (categoryNum == 4) return post.viewCount.desc();
+        return null;
+    }
+
+    //테스트
+    @Override
+    public List<PostCompletionResponsePageDto> postRead(int tabNum, int categoryNum, Pageable pageable) {
+        // tabNum : 0->전체 1->제시어o 2->제시어x
+        // categoryNum : 1->최신순 2->좋아요순 3->댓글순 4->조회순
+
+        //Q클래스를 이용한다.
+        QPost post = QPost.post;
+        QPostRelay postRelay = QPostRelay.postRelay;
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // 전체 게시물물
+        if (tabNum == 0) builder.and(null);
+        // 제시어 o 게시물
+        if (tabNum == 1) builder.and(post.topic.isNotNull());
+        // 제시어 x 게시물
+        if (tabNum == 2) builder.and(post.topic.isNull());
+
+
+        List<PostRelay> postRelayList = queryFactory.selectFrom(postRelay)
+                .innerJoin(postRelay.post, post)
+                .where(post.status.eq(2)
+                        .and(postRelay.frameNum.eq(post.frameTotal))
+                        .and(builder))
+                .orderBy(order(categoryNum))
+                .fetch();
+
+        List<PostCompletionResponseDto> postCompletionResponseDtoList = new ArrayList<>();
+        for (PostRelay postRelay2 : postRelayList) {
+
+            Long id = postRelay2.getPost().getId();
+            String gifUrl = postRelay2.getPost().getGifUrl();
+            int likeCount = postRelay2.getPost().getLikeCount();
+            String topic = postRelay2.getPost().getTopic();
+            String nickname = postRelay2.getPost().getMember().getNickname();
+            String profileImg = postRelay2.getPost().getMember().getProfileImg();
+            int commetCount = postRelay2.getPost().getCommentCount();
+            int reportCount = postRelay2.getPost().getReportCount();
+            LocalDateTime date = postRelay2.getCreatedAt(); // 마지막 프레임 생성일자 = gif 게시물 생성일
+            int viewCount = postRelay2.getPost().getViewCount();
+            int status = postRelay2.getPost().getStatus();
+
+            // 게시글을 만드는데 참여한 인원 구하기
+            List<Member> members = new ArrayList<>();
+            List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
+            List<PostRelay> postRelayListForMember = queryFactory.selectFrom(postRelay)
+                    .innerJoin(postRelay.post, post)
+                    .where(post.eq(postRelay2.getPost()))
+                    .fetch();
+
+            // 중복제거 하면서 멤버 추가
+            for (PostRelay forFor : postRelayListForMember) {
+                members.remove(forFor.getMember());
+                members.add(forFor.getMember());
+            }
+
+            // 참가자 중에서 작성자 제외하기
+            members.remove(postRelay2.getPost().getMember());
+
+            // 리스폰스 작성
+            for (Member members2 : members) {
+                participantResponseDtoList.add(new ParticipantResponseDto(members2.getNickname(), members2.getProfileImg()));
+            }
+
+            int participantCount = participantResponseDtoList.size();
+
+            for (PostRelay postRelays : postRelayList) {
+
+                Member member = postRelays.getMember();
+                members.remove(member);
+                members.add(member);
+
+            }
+
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commetCount, reportCount, date, viewCount, status, participantResponseDtoList, participantCount);
+            postCompletionResponseDtoList.add(postCompletionResponseDto);
+
+        }
+
+        // list의 size를 얻어 totalElements와 totalPages에 사용
+        int total = postRelayList.size();
+        // list의 offset부터 limit까지 가져와야 하기 때문에 하기와 같이 구현
+        int limit = pageable.getPageSize() * (pageable.getPageNumber() + 1);
+        List<PostCompletionResponsePageDto> postCompletionResponsePageDtoList = new ArrayList<>();
+
+        // 기존에 list로 가져온 응답 중, 필요한 offset ~ limit까지의 데이터만 담음
+        for (int i = pageable.getPageNumber() * pageable.getPageSize(); i < limit && i < total; i++) {
+            postCompletionResponsePageDtoList.add(new PostCompletionResponsePageDto(postCompletionResponseDtoList.get(i)));
+
+        }
+
+        return postCompletionResponsePageDtoList;
+
+    }
+
+    private OrderSpecifier<?> order(int categoryNum) {
+        QPost post = QPost.post;
+        QPostRelay postRelay = QPostRelay.postRelay;
+        if(categoryNum == 1) return postRelay.createdAt.desc();
         if(categoryNum == 2) return post.likeCount.desc();
         if(categoryNum == 3) return post.commentCount.desc();
         if(categoryNum == 4) return post.viewCount.desc();
         return null;
     }
-
-
 }

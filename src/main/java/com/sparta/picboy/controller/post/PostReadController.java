@@ -49,6 +49,14 @@ public class PostReadController {
 
     }
 
+
+    // 완료된 움짤 페이지 조회
+    @GetMapping("/post/gif/{tabNum}/{categoryNum}")
+    public ResponseDto<?> testSibal(@PathVariable int tabNum, @PathVariable int categoryNum, @RequestParam int page, @RequestParam int size) {
+        return postReadService.postRead(tabNum, categoryNum, page, size);
+
+    }
+
     // 완료된 움짤 페이지 목록 조회
     @GetMapping("/post/gif/{categoryNum}")
     public ResponseDto<?> readCompletion(@PathVariable Long categoryNum, @RequestParam int size, @RequestParam int page) {
