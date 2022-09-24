@@ -35,6 +35,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
         QPostRelay postRelay = QPostRelay.postRelay;
         QMember member = QMember.member;
         QHidePost hidePost = QHidePost.hidePost;
+        QLikes likes = QLikes.likes;
+        QReport report = QReport.report;
 
         BooleanBuilder builder = new BooleanBuilder();
         BooleanBuilder builder2 = new BooleanBuilder();
@@ -95,7 +97,6 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .where(post.id.eq(postRelayList.get(i).getPost().getId()))
                     .fetchOne();
 
-
             // 게시물 참여자 수 구하기 (중복 제거)
             int count = queryFactory.select(postRelay)
                     .from(postRelay)
@@ -103,6 +104,25 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     .where(postRelay.post.id.eq(postRelayList.get(i).getPost().getId()))
                     .groupBy(postRelay.post.id, postRelay.member.id)
                     .fetch().size();
+
+            // 내가 좋아요 누른 게시물 찾기
+            Likes resultLike = queryFactory.selectFrom(likes)
+                            .where(
+                                    likes.post.eq(resultPost)
+                                    .and(likes.member.username.eq(username))
+                            ).fetchOne();
+
+            boolean likesFlag = resultLike != null;
+
+            // 내가 신고한 게시글
+            Report resultReport = queryFactory.selectFrom(report)
+                            .where(
+                                    report.post.eq(resultPost)
+                                    .and(report.member.username.eq(username))
+                            ).fetchOne();
+
+            boolean reportFlag = resultReport != null;
+
 
             responseDtoList.add(new MypageResponseDto(
                     resultPost.getId(),
@@ -117,7 +137,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                     resultPost.getMember().getProfileImg(),
                     count - 1, // 글쓴이 외 참여자 수
                     resultPost.getExpiredAt(),
-                    resultPost.getStatus()
+                    resultPost.getStatus(),
+                    likesFlag,
+                    reportFlag
             ));
         }
         return  new PageImpl<>(responseDtoList, pageable, total);
