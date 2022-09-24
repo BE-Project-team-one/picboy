@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,7 @@ public class AlarmService {
     }
 
     // 전체 알람 읽음 처리 update
+    @Transactional
     public ResponseDto<?> alertAllRead(UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         try {

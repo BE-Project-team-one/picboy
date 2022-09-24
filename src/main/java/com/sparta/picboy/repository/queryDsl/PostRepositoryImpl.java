@@ -5,6 +5,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
+import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.post.AlertInboxResponseDto;
@@ -192,10 +193,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     // 알람 전체 읽음 처리로 update
     @Override
     public void alertAllRead(String username) {
+        QMember member = QMember.member;
         QAlert alert = QAlert.alert;
 
+        Member member1 = queryFactory.selectFrom(member)
+                .where(member.username.eq(username))
+                .fetchOne();
+
         queryFactory.update(alert)
-                .where(alert.member.username.eq(username))
+                .where(alert.member.eq(member1))
                 .set(alert.flag, true)
                 .execute();
     }
