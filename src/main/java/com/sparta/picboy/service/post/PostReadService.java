@@ -313,6 +313,7 @@ public class PostReadService {
 //            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
 //            LocalDateTime date = postRelay.getCreatedAt();
             LocalDateTime date = post.getModifiedAt();
+            LocalDateTime completAt = post.getCompletAt();
 
             int viewCount = post.getViewCount();
             int status = post.getStatus(); // 반드시 2의 값을 가질것임
@@ -346,7 +347,7 @@ public class PostReadService {
             }
 
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount, completAt);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
         }
 

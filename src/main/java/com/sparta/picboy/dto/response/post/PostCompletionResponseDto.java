@@ -22,8 +22,9 @@ public class PostCompletionResponseDto {
     private int status; // 반드시 2 의 값을 가짐
     private List<ParticipantResponseDto> participantResponseDtoList;
     private int participantCount;
+    private LocalDateTime completAt;
 
-    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount, LocalDateTime completAt) {
         this.id = id;
         this.gifUrl = gifUrl;
         this.likeCount = likeCount;
@@ -37,5 +38,6 @@ public class PostCompletionResponseDto {
         this.status = status;
         this.participantResponseDtoList = participantResponseDtoList;
         this.participantCount = participantCount;
+        this.completAt = completAt;
     }
 }
