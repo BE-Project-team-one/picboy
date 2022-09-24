@@ -210,6 +210,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     @Override
     public List<AlertInboxResponseDto> alertAllGet(String username) {
         QAlert alert = QAlert.alert;
+        QPost post = QPost.post;
 
         List<Alert> alertList = queryFactory.selectFrom(alert)
                 .where(alert.member.username.eq(username))
@@ -218,12 +219,15 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
         List<AlertInboxResponseDto> dtoList = new ArrayList<>();
         for(Alert a : alertList) {
+
+
             dtoList.add(new AlertInboxResponseDto(
                     a.getId(),
                     a.getContent(),
                     a.getMember().getNickname(),
                     a.getCreatedAt(),
-                    a.isFlag()
+                    a.isFlag(),
+                    a.getPost().getTopic()
             ));
         }
         return dtoList;

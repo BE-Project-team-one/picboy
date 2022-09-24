@@ -2,10 +2,12 @@ package com.sparta.picboy.WebSocket;
 
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.domain.post.Alert;
+import com.sparta.picboy.domain.post.Post;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.AlertResponseDto;
 import com.sparta.picboy.repository.post.AlertRepository;
+import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.queryDsl.PostRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -21,11 +23,13 @@ public class AlarmService {
     private final AlertRepository alertRepository;
     private final PostRepositoryImpl postRepository;
 
+    private final PostRepository jpaPost;
+
     // 알람 메시지 보내는 메소드
     public void alarmByMessage(MessageDto messageDto) {
-
+        Post post = jpaPost.findById(messageDto.getPostId()).orElse(null);
         for(Member member : messageDto.getMemberSet()) {
-            Alert alert = new Alert(messageDto.getContent(),member);
+            Alert alert = new Alert(messageDto.getContent(),member, post);
             alertRepository.save(alert);
             AlertResponseDto alertResponseDto = new AlertResponseDto(messageDto.getPostId(), messageDto.getContent(), alert.getMember().getUsername());
             messagingTemplate.convertAndSend("/sub/" + member.getUsername(), alertResponseDto);

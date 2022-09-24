@@ -16,5 +16,6 @@ public class AlertInboxResponseDto {
     private String receiver;
     private LocalDateTime createAt;
     private boolean flag;
+    private String topic;
 
 }
