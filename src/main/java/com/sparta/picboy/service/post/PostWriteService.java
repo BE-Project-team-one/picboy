@@ -34,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -113,6 +114,10 @@ public class PostWriteService {
 
         if (post.getFrameNum() == post.getFrameTotal()) {
             post.statusUpdate(2);
+
+            //마지막 프레임 완성일 = gif 게시물 작성일
+            LocalDateTime completAt = postRelay.getModifiedAt();
+            post.updateCompletAt(completAt);
 
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
 

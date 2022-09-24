@@ -204,7 +204,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     // 동적 정렬 기준 메소드
     private OrderSpecifier<?> getOrder(int categoryNum) {
         QPost post = QPost.post;
-        if(categoryNum == 1) return post.createdAt.desc();
+        if(categoryNum == 1) return post.completAt.desc();
         if(categoryNum == 2) return post.likeCount.desc();
         if(categoryNum == 3) return post.commentCount.desc();
         if(categoryNum == 4) return post.viewCount.desc();

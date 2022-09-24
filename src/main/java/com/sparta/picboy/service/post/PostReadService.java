@@ -140,13 +140,13 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 게시글 전체
-        if (tabNum == 0) postList = postRepository.findAllByStatusOrderByModifiedAtDesc(1,pageable);
+        if (tabNum == 0) postList = postRepository.findAllByStatusOrderByCompletAtDesc(1,pageable);
 
         // 주제어 o
-        if (tabNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByModifiedAtDesc(1, pageable);
+        if (tabNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCompletAtDesc(1, pageable);
 
         // 주제어 x
-        if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByModifiedAtDesc(1, pageable);
+        if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCompletAtDesc(1, pageable);
 
         //x pageable을 controller에서 받아주면 안되는건가?
 
@@ -233,7 +233,7 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByModifiedAtDesc(2, pageable);
+        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByCompletAtDesc(2, pageable);
 
         // 좋아요 순 정렬
         if (categoryNum == 2) postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
@@ -255,7 +255,7 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAtDesc(2, pageable);
+        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCompletAtDesc(2, pageable);
 
         // 좋아요 순 정렬
         if (categoryNum == 2) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
@@ -279,7 +279,7 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAtDesc(2, pageable);
+        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCompletAtDesc(2, pageable);
 
         // 좋아요 순 정렬
         if (categoryNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);

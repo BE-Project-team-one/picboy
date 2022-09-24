@@ -52,12 +52,15 @@ public class Post extends Timestamped {
     @Column
     private int reportCount; // 신고 수
 
+    @Column
+    private LocalDateTime completAt; // gif 완성일
+
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member; // 유저
 
-    public Post(String topic, int frameNum, int frameTotal, String imgUrl, LocalDateTime expiredAt, int status, String gifUrl, int commentCount, int likeCount, int viewCount, int reportCount, Member member) {
+    public Post(String topic, int frameNum, int frameTotal, String imgUrl, LocalDateTime expiredAt, int status, String gifUrl, int commentCount, int likeCount, int viewCount, int reportCount, LocalDateTime completAt, Member member) {
         this.topic = topic;
         this.frameNum = frameNum;
         this.frameTotal = frameTotal;
@@ -69,6 +72,7 @@ public class Post extends Timestamped {
         this.likeCount = likeCount;
         this.viewCount = viewCount;
         this.reportCount = reportCount;
+        this.completAt = completAt;
         this.member = member;
     }
 
@@ -119,6 +123,12 @@ public class Post extends Timestamped {
     // reportCount 업데이트
     public void updateReportCnt(int reportCount) {
         this.reportCount = reportCount;
+
+    }
+
+    // gif 완성일 업데이트
+    public void updateCompletAt(LocalDateTime completAt) {
+        this.completAt = completAt;
 
     }
 
