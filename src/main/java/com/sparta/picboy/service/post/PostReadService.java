@@ -12,6 +12,7 @@ import com.sparta.picboy.repository.comment.CommentRepository;
 import com.sparta.picboy.repository.post.PostLikeRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
+import com.sparta.picboy.repository.queryDsl.PostRepositoryImpl;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,7 @@ public class PostReadService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
+    private final PostRepositoryImpl postQueryDsl;
 
 
     // 메인페이지 베스트 움짤 Top 10
@@ -226,6 +228,14 @@ public class PostReadService {
     }
 
 
+
+    // 완료된 움짤 페이지 조회
+    public ResponseDto<?> postRead(int tabNum, int categoryNum, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseDto.success(postQueryDsl.postRead(tabNum, categoryNum,pageable));
+
+    }
+
     // 완료된 움짤 페이지 목록 전체 조회
     public ResponseDto<?> readCompletion(Long categoryNum, int size, int page) {
 
@@ -313,7 +323,6 @@ public class PostReadService {
 //            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
 //            LocalDateTime date = postRelay.getCreatedAt();
             LocalDateTime date = post.getModifiedAt();
-            LocalDateTime completAt = post.getCompletAt();
 
             int viewCount = post.getViewCount();
             int status = post.getStatus(); // 반드시 2의 값을 가질것임
@@ -347,7 +356,7 @@ public class PostReadService {
             }
 
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount, completAt);
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
         }
 
