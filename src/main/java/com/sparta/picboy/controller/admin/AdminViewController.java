@@ -20,6 +20,16 @@ public class AdminViewController {
         mv.addObject("userCount", adminService.userCount());
         // 총 게시물 수
         mv.addObject("postCount", adminService.postCount());
+        // 주제어 있는 게시물
+        mv.addObject("topicIsNotNullPost", adminService.topicIsNotNullPost());
+        // 주제어 없는 게시물
+        mv.addObject("topicIsNullPost", adminService.topicIsNullPost());
+        // 완성된 게시물
+        mv.addObject("completePost", adminService.completePost());
+        // 진행중인 게시물
+        mv.addObject("proceedingPost", adminService.proceedingPost());
+        // 숨겨진 게시글
+        mv.addObject("hidnPost", adminService.hidnPost());
 
         return mv;
     }

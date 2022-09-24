@@ -338,6 +338,51 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     }
 
+    @Override
+    public int topicIsNotNullPost() {
+        QPost post = QPost.post;
+
+        return queryFactory.selectFrom(post)
+                .where(post.topic.isNotNull())
+                .fetch().size();
+    }
+
+    @Override
+    public int topicIsNullPost() {
+        QPost post = QPost.post;
+
+        return queryFactory.selectFrom(post)
+                .where(post.topic.isNull())
+                .fetch().size();
+    }
+
+    @Override
+    public int completePost() {
+        QPost post = QPost.post;
+
+        return queryFactory.selectFrom(post)
+                .where(post.frameTotal.eq(post.frameNum))
+                .fetch().size();
+    }
+
+    @Override
+    public int proceedingPost() {
+        QPost post = QPost.post;
+
+        return queryFactory.selectFrom(post)
+                .where(post.frameTotal.ne(post.frameNum))
+                .fetch().size();
+    }
+
+    @Override
+    public int hidnPost() {
+        QPost post = QPost.post;
+
+        return queryFactory.selectFrom(post)
+                .where(post.status.eq(3))
+                .fetch().size();
+    }
+
     private OrderSpecifier<?> order(int categoryNum) {
         QPost post = QPost.post;
         QPostRelay postRelay = QPostRelay.postRelay;

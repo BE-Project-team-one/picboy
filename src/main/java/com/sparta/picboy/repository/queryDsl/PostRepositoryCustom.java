@@ -29,4 +29,19 @@ public interface PostRepositoryCustom {
 
     List<PostCompletionResponsePageDto> postRead(int tabNum, int categoryNum, Pageable pageable);
 
+    // 주제에 있는 게시글 갯수
+    int topicIsNotNullPost();
+
+    // 주제어 없는 게시글 갯수
+    int topicIsNullPost();
+
+    // 완성된 게시물 수
+    int completePost();
+
+    //진행중인 게시물 수
+    int proceedingPost();
+
+    //숨겨진 게시글 수
+   int hidnPost();
+
 }

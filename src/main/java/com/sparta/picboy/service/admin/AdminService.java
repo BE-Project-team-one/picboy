@@ -49,4 +49,30 @@ public class AdminService {
     public int postCount() {
         return postRepository.findAllPost().size();
     }
+
+    // 주제어 있는 게시물
+    public int topicIsNotNullPost() {
+        return postRepository.topicIsNotNullPost();
+    }
+
+    // 주제어 없는 게시물
+    public int topicIsNullPost() {
+        return postRepository.topicIsNullPost();
+    }
+
+    // 완성된 게시물
+    public int completePost() {
+        return postRepository.completePost();
+    }
+    // 진행중인 게시물
+    public int proceedingPost() {
+        return postRepository.proceedingPost();
+    }
+
+    // 숨겨진 게시글
+    public int hidnPost() {
+        return postRepository.hidnPost();
+    }
+
+
 }
