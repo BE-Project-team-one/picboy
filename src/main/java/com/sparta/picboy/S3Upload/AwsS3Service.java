@@ -118,7 +118,6 @@ public class AwsS3Service {
         httpHeaders.setContentDispositionFormData("attachment", encodedFilename);
 
         return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
-
     }
 
 
