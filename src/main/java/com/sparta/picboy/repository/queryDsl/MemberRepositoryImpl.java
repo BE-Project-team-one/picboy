@@ -1,5 +1,6 @@
 package com.sparta.picboy.repository.queryDsl;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
@@ -39,5 +40,36 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         }
 
         return responseList;
+    }
+
+    @Override
+    public void userLock(Long memberId) {
+        QMember member = QMember.member;
+
+        queryFactory.update(member)
+                .where(member.id.eq(memberId))
+                .set(member.status, 3)
+                .execute();
+    }
+
+    @Override
+    public void userClear(Long memberId) {
+        QMember member = QMember.member;
+
+        Member member1 = queryFactory.selectFrom(member)
+                .where(member.id.eq(memberId))
+                .fetchOne();
+
+        if(member1.getKakaoId() == null) {
+            queryFactory.update(member)
+                    .where(member.id.eq(memberId))
+                    .set(member.status, 1)
+                    .execute();
+        } else {
+            queryFactory.update(member)
+                    .where(member.id.eq(memberId))
+                    .set(member.status, 2)
+                    .execute();
+        }
     }
 }

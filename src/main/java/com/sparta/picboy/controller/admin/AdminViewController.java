@@ -13,10 +13,18 @@ public class AdminViewController {
 
     // 관리자 메인 홈페이지
     @GetMapping("/admin")
-    public String home() {
-        return "index";
+    public ModelAndView home() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("index");
+        // 총 유저수
+        mv.addObject("userCount", adminService.userCount());
+        // 총 게시물 수
+        mv.addObject("postCount", adminService.postCount());
+
+        return mv;
     }
 
+    // 관리자 유저 페이지
     @GetMapping("/admin/user")
     public ModelAndView adminUser() {
         ModelAndView mv = new ModelAndView();
@@ -26,6 +34,7 @@ public class AdminViewController {
         return mv;
     }
 
+    // 관리자 정보 페이지
     @GetMapping("/admin/post")
     public ModelAndView adminPost() {
         ModelAndView mv = new ModelAndView();

@@ -72,7 +72,8 @@ public class WebSecurityConfig {
                                 "/fonts/**",
                                 "/img/**",
                                 "/vendor/**",
-                                "/js/**"
+                                "/js/**",
+                                "/favicon.ico"
                                 ).permitAll()
 //                        .antMatchers(HttpMethod.GET,"/oauth/**").permitAll() // 혹시 이거때문?
                         // 나머지 어떤 요청이든 '인증' 필요

@@ -8,4 +8,9 @@ public interface MemberRepositoryCustom {
 
     // 전체 맴버 찾기
     List<UserResponseDto> findAllMember();
+
+    // 유저 계정 정지
+    void userLock(Long memberId);
+
+    void userClear(Long memberId);
 }
