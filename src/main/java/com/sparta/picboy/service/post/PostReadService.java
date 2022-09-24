@@ -140,13 +140,13 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 게시글 전체
-        if (tabNum == 0) postList = postRepository.findAllByStatusOrderByCreatedAtDesc(1,pageable);
+        if (tabNum == 0) postList = postRepository.findAllByStatusOrderByModifiedAtDesc(1,pageable);
 
         // 주제어 o
-        if (tabNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCreatedAt(1, pageable);
+        if (tabNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByModifiedAtDesc(1, pageable);
 
         // 주제어 x
-        if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCreatedAt(1, pageable);
+        if (tabNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByModifiedAtDesc(1, pageable);
 
         //x pageable을 controller에서 받아주면 안되는건가?
 
@@ -233,7 +233,7 @@ public class PostReadService {
         Page<Post> postList = null;
 
         // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByCreatedAtDesc(2, pageable);
+        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByModifiedAtDesc(2, pageable);
 
         // 좋아요 순 정렬
         if (categoryNum == 2) postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
@@ -309,9 +309,10 @@ public class PostReadService {
             int repotCount = post.getReportCount();
 
             // 완성된 날짜를 계산해야됨 -> 해당 게시글의 마지막 프레임이 생성된 시각
-            int postFrameTotal = post.getFrameTotal();
-            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
-            LocalDateTime date = postRelay.getCreatedAt();
+//            int postFrameTotal = post.getFrameTotal();
+//            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
+//            LocalDateTime date = postRelay.getCreatedAt();
+            LocalDateTime date = post.getModifiedAt();
 
             int viewCount = post.getViewCount();
             int status = post.getStatus(); // 반드시 2의 값을 가질것임
