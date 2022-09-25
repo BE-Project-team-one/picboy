@@ -1,6 +1,9 @@
 package com.sparta.picboy.repository.queryDsl;
 
-import com.querydsl.core.BooleanBuilder;
+
+import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
@@ -8,6 +11,7 @@ import com.sparta.picboy.dto.response.user.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,5 +75,20 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                     .set(member.status, 2)
                     .execute();
         }
+    }
+
+    @Override
+    public int todayRegister() {
+        QMember member = QMember.member;
+        LocalDate now = LocalDate.now();
+
+        StringTemplate dateFormat = Expressions.stringTemplate(
+                "DATE_FORMAT( {0}, {1} )",
+                member.createdAt,
+                ConstantImpl.create("%Y-%m-%d"));
+
+        return  queryFactory.selectFrom(member)
+                .where(dateFormat.eq(now.toString()))
+                .fetch().size();
     }
 }

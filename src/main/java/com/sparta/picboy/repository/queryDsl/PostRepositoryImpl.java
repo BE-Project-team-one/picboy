@@ -2,7 +2,10 @@ package com.sparta.picboy.repository.queryDsl;
 
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
 import com.sparta.picboy.domain.user.Member;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -380,6 +384,57 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         return queryFactory.selectFrom(post)
                 .where(post.status.eq(3))
+                .fetch().size();
+    }
+
+    @Override
+    public int todayCreatePost() {
+        QPost post = QPost.post;
+        LocalDate now = LocalDate.now();
+
+        StringTemplate dateFormat = Expressions.stringTemplate(
+                "DATE_FORMAT( {0}, {1} )",
+                post.createdAt,
+                ConstantImpl.create("%Y-%m-%d"));
+
+        return  queryFactory.selectFrom(post)
+                .where(dateFormat.eq(now.toString()))
+                .fetch().size();
+    }
+
+    @Override
+    public int todayCompletePost() {
+        QPost post = QPost.post;
+        QPostRelay postRelay = QPostRelay.postRelay;
+        LocalDate now = LocalDate.now();
+
+        StringTemplate dateFormat = Expressions.stringTemplate(
+                "DATE_FORMAT( {0}, {1} )",
+                postRelay.createdAt,
+                ConstantImpl.create("%Y-%m-%d"));
+
+        return  queryFactory.selectFrom(postRelay)
+                .innerJoin(postRelay.post, post)
+                .where(
+                        post.frameTotal.eq(postRelay.frameNum)
+                                .and(dateFormat.eq(now.toString()))
+                ).fetch().size();
+    }
+
+    @Override
+    public int todayDeletePost() {
+        QPost post = QPost.post;
+        LocalDate now = LocalDate.now();
+
+        StringTemplate dateFormat = Expressions.stringTemplate(
+                "DATE_FORMAT( {0}, {1} )",
+                post.expiredAt,
+                ConstantImpl.create("%Y-%m-%d"));
+
+        return  queryFactory.selectFrom(post)
+                .where(dateFormat.eq(now.toString())
+                        .and(post.status.in(1))
+                )
                 .fetch().size();
     }
 

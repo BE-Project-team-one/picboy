@@ -42,6 +42,17 @@ public interface PostRepositoryCustom {
     int proceedingPost();
 
     //숨겨진 게시글 수
-   int hidnPost();
+    int hidnPost();
+
+    // 오늘 생성된 게시글 수
+    int todayCreatePost();
+
+    // 오늘 완성된 게시글 수
+    int todayCompletePost();
+
+    // 오늘 삭제될 게시물 수
+    int todayDeletePost();
+
+
 
 }

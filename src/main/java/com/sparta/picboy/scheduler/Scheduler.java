@@ -36,7 +36,7 @@ public class Scheduler {
     // 초, 분, 시, 일, 월, 주 순서
     // 영속성 컨테이너 관리 때문에 @Transactional을 꼭 사용해야함
     @Transactional
-    @Scheduled(cron = "0 7 3 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void updatePost() throws InterruptedException {
         List<Post> postList = postRepository.findAll();
 

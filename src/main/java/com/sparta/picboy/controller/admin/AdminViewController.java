@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+
 @RequiredArgsConstructor
 @Controller
 public class AdminViewController {
@@ -30,6 +31,14 @@ public class AdminViewController {
         mv.addObject("proceedingPost", adminService.proceedingPost());
         // 숨겨진 게시글
         mv.addObject("hidnPost", adminService.hidnPost());
+        // 오늘 가입한 유저
+        mv.addObject("todayRegister", adminService.todayRegister());
+        // 오늘 생성된 게시물
+        mv.addObject("todayCreatePost", adminService.todayCreatePost());
+        // 오늘 완료된 게시물
+        mv.addObject("todayCompletePost", adminService.todayCompletePost());
+        // 오늘 삭제될 게시물
+        mv.addObject("todayDeletePost", adminService.todayDeletePost());
 
         return mv;
     }
@@ -54,6 +63,9 @@ public class AdminViewController {
 
         return mv;
     }
+
+
+
 
 
 }

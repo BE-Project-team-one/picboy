@@ -40,38 +40,58 @@ public class AdminService {
         memberRepository.userClear(memberId);
     }
 
-    // 총 유저 수
+    // 총 유저 수 count
     public int userCount() {
         return memberRepository.findAllMember().size();
     }
 
-    // 총 게시물 수
+    // 총 게시물 수 count
     public int postCount() {
         return postRepository.findAllPost().size();
     }
 
-    // 주제어 있는 게시물
+    // 주제어 있는 게시물 count
     public int topicIsNotNullPost() {
         return postRepository.topicIsNotNullPost();
     }
 
-    // 주제어 없는 게시물
+    // 주제어 없는 게시물 count
     public int topicIsNullPost() {
         return postRepository.topicIsNullPost();
     }
 
-    // 완성된 게시물
+    // 완성된 게시물 count
     public int completePost() {
         return postRepository.completePost();
     }
-    // 진행중인 게시물
+    // 진행중인 게시물 count
     public int proceedingPost() {
         return postRepository.proceedingPost();
     }
 
-    // 숨겨진 게시글
+    // 숨겨진 게시글 count
     public int hidnPost() {
         return postRepository.hidnPost();
+    }
+
+    // 오늘 가입된 유저 count
+    public int todayRegister() {
+        return memberRepository.todayRegister();
+    }
+
+    // 오늘 생성된 게시물 count
+    public int todayCreatePost() {
+        return postRepository.todayCreatePost();
+    }
+
+    // 오늘 완성된 게시물 count
+    public int todayCompletePost() {
+        return postRepository.todayCompletePost();
+    }
+
+    // 오늘 삭제될 게시물 count
+    public int todayDeletePost() {
+        return postRepository.todayDeletePost();
     }
 
 
