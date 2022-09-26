@@ -50,6 +50,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
 //        http.cors();
+        http.cors().and();
         http.csrf().disable();
 
 
