@@ -27,7 +27,7 @@ public interface PostRepositoryCustom {
 
     List<AlertInboxResponseDto> alertAllGet(String username);
 
-    List<PostCompletionResponsePageDto> postRead(int tabNum, int categoryNum, Pageable pageable);
+    Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable);
 
     // 주제에 있는 게시글 갯수
     int topicIsNotNullPost();
