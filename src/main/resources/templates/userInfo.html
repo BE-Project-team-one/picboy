@@ -163,7 +163,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/admin/userLock/"+data,
+            url: "https://picboy.net/admin/userLock/"+data,
             data: null,
             success:function(res){
                 alert("계정 잠금 성공");
@@ -181,7 +181,7 @@
 
         $.ajax({
             type: "PUT",
-            url: "/admin/userClear/"+data,
+            url: "https://picboy.net/admin/userClear/"+data,
             data: null,
             success:function(res){
                 alert("잠금 해제 성공");
