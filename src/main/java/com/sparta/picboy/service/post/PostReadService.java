@@ -166,6 +166,8 @@ public class PostReadService {
             Long id = post.getId();
             String imgUrl = post.getImgUrl();
             String topic = post.getTopic();
+            Long userid = post.getMember().getId();
+            String username = post.getMember().getUsername();
             String nickname = post.getMember().getNickname();
             int status = post.getStatus();
             String profileImg = post.getMember().getProfileImg();
@@ -197,7 +199,7 @@ public class PostReadService {
 
             }
 
-            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, nickname, status, profileImg, participantResponseDtoList, participantCount);
+            PostProceedingResponseDto postProceedingResponseDto = new PostProceedingResponseDto(id, imgUrl, topic, userid, username, nickname, status, profileImg, participantResponseDtoList, participantCount);
             postProceedingResponseDtoList.add(postProceedingResponseDto);
 
         }
