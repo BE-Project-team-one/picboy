@@ -127,8 +127,9 @@ public class PostReadService {
         String nickname = member.getNickname();
         String profileImg = member.getProfileImg();
         String authority = member.getAuthority();
+        int status = member.getStatus();
 
-        MemberLoginInfoResponseDto memberLoginInfoResponseDto = new MemberLoginInfoResponseDto(username, nickname, profileImg, authority);
+        MemberLoginInfoResponseDto memberLoginInfoResponseDto = new MemberLoginInfoResponseDto(username, nickname, profileImg, authority, status);
         return ResponseDto.success(memberLoginInfoResponseDto);
 
 

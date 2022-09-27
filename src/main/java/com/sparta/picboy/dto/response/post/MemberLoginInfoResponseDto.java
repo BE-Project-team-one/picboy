@@ -12,12 +12,14 @@ public class MemberLoginInfoResponseDto {
     private String nickname;
     private String profileImg;
     private String authority;
+    private int status;
 
-    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg,String authority) {
+    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg,String authority, int status) {
         this.username = username;
         this.nickname = nickname;
         this.profileImg = profileImg;
         this.authority = Authority.ROLE_USER.toString();
+        this.status = status;
     }
 }
 
