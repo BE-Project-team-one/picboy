@@ -13,7 +13,7 @@ public class MemberLoginInfoResponseDto {
     private String profileImg;
     private String authority;
 
-    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg,String authority) {
+    public MemberLoginInfoResponseDto(String username, String nickname, String profileImg, String authority) {
         this.username = username;
         this.nickname = nickname;
         this.profileImg = profileImg;

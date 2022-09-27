@@ -1,6 +1,5 @@
 package com.sparta.picboy.dto.response.mypage;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +14,7 @@ public class MypageUserInfoResponseDto {
 
     public MypageUserInfoResponseDto(String username, String nickname, String profilImg, int postCount, int status) {
         this.username = username;
+        this.nickname = nickname;
         this.profilImg = profilImg;
         this.postCount = postCount;
         this.status = status;
