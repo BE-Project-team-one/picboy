@@ -126,7 +126,7 @@ public class KakaoService {
             String password = UUID.randomUUID().toString();
             String encodedPassword = passwordEncoder.encode(password);
             // username: kakao nickname
-            String nickname = kakaoUserInfo.getNickname();
+            String nickname = kakaoUserInfo.getNickname() +"-"+UUID.randomUUID();
             // email: kakao email
             String username = "kakaoUser" + UUID.randomUUID();
             // role: 일반 사용자
