@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CommentResponseDto {
     private Long commentId;
+    private String username;
     private String nickname;
     private String comment;
     private String profileImage;

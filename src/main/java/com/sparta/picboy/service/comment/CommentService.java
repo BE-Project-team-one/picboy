@@ -47,6 +47,7 @@ public class CommentService {
 
         CommentResponseDto commentResponse = new CommentResponseDto(
                 comment.getId(),
+                comment.getMember().getUsername(),
                 comment.getMember().getNickname(),
                 comment.getComment(),
                 comment.getMember().getProfileImg(),
@@ -112,6 +113,7 @@ public class CommentService {
         for (Comment comment : commentList){
             commentResponseDtos.add(new CommentResponseDto(
                     comment.getId(),
+                    comment.getMember().getUsername(),
                     comment.getMember().getNickname(),
                     comment.getComment(),
                     comment.getMember().getProfileImg(),
