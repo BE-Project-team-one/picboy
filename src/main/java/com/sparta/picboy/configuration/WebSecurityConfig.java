@@ -50,8 +50,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
 //        http.cors();
-        http.cors().and();
-        http.csrf().disable();
+        http.cors().and().csrf().disable() // remove for production
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
 
         http
@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
+                        .antMatchers(HttpMethod.PUT,"/mypage/**").permitAll()
                         .antMatchers("/main/best-top10").permitAll()
                         .antMatchers("/admin/**").permitAll()
                         .antMatchers("/",
