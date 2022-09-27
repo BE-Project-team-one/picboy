@@ -105,10 +105,8 @@ public class PostReadService {
         }
 
         postMainTop410ResponseDtoList.remove(0);
-        postMainTop410ResponseDtoList.remove(1);
-        postMainTop410ResponseDtoList.remove(2);
-
-        System.out.println(postMainTop410ResponseDtoList.size());
+        postMainTop410ResponseDtoList.remove(0);
+        postMainTop410ResponseDtoList.remove(0);
 
         PostMainTopResponseDto postMainTopResponseDto = new PostMainTopResponseDto(postMainTop3ResponseDtoList, postMainTop410ResponseDtoList);
 
