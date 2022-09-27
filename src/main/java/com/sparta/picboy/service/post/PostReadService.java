@@ -124,7 +124,13 @@ public class PostReadService {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
         }
 
-        String username = member.getUsername();
+        String username;
+        if(member.getStatus() == 2) {
+            username = member.getUsername().substring(0,9);
+        } else {
+            username = member.getUsername();
+        }
+
         String nickname = member.getNickname();
         String profileImg = member.getProfileImg();
         String authority = member.getAuthority();

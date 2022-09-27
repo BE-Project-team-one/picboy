@@ -91,7 +91,8 @@ public class MyPageService {
                 member.getUsername(),
                 member.getNickname(),
                 member.getProfileImg(),
-                postList.size()
+                postList.size(),
+                member.getStatus()
         );
         return ResponseDto.success(userInfoResponseDto);
     }
