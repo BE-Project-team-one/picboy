@@ -41,8 +41,8 @@ public class PostReadService {
 
     // 메인페이지 베스트 움짤 Top 10
     public ResponseDto<?> mainTop10() {
-        List<Post> postListTop3 = postRepository.findTop3ByStatusOrderByLikeCountDesc(2);
-        List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDesc(2);
+        List<Post> postListTop3 = postRepository.findTop3ByStatusOrderByLikeCountDescModifiedAtDesc(2);
+        List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDescModifiedAtDesc(2);
         List<PostMainTop3ResponseDto> postMainTop3ResponseDtoList = new ArrayList<>();
         List<PostMainTop410ResponseDto> postMainTop410ResponseDtoList = new ArrayList<>();
 

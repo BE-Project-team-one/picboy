@@ -11,11 +11,11 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     // 게시물 좋아요 순 Top 4 가져오기기
-   List<Post> findTop3ByStatusOrderByLikeCountDesc(int status);
+   List<Post> findTop3ByStatusOrderByLikeCountDescModifiedAtDesc(int status);
 
 
    //
-   List<Post> findTop10ByStatusOrderByLikeCountDesc(int status);
+   List<Post> findTop10ByStatusOrderByLikeCountDescModifiedAtDesc(int status);
 
 
     // 게시물 1개 post_id 로 찾기
