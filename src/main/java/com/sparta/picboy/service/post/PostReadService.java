@@ -192,7 +192,7 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member member : memberList) {
 
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getNickname(), member.getProfileImg());
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(member.getId(),member.getUsername(),member.getNickname(), member.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
             }
@@ -350,7 +350,7 @@ public class PostReadService {
             // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
             for (Member memberList : members) {
 
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(memberList.getNickname(), memberList.getProfileImg());
+                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(memberList.getId(),memberList.getUsername(),memberList.getNickname(), memberList.getProfileImg());
                 participantResponseDtoList.add(participantResponseDto);
 
             }

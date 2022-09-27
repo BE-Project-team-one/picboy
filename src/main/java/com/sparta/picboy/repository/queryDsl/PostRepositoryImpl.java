@@ -317,7 +317,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             // 리스폰스 작성
             for (Member members2 : members) {
-                participantResponseDtoList.add(new ParticipantResponseDto(members2.getNickname(), members2.getProfileImg()));
+                participantResponseDtoList.add(new ParticipantResponseDto(members2.getId(),members2.getUsername(),members2.getNickname(), members2.getProfileImg()));
             }
 
             int participantCount = participantResponseDtoList.size();
