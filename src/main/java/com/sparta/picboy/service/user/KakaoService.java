@@ -115,8 +115,7 @@ public class KakaoService {
         return new KakaoMemberInfo(id, nickname);
     }
 
-    @Transactional
-    public Member registerKakaoUserIfNeeded(KakaoMemberInfo kakaoUserInfo) {
+    private Member registerKakaoUserIfNeeded(KakaoMemberInfo kakaoUserInfo) {
         // DB 에 중복된 Kakao Id 가 있는지 확인
         Long kakaoId = kakaoUserInfo.getId();
         Member kakaoMember = memberRepository.findByKakaoId(kakaoId)
