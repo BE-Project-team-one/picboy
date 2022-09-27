@@ -290,6 +290,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             String gifUrl = resultPost.getGifUrl();
             int likeCount = resultPost.getLikeCount();
             String topic = resultPost.getTopic();
+            Long memberid = resultPost.getMember().getId();
             String nickname = resultPost.getMember().getNickname();
             String profileImg = resultPost.getMember().getProfileImg();
             int commetCount = resultPost.getCommentCount();
@@ -322,7 +323,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             int participantCount = participantResponseDtoList.size();
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, nickname, profileImg, commetCount, reportCount, date, viewCount, status, participantResponseDtoList, participantCount);
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, nickname, profileImg, commetCount, reportCount, date, viewCount, status, participantResponseDtoList, participantCount);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
 
         }

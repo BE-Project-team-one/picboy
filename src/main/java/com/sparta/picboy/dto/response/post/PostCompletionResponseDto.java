@@ -13,6 +13,7 @@ public class PostCompletionResponseDto {
     private String gifUrl;
     private int likeCount;
     private String topic;
+    private Long memberid;
     private String nickname;
     private String profileImg;
     private int commentCount;
@@ -23,11 +24,12 @@ public class PostCompletionResponseDto {
     private List<ParticipantResponseDto> participantResponseDtoList;
     private int participantCount;
 
-    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, Long memberid, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
         this.id = id;
         this.gifUrl = gifUrl;
         this.likeCount = likeCount;
         this.topic = topic;
+        this.memberid = memberid;
         this.nickname = nickname;
         this.profileImg = profileImg;
         this.commentCount = commentCount;
