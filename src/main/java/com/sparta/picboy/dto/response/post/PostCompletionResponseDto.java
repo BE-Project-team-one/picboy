@@ -22,10 +22,12 @@ public class PostCompletionResponseDto {
     private LocalDateTime date; // 생성날짜 = 움짤 완성된 날짜
     private int viewCount;
     private int status; // 반드시 2 의 값을 가짐
+    private boolean liked; // 좋아요 여부
+    private boolean reported; // 신고 여부
     private List<ParticipantResponseDto> participantResponseDtoList;
     private int participantCount;
 
-    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, Long memberid, String username, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
+    public PostCompletionResponseDto(Long id, String gifUrl, int likeCount, String topic, Long memberid, String username, String nickname, String profileImg, int commentCount, int reportCount, LocalDateTime date, int viewCount, int status, boolean liked, boolean reported, List<ParticipantResponseDto> participantResponseDtoList, int participantCount) {
         this.id = id;
         this.gifUrl = gifUrl;
         this.likeCount = likeCount;
@@ -39,6 +41,8 @@ public class PostCompletionResponseDto {
         this.date = date;
         this.viewCount = viewCount;
         this.status = status;
+        this.liked = liked;
+        this.reported = reported;
         this.participantResponseDtoList = participantResponseDtoList;
         this.participantCount = participantCount;
     }

@@ -232,139 +232,10 @@ public class PostReadService {
 
 
     // 완료된 움짤 페이지 조회
-    public ResponseDto<?> postRead(int tabNum, int categoryNum, int page, int size) {
+    public ResponseDto<?> postRead(int tabNum, int categoryNum, int page, int size, boolean login) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseDto.success(postQueryDsl.postRead(tabNum, categoryNum,pageable));
+        return ResponseDto.success(postQueryDsl.postRead(tabNum, categoryNum, pageable, login));
 
-    }
-
-    // 완료된 움짤 페이지 목록 전체 조회
-    public ResponseDto<?> readCompletion(Long categoryNum, int size, int page) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postList = null;
-
-        // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByStatusOrderByCompletAtDesc(2, pageable);
-
-        // 좋아요 순 정렬
-        if (categoryNum == 2) postList = postRepository.findAllByStatusOrderByLikeCountDesc(2, pageable);
-
-        // 댓글 수 순 정렬
-        if (categoryNum == 3) postList = postRepository.findAllByStatusOrderByCommentCountDesc(2, pageable);
-
-        // 조회 수 순 정렬
-        if (categoryNum == 4) postList = postRepository.findAllByStatusOrderByViewCountDesc(2, pageable);
-
-        return ResponseDto.success(sortCompletionCategory(postList));
-
-    }
-
-    // 완료된 움짤 페이지 목록 제시어 o 조회
-    public ResponseDto<?> readCompletionTopicOk(Long categoryNum, int size, int page) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postList = null;
-
-        // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCompletAtDesc(2, pageable);
-
-        // 좋아요 순 정렬
-        if (categoryNum == 2) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByLikeCountDesc(2, pageable);
-
-        // 댓글 순 정렬
-        if (categoryNum == 3) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByCommentCountDesc(2, pageable);
-
-        //  조회 수 순 정렬
-        if (categoryNum == 4) postList = postRepository.findAllByTopicIsNotNullAndStatusOrderByViewCountDesc(2, pageable);
-
-        System.out.println("여기 들어옴?" + postList);
-
-        return ResponseDto.success(sortCompletionCategory(postList));
-
-    }
-
-    // 완료된 움짤 페이지 목록 제시어 x 조회
-    public ResponseDto<?> readCompletionTopicNull(Long categoryNum, int size, int page) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> postList = null;
-
-        // 최신 순 정렬
-        if (categoryNum == 1) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCompletAtDesc(2, pageable);
-
-        // 좋아요 순 정렬
-        if (categoryNum == 2) postList = postRepository.findAllByTopicIsNullAndStatusOrderByLikeCountDesc(2, pageable);
-
-        // 댓글 수 순 정렬
-        if (categoryNum == 3) postList = postRepository.findAllByTopicIsNullAndStatusOrderByCommentCountDesc(2, pageable);
-
-        //  조회 수 순 정렬
-        if (categoryNum == 4) postList = postRepository.findAllByTopicIsNullAndStatusOrderByViewCountDesc(2, pageable);
-
-        return ResponseDto.success(sortCompletionCategory(postList));
-
-    }
-
-    // 완료된 움짤 카테고리 정렬 중복 매서드 처리
-    public List<PostCompletionResponseDto> sortCompletionCategory(Page<Post> postList) {
-        List<PostCompletionResponseDto> postCompletionResponseDtoList = new ArrayList<>();
-        for (Post post : postList) {
-
-            Long id = post.getId();
-            String gifUrl = post.getGifUrl();
-            int likeCount = post.getLikeCount();
-            String topic = post.getTopic();
-            Long memberid = post.getMember().getId();
-            String username = post.getMember().getUsername();
-            String nickname = post.getMember().getNickname();
-            String profileImg = post.getMember().getProfileImg();
-            int commentCount = post.getCommentCount();
-            int repotCount = post.getReportCount();
-
-            // 완성된 날짜를 계산해야됨 -> 해당 게시글의 마지막 프레임이 생성된 시각
-//            int postFrameTotal = post.getFrameTotal();
-//            PostRelay postRelay = postRelayRepository.findByPostAndFrameNum(post, postFrameTotal); // 해당 게시물의 총 프레임 수 = 마지막 순번의 프레임 번호
-//            LocalDateTime date = postRelay.getCreatedAt();
-            LocalDateTime date = post.getModifiedAt();
-
-            int viewCount = post.getViewCount();
-            int status = post.getStatus(); // 반드시 2의 값을 가질것임
-
-            List<Member> members = new ArrayList<>();
-
-            // 참가자 수를 구할건데 게시물에 연관된 릴레이 테이블의 게시물을 모두 불러와서 프레임별로 멤버를 뽑아낼것임
-            List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
-            for (PostRelay postRelays : postRelayList) {
-
-                Member member = postRelays.getMember();
-                members.remove(member);
-                members.add(member);
-
-            }
-
-            // 참가자 중에서 게시물 작성자 제외하기
-            Member member = post.getMember();
-            members.remove(member);
-
-            int participantCount = members.size();
-
-            List<ParticipantResponseDto> participantResponseDtoList = new ArrayList<>();
-
-            // 생성된 멤버 명단에서 하나씩 돌면서 멤버정보 세분화하여 뽑아내기
-            for (Member memberList : members) {
-
-                ParticipantResponseDto participantResponseDto = new ParticipantResponseDto(memberList.getId(),memberList.getUsername(),memberList.getNickname(), memberList.getProfileImg());
-                participantResponseDtoList.add(participantResponseDto);
-
-            }
-
-
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, username, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
-            postCompletionResponseDtoList.add(postCompletionResponseDto);
-        }
-
-        return postCompletionResponseDtoList;
     }
 
     // 완료된 움짤 디테일 페이지 조회
@@ -389,7 +260,7 @@ public class PostReadService {
 
             }
 
-            // 좋아요 안한 게시물
+            // 좋아요 여부 판단
             liked = postLikeRepository.existsByPostAndMember(post, member);
 
         }

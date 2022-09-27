@@ -10,12 +10,19 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.picboy.domain.post.*;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.domain.user.QMember;
+import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.post.*;
+import com.sparta.picboy.exception.ErrorCode;
+import com.sparta.picboy.repository.post.PostLikeRepository;
+import com.sparta.picboy.repository.post.PostReportRepository;
+import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -30,6 +37,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final PostLikeRepository postLikeRepository;
+    private final PostReportRepository postReportRepository;
+    private final MemberRepository memberRepository;
 
     //카테고리 정렬 메소드
     @Override
@@ -247,7 +257,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     // 완료된 페이지 공통 조회
     @Override
-    public Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable) {
+    public Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable, boolean login) {
         // tabNum : 0->전체 1->제시어o 2->제시어x
         // categoryNum : 1->최신순 2->좋아요순 3->댓글순 4->조회순
 
@@ -299,6 +309,24 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
             LocalDateTime date = postRelayList.get(i).getCreatedAt(); // 마지막 프레임 생성일자 = gif 게시물 생성일
             int viewCount = resultPost.getViewCount();
             int status = resultPost.getStatus();
+            boolean liked = false;
+            boolean reported = false;
+
+            // 좋아요,신고 여부 판단
+            if (login) { // 로그인 되어 있음
+                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                UserDetails userDetails = (UserDetails)principal;
+
+                Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
+                if (member == null) {
+                    ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+
+                }
+
+                liked = postLikeRepository.existsByPostAndMember(resultPost, member);
+                reported = postReportRepository.existsByPostAndMember(resultPost, member);
+
+            }
 
             // 게시글을 만드는데 참여한 인원 구하기
             List<Member> members = new ArrayList<>();
@@ -324,7 +352,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
             int participantCount = participantResponseDtoList.size();
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, username, nickname, profileImg, commetCount, reportCount, date, viewCount, status, participantResponseDtoList, participantCount);
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, username, nickname, profileImg, commetCount, reportCount, date, viewCount, status, liked, reported, participantResponseDtoList, participantCount);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
 
         }

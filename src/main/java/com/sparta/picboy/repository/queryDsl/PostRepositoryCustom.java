@@ -3,7 +3,6 @@ package com.sparta.picboy.repository.queryDsl;
 import com.sparta.picboy.dto.response.mypage.MypageResponseDto;
 import com.sparta.picboy.dto.response.post.AlertInboxResponseDto;
 import com.sparta.picboy.dto.response.post.PostCompletionResponseDto;
-import com.sparta.picboy.dto.response.post.PostCompletionResponsePageDto;
 import com.sparta.picboy.dto.response.post.PostResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +26,7 @@ public interface PostRepositoryCustom {
     // 알람 전체 조회
     List<AlertInboxResponseDto> alertAllGet(String username);
 
-    Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable);
+    Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable, boolean login);
 
     // 주제에 있는 게시글 갯수
     int topicIsNotNullPost();
