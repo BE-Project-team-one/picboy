@@ -314,6 +314,7 @@ public class PostReadService {
             int likeCount = post.getLikeCount();
             String topic = post.getTopic();
             Long memberid = post.getMember().getId();
+            String username = post.getMember().getUsername();
             String nickname = post.getMember().getNickname();
             String profileImg = post.getMember().getProfileImg();
             int commentCount = post.getCommentCount();
@@ -357,7 +358,7 @@ public class PostReadService {
             }
 
 
-            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
+            PostCompletionResponseDto postCompletionResponseDto = new PostCompletionResponseDto(id, gifUrl, likeCount, topic, memberid, username, nickname, profileImg, commentCount, repotCount, date, viewCount, status, participantResponseDtoList, participantCount);
             postCompletionResponseDtoList.add(postCompletionResponseDto);
         }
 
