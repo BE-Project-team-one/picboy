@@ -213,8 +213,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     @Override
     public List<AlertInboxResponseDto> alertAllGet(String username) {
         QAlert alert = QAlert.alert;
-        QPost post = QPost.post;
-
+        
         List<Alert> alertList = queryFactory.selectFrom(alert)
                 .where(alert.member.username.eq(username))
                 .orderBy(alert.createdAt.desc())
@@ -225,7 +224,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
 
             dtoList.add(new AlertInboxResponseDto(
-                    a.getId(),
+                    a.getPost().getId(),
                     a.getContent(),
                     a.getMember().getNickname(),
                     a.getCreatedAt(),
