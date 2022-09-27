@@ -178,6 +178,9 @@ public class PostWriteService {
 
         postRepository.delete(post);
         awsS3Service.removeFolder("picboy/images/post" + post.getId());
+       if(post.getStatus() == 2 || post.getStatus() == 3) {
+           awsS3Service.removeFolder("picboy/gif/post" + post.getId());
+       }
 
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         Set<Member> memberSet = new HashSet<>();

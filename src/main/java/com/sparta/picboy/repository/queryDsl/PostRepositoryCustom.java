@@ -24,7 +24,7 @@ public interface PostRepositoryCustom {
 
     // 알람 전체 읽음
     void alertAllRead(String username);
-
+    // 알람 전체 조회
     List<AlertInboxResponseDto> alertAllGet(String username);
 
     Page<PostCompletionResponseDto> postRead(int tabNum, int categoryNum, Pageable pageable);

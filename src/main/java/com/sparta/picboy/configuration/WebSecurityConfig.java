@@ -50,8 +50,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
 //        http.cors();
-        http.cors().and().csrf().disable() // remove for production
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+        http.cors().and().csrf().disable(); // remove for production
+            //    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
 
         http
