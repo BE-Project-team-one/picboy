@@ -176,12 +176,6 @@ public class PostWriteService {
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
 
-        postRepository.delete(post);
-        awsS3Service.removeFolder("picboy/images/post" + post.getId());
-       if(post.getStatus() == 2 || post.getStatus() == 3) {
-           awsS3Service.removeFolder("picboy/gif/post" + post.getId());
-       }
-
         List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
         Set<Member> memberSet = new HashSet<>();
 
@@ -190,6 +184,12 @@ public class PostWriteService {
         }
         MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
         alarmService.alarmByMessage(messageDto);
+
+        postRepository.delete(post);
+        awsS3Service.removeFolder("picboy/images/post" + post.getId());
+        if(post.getStatus() == 2 || post.getStatus() == 3) {
+            awsS3Service.removeFolder("picboy/gif/post" + post.getId());
+        }
 
         return ResponseDto.success("게시물이 삭제되었습니다.");
     }

@@ -29,15 +29,17 @@ public class Alert extends Timestamped {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member; // 유저
 
-    @JoinColumn(name = "post_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Post post; // 게시물
+    @Column
+    private Long postId;
 
-    public Alert(String content, Member member, Post post) {
+    @Column
+    private String topic;
+
+    public Alert(String content, Member member, Long postId, String topic) {
         this.content = content;
         this.member = member;
-        this.post = post;
+        this.postId = postId;
         this.flag = false;
+        this.topic = topic;
     }
 }

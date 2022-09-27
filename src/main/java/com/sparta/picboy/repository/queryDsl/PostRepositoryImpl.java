@@ -224,12 +224,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
 
             dtoList.add(new AlertInboxResponseDto(
-                    a.getPost().getId(),
+                    a.getPostId(),
                     a.getContent(),
                     a.getMember().getNickname(),
                     a.getCreatedAt(),
                     a.isFlag(),
-                    a.getPost().getTopic()
+                    a.getTopic()
             ));
         }
         return dtoList;

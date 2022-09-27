@@ -29,8 +29,9 @@ public class AlarmService {
     public void alarmByMessage(MessageDto messageDto) {
         Post post = jpaPost.findById(messageDto.getPostId()).orElse(null);
         for(Member member : messageDto.getMemberSet()) {
-            Alert alert = new Alert(messageDto.getContent(),member, post);
+            Alert alert = new Alert(messageDto.getContent(),member, post.getId(), post.getTopic());
             alertRepository.save(alert);
+
             AlertResponseDto alertResponseDto = new AlertResponseDto(messageDto.getPostId(), messageDto.getContent(), alert.getMember().getUsername());
             messagingTemplate.convertAndSend("/sub/" + member.getUsername(), alertResponseDto);
         }
