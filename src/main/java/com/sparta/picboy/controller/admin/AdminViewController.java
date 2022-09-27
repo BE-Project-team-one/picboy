@@ -13,7 +13,7 @@ public class AdminViewController {
     private final AdminService adminService;
 
     // 관리자 메인 홈페이지
-    @GetMapping("/admin")
+    @GetMapping("/admin/dongkeon0606")
     public ModelAndView home() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("index");
@@ -44,7 +44,7 @@ public class AdminViewController {
     }
 
     // 관리자 유저 페이지
-    @GetMapping("/admin/user")
+    @GetMapping("/admin/user/dongkeon0606")
     public ModelAndView adminUser() {
         ModelAndView mv = new ModelAndView();
 
@@ -54,7 +54,7 @@ public class AdminViewController {
     }
 
     // 관리자 정보 페이지
-    @GetMapping("/admin/post")
+    @GetMapping("/admin/post/dongkeon0606")
     public ModelAndView adminPost() {
         ModelAndView mv = new ModelAndView();
 
