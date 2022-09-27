@@ -213,7 +213,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     @Override
     public List<AlertInboxResponseDto> alertAllGet(String username) {
         QAlert alert = QAlert.alert;
-        
+
         List<Alert> alertList = queryFactory.selectFrom(alert)
                 .where(alert.member.username.eq(username))
                 .orderBy(alert.createdAt.desc())

@@ -19,10 +19,5 @@ public class MypageUserInfoResponseDto {
         this.postCount = postCount;
         this.status = status;
 
-        if(status == 2 ) {
-            this.nickname = nickname.substring(0,9);
-        } else {
-            this.nickname = nickname;
-        }
     }
 }
