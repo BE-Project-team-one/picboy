@@ -37,7 +37,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/dongkeon0606">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -46,13 +46,13 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="/admin/user/dongkeon0606">
+                <a class="nav-link" href="/admin/user">
                     <i class="fas fa-fw fa-table"></i>
                     <span>유저 정보</span></a>
             </li>
 
             <li class="nav-item active">
-                <a class="nav-link" href="/admin/post/dongkeon0606">
+                <a class="nav-link" href="/admin/post">
                     <i class="fas fa-fw fa-table"></i>
                     <span>게시글 정보</span></a>
             </li>
@@ -76,8 +76,50 @@
                         </button>
                     </form>
 
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                        <li class="nav-item dropdown no-arrow d-sm-none">
+                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <!--                                <i class="fas fa-search fa-fw"></i>-->
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                 aria-labelledby="searchDropdown">
+                                <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control bg-light border-0 small"
+                                               placeholder="Search for..." aria-label="Search"
+                                               aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">
+                                                <!--                                                <i class="fas fa-search fa-sm"></i>-->
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" onclick="logout()">로그 아웃</span>
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+
                 </nav>
                 <!-- End of Topbar -->
+
+
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
@@ -142,7 +184,8 @@
     </div>
     <!-- End of Page Wrapper -->
 
-
+    <!--로그인 확인을 위한 토큰값    -->
+    <div><input type="hidden" th:value="${token}" id="token"></div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>
@@ -163,6 +206,22 @@
 
 
 <script>
+
+    $( document ).ready(function() {
+         var checkEvent = document.cookie;
+         var val = checkEvent.split(';');
+         var x;
+
+         x =val[0].substr(val[0].indexOf('=') + 1);
+         x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+
+         const token = document.querySelector('#token').value;
+
+         if(x != token || x == null) {
+            window.location.href ='/admin/login';
+         }
+    });
+
     function btnDelete(data) {
         console.log(data);
 
@@ -184,6 +243,27 @@
 
     function gifPage(data) {
         window.location.href =data;
+    }
+
+    function logout() {
+
+      const cookies = document.cookie.split('; '); // 배열로 반환
+      const expiration = 'Sat, 01 Jan 1972 00:00:00 GMT';
+
+      // 반목문 순회하면서 쿠키 전체 삭제
+      if (!document.cookie) {
+        alert('삭제할 쿠키가 없습니다.');
+      } else {
+        for (i = 0; i < cookies.length; i++) {
+          // const uname = cookies[i].split('=')[0];
+          // document.cookie = `${uname}=; expires=${expiration}`;
+          document.cookie = cookies[i].split('=')[0] + '=; expires=' + expiration;
+          // document.cookie = cookies[i].split('=')[0] + '=; expires=' + expiration + '; domain =' + domain;
+        }
+        alert('로그 아웃!');
+      }
+       window.location.href ='/admin/login';
+
     }
 
 

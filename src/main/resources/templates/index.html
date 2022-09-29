@@ -31,7 +31,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/dongkeon0606">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -40,13 +40,13 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="/admin/user/dongkeon0606">
+                <a class="nav-link" href="/admin/user">
                     <i class="fas fa-fw fa-table"></i>
                     <span>유저 정보</span></a>
             </li>
 
             <li class="nav-item active">
-                <a class="nav-link" href="/admin/post/dongkeon0606">
+                <a class="nav-link" href="/admin/post">
                     <i class="fas fa-fw fa-table"></i>
                     <span>게시글 정보</span></a>
             </li>
@@ -101,19 +101,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" onclick="logout()">로그 아웃</span>
 
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    Logout
-                                </a>
-                            </div>
+                            </a>
                         </li>
 
                     </ul>
@@ -333,24 +323,10 @@
 
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
+    <!--로그인 확인을 위한 토큰값    -->
+    <div><input type="hidden" th:value="${token}" id="token"></div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="/vendor/jquery/jquery.min.js"></script>
@@ -371,20 +347,58 @@
 
 <script>
     $( document ).ready(function() {
-     const todayRegister = document.querySelector('#todayRegister').innerText;
-     document.getElementById('todayRegisterBar').style.width = todayRegister +'%';
 
-     const todayCreatePost = document.querySelector('#todayCreatePost').innerText;
-     document.getElementById('todayCreatePostBar').style.width = todayCreatePost +'%';
+         const todayRegister = document.querySelector('#todayRegister').innerText;
+         document.getElementById('todayRegisterBar').style.width = todayRegister +'%';
 
-     const todayCompletePost = document.querySelector('#todayCompletePost').innerText;
-     document.getElementById('todayCompletePostBar').style.width = todayCompletePost +'%';
+         const todayCreatePost = document.querySelector('#todayCreatePost').innerText;
+         document.getElementById('todayCreatePostBar').style.width = todayCreatePost +'%';
 
-     const todayDeletePost = document.querySelector('#todayDeletePost').innerText;
-     document.getElementById('todayDeletePostBar').style.width = todayDeletePost +'%';
+         const todayCompletePost = document.querySelector('#todayCompletePost').innerText;
+         document.getElementById('todayCompletePostBar').style.width = todayCompletePost +'%';
 
+         const todayDeletePost = document.querySelector('#todayDeletePost').innerText;
+         document.getElementById('todayDeletePostBar').style.width = todayDeletePost +'%';
+
+         var checkEvent = document.cookie;
+         var val = checkEvent.split(';');
+         var x;
+
+         x =val[0].substr(val[0].indexOf('=') + 1);
+         x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+
+         const token = document.querySelector('#token').value;
+
+
+         if(x != token || x == null) {
+            window.location.href ='/admin/login';
+         }
 
     });
+
+    function logout() {
+
+      const cookies = document.cookie.split('; '); // 배열로 반환
+      const expiration = 'Sat, 01 Jan 1972 00:00:00 GMT';
+
+      // 반목문 순회하면서 쿠키 전체 삭제
+      if (!document.cookie) {
+        alert('삭제할 쿠키가 없습니다.');
+      } else {
+        for (i = 0; i < cookies.length; i++) {
+          // const uname = cookies[i].split('=')[0];
+          // document.cookie = `${uname}=; expires=${expiration}`;
+          document.cookie = cookies[i].split('=')[0] + '=; expires=' + expiration;
+          // document.cookie = cookies[i].split('=')[0] + '=; expires=' + expiration + '; domain =' + domain;
+        }
+        alert('로그 아웃!');
+      }
+       window.location.href ='/admin/login';
+
+    }
+
+
+
 
 </script>
 
