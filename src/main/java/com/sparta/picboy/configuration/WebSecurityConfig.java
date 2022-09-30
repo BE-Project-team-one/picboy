@@ -49,10 +49,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // CSRF protection 을 비활성화
-//        http.cors();
         http.cors().and().csrf().disable(); // remove for production
-            //    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-
 
         http
                 .authorizeHttpRequests((authz) -> authz
@@ -77,7 +74,6 @@ public class WebSecurityConfig {
                                 "/js/**",
                                 "/favicon.ico"
                                 ).permitAll()
-//                        .antMatchers(HttpMethod.GET,"/oauth/**").permitAll() // 혹시 이거때문?
                         // 나머지 어떤 요청이든 '인증' 필요
                         .anyRequest().authenticated());
 

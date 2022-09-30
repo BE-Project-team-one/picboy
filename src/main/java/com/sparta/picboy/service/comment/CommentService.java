@@ -120,8 +120,6 @@ public class CommentService {
                     comment.getModifiedAt()));
         }
 
-        //CommentResponseDto.inner commentListDto = new CommentResponseDto.inner(commentResponseDtos);
-
         return ResponseDto.success(commentResponseDtos);
     }
 }
