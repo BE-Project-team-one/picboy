@@ -52,6 +52,12 @@ public interface PostRepositoryCustom {
     // 오늘 삭제될 게시물 수
     int todayDeletePost();
 
+    //신고 5회 이상인 게시물
+    List<PostResponseDto> reportPost();
+
+    // 신고 횟수 초기화
+    void reportCountReset(Long postId);
+
 
 
 }

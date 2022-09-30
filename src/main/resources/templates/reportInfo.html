@@ -142,33 +142,26 @@
                                         <tr>
                                             <th>순번</th>
                                             <th>제시어</th>
-                                            <th>마지막 프레임</th>
                                             <th>총 프레임</th>
                                             <th>gif 이미지</th>
                                             <th>상태</th>
-                                            <th>댓글 수</th>
-                                            <th>좋아요 수</th>
-                                            <th>조회 수</th>
                                             <th>신고 수</th>
                                             <th>게시물 작성자</th>
                                             <th>삭제</th>
+                                            <th>초기화</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="m, i : ${postList}">
+                                        <tr th:each="m, i : ${reportList}">
                                             <td th:text="${i.index+1}"></td>
                                             <td th:text="${m.topic}"></td>
-                                            <td th:text="${m.frameNum}"></td>
                                             <td th:text="${m.frameTotal}"></td>
-<!--                                            <td th:text="${m.gifUrl}" style="text-overflow:ellipsis"></td>-->
                                             <td><button onclick="gifPage(value)" th:value='${m.gifUrl}'  >gif 이미지</button> </td>
                                             <td th:text="${m.status}"></td>
-                                            <td th:text="${m.commentCount}"></td>
-                                            <td th:text="${m.likeCount}"></td>
-                                            <td th:text="${m.viewCount}"></td>
                                             <td th:text="${m.reportCount}"></td>
                                             <td th:text="${m.member.nickname}"></td>
                                             <td> <button onclick="btnDelete(value)" th:value='${m.id}'  >삭제</button></td>
+                                            <td> <button onclick="btnReset(value)" th:value='${m.id}'  >초기화</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -246,6 +239,26 @@
 
         });
     }
+
+    function btnReset(data) {
+        console.log(data);
+
+        $.ajax({
+            type: "PUT",
+            url: "https://picboy.net/admin/reset/"+data,
+            data: null,
+            success:function(res){
+                alert("초기화 성공");
+                window.location.href = window.location.href;
+
+            },
+            error:function() {
+                alert("초기화 실패");
+            }
+
+        });
+    }
+
 
     function gifPage(data) {
         window.location.href =data;

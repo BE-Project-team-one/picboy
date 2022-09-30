@@ -457,6 +457,49 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch().size();
     }
 
+    @Override
+    public List<PostResponseDto> reportPost() {
+        QPost post = QPost.post;
+
+        List<Post> postList = queryFactory.selectFrom(post)
+                .where(post.reportCount.gt(4))
+                .fetch();
+        List<PostResponseDto> dto = new ArrayList<>();
+        for (Post p : postList) {
+            dto.add(new PostResponseDto(
+                    p.getId(),
+                    p.getTopic(),
+                    p.getFrameNum(),
+                    p.getFrameTotal(),
+                    p.getImgUrl(),
+                    p.getExpiredAt(),
+                    p.getStatus(),
+                    p.getGifUrl(),
+                    p.getCommentCount(),
+                    p.getLikeCount(),
+                    p.getViewCount(),
+                    p.getReportCount(),
+                    p.getMember()
+            ));
+        }
+        return dto;
+    }
+
+    @Override
+    public void reportCountReset(Long postId) {
+        QPost post = QPost.post;
+        QReport report = QReport.report;
+
+        queryFactory.update(post)
+                .where(post.id.eq(postId))
+                .set(post.reportCount, 0)
+                .execute();
+
+        queryFactory.delete(report)
+                .where(report.post.id.eq(postId))
+                .execute();
+    }
+
     private OrderSpecifier<?> order(int categoryNum) {
         QPost post = QPost.post;
         QPostRelay postRelay = QPostRelay.postRelay;

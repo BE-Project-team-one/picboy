@@ -94,5 +94,16 @@ public class AdminService {
         return postRepository.todayDeletePost();
     }
 
+    // 신고된 게시물 전체 조회
+    public List<PostResponseDto> reportPost() {
+        return postRepository.reportPost();
+    }
+
+    // 신고count 초기화
+    @Transactional
+    public void reportCountReset(Long postId) {
+        postRepository.reportCountReset(postId);
+    }
+
 
 }

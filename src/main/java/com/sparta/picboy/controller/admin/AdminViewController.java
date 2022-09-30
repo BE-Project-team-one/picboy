@@ -135,11 +135,24 @@ public class AdminViewController {
         return mv;
     }
 
+    // 로그인 페이지
     @GetMapping("/admin/login")
     public ModelAndView adminLogin() {
         ModelAndView mv = new ModelAndView();
 
         mv.setViewName("login");
+        return mv;
+    }
+
+    // 관리자 신고 목록 페이지
+    @GetMapping("/admin/reportPost")
+    public ModelAndView adminReportPost() {
+        ModelAndView mv = new ModelAndView();
+
+        mv.addObject("reportList", adminService.reportPost());
+        mv.addObject("token", adminToken);
+        mv.setViewName("reportInfo");
+
         return mv;
     }
 
