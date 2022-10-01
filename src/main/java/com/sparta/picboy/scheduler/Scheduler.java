@@ -56,7 +56,7 @@ public class Scheduler {
                 postRepository.delete(post);
                 awsS3Service.removeFolder("picboy/images/post" + post.getId());
 
-                MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
+                MessageDto messageDto = new MessageDto(memberSet, "작성하신 게시물이 삭제되었습니다.", post.getId());
                 alarmService.alarmByMessage(messageDto);
                 logger.info("게시물 <"+post.getId()+">번이 삭제되었습니다.");
             }

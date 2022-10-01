@@ -138,7 +138,8 @@ public class PostWriteService {
                 memberSet.add(relay.getMember());
             }
 
-            MessageDto messageDto = new MessageDto(memberSet, "게시물이 완성되었습니다", post.getId());
+            MessageDto messageDto = new MessageDto(memberSet, "작성하신 게시물이 완성되었습니다.\n" +
+                    "지금 바로 확인하러 가보세요.", post.getId());
             alarmService.alarmByMessage(messageDto);
         }
 
@@ -182,7 +183,7 @@ public class PostWriteService {
         for(PostRelay relay : postRelayList) {
             memberSet.add(relay.getMember());
         }
-        MessageDto messageDto = new MessageDto(memberSet, "게시물이 삭제되었습니다.", post.getId());
+        MessageDto messageDto = new MessageDto(memberSet, "작성하신 게시물이 삭제되었습니다.", post.getId());
         alarmService.alarmByMessage(messageDto);
 
         postRepository.delete(post);
@@ -191,7 +192,7 @@ public class PostWriteService {
             awsS3Service.removeFolder("picboy/gif/post" + post.getId());
         }
 
-        return ResponseDto.success("게시물이 삭제되었습니다.");
+        return ResponseDto.success("작성하신 게시물이 삭제되었습니다.");
     }
 
 
