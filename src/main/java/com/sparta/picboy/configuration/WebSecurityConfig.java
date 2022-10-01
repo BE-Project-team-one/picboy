@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.GET,"/post/**").permitAll()
                         .antMatchers("/socket/**").permitAll()
                         .antMatchers("/download/**").permitAll()
+                        .antMatchers("/validate/**").permitAll()
                         .antMatchers(HttpMethod.DELETE,"/post/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/comment/**").permitAll()
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
