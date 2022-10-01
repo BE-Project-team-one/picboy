@@ -326,14 +326,18 @@ public class PostReadService {
 
 
     // 토큰 검증
-    public ResponseDto<?> validate(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseDto<?> validate(HttpServletRequest request) {
 
         // 1. Request Header 에서 토큰을 꺼냄
         String access = resolveToken(request);
         String refresh = request.getHeader("Refresh-Token");
 
         // 2. validateTokenAPI 로 토큰 유효성 검사
-        if (StringUtils.hasText(access) && StringUtils.hasText(refresh) && tokenProvider.validateTokenAPI(access,refresh,response)) {
+        if (!StringUtils.hasText(access) || !StringUtils.hasText(refresh)) { // 비회원
+            return ResponseDto.success(new ValidateTokenResponseDto(2));
+        }
+
+        if (tokenProvider.validateTokenAPI(access,refresh)) {
             return ResponseDto.success(new ValidateTokenResponseDto(0)); // 정상
         }
 

@@ -87,15 +87,8 @@ public class PostReadController {
 
     // 토큰 검증
     @GetMapping("/validate")
-    public ResponseDto<?> validate(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        if (userDetails == null) { // 비회원
-            ValidateTokenResponseDto validateTokenResponseDto = new ValidateTokenResponseDto(2);
-            return ResponseDto.success(validateTokenResponseDto);
-
-        }
-
-        return postReadService.validate(request, response);
+    public ResponseDto<?> validate(HttpServletRequest request) {
+        return postReadService.validate(request);
 
     }
 
