@@ -8,6 +8,7 @@ import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.*;
 import com.sparta.picboy.exception.ErrorCode;
+import com.sparta.picboy.jwt.TokenProvider;
 import com.sparta.picboy.repository.comment.CommentRepository;
 import com.sparta.picboy.repository.post.PostLikeRepository;
 import com.sparta.picboy.repository.post.PostRelayRepository;
@@ -18,11 +19,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +42,7 @@ public class PostReadService {
     private final CommentRepository commentRepository;
     private final PostLikeRepository postLikeRepository;
     private final PostRepositoryImpl postQueryDsl;
+    private final TokenProvider tokenProvider;
 
 
     // 메인페이지 베스트 움짤 Top 10
@@ -315,6 +321,35 @@ public class PostReadService {
         return ResponseDto.success(postCompletionDetailResponseDto);
 
 
+    }
+
+
+
+    // 토큰 검증
+    public ResponseDto<?> validate(HttpServletRequest request, HttpServletResponse response) {
+
+        // 1. Request Header 에서 토큰을 꺼냄
+        String access = resolveToken(request);
+        String refresh = request.getHeader("Refresh-Token");
+
+        // 2. validateTokenAPI 로 토큰 유효성 검사
+        if (StringUtils.hasText(access) && StringUtils.hasText(refresh) && tokenProvider.validateTokenAPI(access,refresh,response)) {
+            return ResponseDto.success(new ValidateTokenResponseDto(0)); // 정상
+        }
+
+        return ResponseDto.success(new ValidateTokenResponseDto(1)); // 비정상
+
+
+    }
+
+    // Request Header 에서 토큰 정보를 꺼내오기
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("Refresh-Token");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ") && StringUtils.hasText(refreshToken)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
 

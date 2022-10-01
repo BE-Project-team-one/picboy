@@ -3,6 +3,7 @@ package com.sparta.picboy.controller.post;
 import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.dto.response.ResponseDto;
+import com.sparta.picboy.dto.response.post.ValidateTokenResponseDto;
 import com.sparta.picboy.service.post.PostReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -80,6 +83,20 @@ public class PostReadController {
     @GetMapping("/download")
     public ResponseEntity<byte[]> download(@RequestParam Long postId, @RequestParam String fileName) throws IOException {
         return awsS3Service.getObject(postId, fileName);
+    }
+
+    // 토큰 검증
+    @GetMapping("/validate")
+    public ResponseDto<?> validate(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        if (userDetails == null) { // 비회원
+            ValidateTokenResponseDto validateTokenResponseDto = new ValidateTokenResponseDto(2);
+            return ResponseDto.success(validateTokenResponseDto);
+
+        }
+
+        return postReadService.validate(request, response);
+
     }
 
 }
