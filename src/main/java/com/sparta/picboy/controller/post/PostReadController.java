@@ -35,10 +35,6 @@ public class PostReadController {
     // 로그인한 유저 정보 가져오기 <- 병합 후 유저 컨트롤러로 이동시키기
     @GetMapping("/main/user-info")
     public ResponseDto<?> loginUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails == null) {
-            return ResponseDto.fail(ErrorCode.UNAUTHORIZED);
-
-        }
         return postReadService.loginUserInfo(userDetails);
 
     }
