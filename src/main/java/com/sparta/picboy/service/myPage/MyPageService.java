@@ -120,17 +120,14 @@ public class MyPageService {
         } else {
             String thisImgUrl = member.getProfileImg();
             String deleteUrl = thisImgUrl.substring(thisImgUrl.indexOf("picboy/mypageImg"));
-            System.out.println(deleteUrl);
-            //deleteUrl : picboy/mypageImg/4354c745-097f-4230-8f32-03e2347ae3d2-mg
+
             awsS3Service.deleteImage(deleteUrl);
-            //amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+
             String imageUrl = getFileUrl(requestDto.getImg());
             if (imageUrl == null) return ResponseDto.fail(ErrorCode.FAIL_FILE_UPLOAD);
             member.updateImg(imageUrl);
             memberRepository.save(member);
         }
-
-
         return ResponseDto.success("이미지를 수정하였습니다.");
     }
 
