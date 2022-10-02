@@ -4,6 +4,7 @@ import com.sparta.picboy.S3Upload.AwsS3Service;
 import com.sparta.picboy.domain.UserDetailsImpl;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.dto.response.post.ValidateTokenResponseDto;
+import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.service.post.PostReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,10 @@ public class PostReadController {
     // 로그인한 유저 정보 가져오기 <- 병합 후 유저 컨트롤러로 이동시키기
     @GetMapping("/main/user-info")
     public ResponseDto<?> loginUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails == null) {
+            return ResponseDto.fail(ErrorCode.UNAUTHORIZED);
+
+        }
         return postReadService.loginUserInfo(userDetails);
 
     }
