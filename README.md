@@ -1,4 +1,5 @@
 ## ****PICBOY****
+<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%83%80%EC%9D%B4%ED%8B%80.gif" width="600"/><br>
 
 ## ****👨‍🏫 프로젝트 소개****
 저희가 기획한 PICBOY는 릴레이로 이어 그린다는 재미에 착안점을 두고 개발 되었습니다.
