@@ -1,20 +1,24 @@
-## ****PICBOY****
-<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%83%80%EC%9D%B4%ED%8B%80.gif" width="600"/><br>
+## ****<img src="https://user-images.githubusercontent.com/98306332/193814380-e6746850-09d1-405f-b65c-d278a19c64c8.png" width="200" margin="auto"/>🎨다 함께 움짤만들기✍️****
+<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/%ED%83%80%EC%9D%B4%ED%8B%80.gif" width="1200" margin="auto"/>
 
-## ****👨‍🏫 프로젝트 소개****
-저희가 기획한 PICBOY는 릴레이로 이어 그린다는 재미에 착안점을 두고 개발 되었습니다.
-한사람이 의미없이 그린 그림에 누군가 다음 과정을 예측,상상하여 이어 그려나가게 되면
-말도안되는 상황 풀이나, 절묘하게 잘 맞아 떨어지는 연계에서 오는 재미를 느낄 수 있을거라 생각했습니다.
-거기에 이렇게 그려진 그림들이 하나의 움직이는 형태로 만들어진다면 더 재밌지 않을까 라는 아이디어에
-개발을 시작하게 되었습니다.
-<br>
-<br><br>
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> 프로젝트 소개****
+- 저희가 기획한 PICBOY는 릴레이로 이어 그린다는 재미에 착안점을 두고 개발 되었습니다.<br>
+- 한사람이 의미없이 그린 그림에 누군가 다음 과정을 예측,상상하여 이어 그려나가 말도안되는 상황 풀이나, 절묘하게 잘 맞아 떨어지는 연계에서 오는 재미를 느껴보세요!
+  <br>
 
-## ****🗓 프로젝트 기간****
+👾[PICBOY 바로가기](http://www.naver.com/)
+
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  바로가기****
+
+- FE GitHub Repository : https://github.com/BE-Project-team-one/picboy
+- BE GitHub Repository : https://github.com/BE-Project-team-one/picboy-FE
+
+
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  프로젝트 기간****
 
 - 2022.08.26 ~ 2022.10.06
 
-## ****👨‍👧‍👦 팀 구성****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  팀 구성****
 
 |이름|팀원 깃허브|포지션|
 |---|---|---|
@@ -30,7 +34,7 @@
 
 
 
-## ****🛠주요기술****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  주요기술****
 
 
 
@@ -41,18 +45,18 @@
 
 <img src="https://img.shields.io/badge/adobe%20illustrator-%23FF9A00.svg?style=for-the-badge&logo=adobe%20illustrator&logoColor=white"> <img src="https://img.shields.io/badge/adobe%20photoshop-%2331A8FF.svg?style=for-the-badge&logo=adobe%20photoshop&logoColor=white"> <img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white">
 
-    
+
 ## ****💡 ERD****
 [ERD](https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/erd%EC%8B%A4%EC%A0%84.png)<br><br>
 
 
 
 
-## ****🖼️ 프로젝트 상세****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  프로젝트 상세****
 
 #### ✅ 게시 글 작성
 
- <img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_1.gif" width="600"/><br>
+<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_1.gif" width="600"/><br>
 -제시어를 선택하고(선택 안해도 됨) 첫 번째 그림을 그려봅시다.<br>
 -움짤로 만들어질 그림들의 개수도 정해 보아요.<br>
 <br>
@@ -61,7 +65,7 @@
 <br>
 
 #### ✅ 이어 그리기 참여
- <img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_2.gif" width="600"/><br>
+<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_2.gif" width="600"/><br>
 -진행 중인 게시 글에 이어 그리기 참여를 해봅시다.<br>
 -가장 마지막에 그려진 그림을 보고 다음 상황을 예측해서 그려봅니다.<br>
 <br>
@@ -86,7 +90,7 @@
 
 <br>
 
-## ****📝기술적 의사 결정****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  기술적 의사 결정****
 
 |사용기술|설명|
 |---|---|
@@ -109,7 +113,7 @@
 
 
 
-## ****🔧트러블 슈팅****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  트러블 슈팅****
 <details>
 <summary> <b>휴대폰 인증</b> </summary>
 <br>
@@ -136,15 +140,15 @@
 <br>
 
 - 문제점 :
-JPA 기본 쿼리를 사용했었습니다. 간단한 조회를 할 때에는 분명 편리했는데 서비스 기능들을 구현하는 과정에서 JPA 기본 제공 쿼리 만으로는 구현하기 까다로운 문제에 봉착했습니다. 성능 개선을 위해서 DB 조회 방식도 지금처럼 해서는 안되며 조회 방식에도 구현하고자 하는 기능을 구현하기에는 한계가 있다고 판단했습니다.
+  JPA 기본 쿼리를 사용했었습니다. 간단한 조회를 할 때에는 분명 편리했는데 서비스 기능들을 구현하는 과정에서 JPA 기본 제공 쿼리 만으로는 구현하기 까다로운 문제에 봉착했습니다. 성능 개선을 위해서 DB 조회 방식도 지금처럼 해서는 안되며 조회 방식에도 구현하고자 하는 기능을 구현하기에는 한계가 있다고 판단했습니다.
 
 - 가정 :
-조회 방식을 직접 쿼리문을 작성하여 가져오게 되면  DB 에서 꺼내올 때도 전부 불러와서 필터링 할 때 보다도 성능 개선이 있으며 무엇보다도 JPA 기본 쿼리로는 구현하기 까다로운 조건의 조회도 입맛대로 골라서 구현할 수 있어서 QueryDSL 을 사용하게 되었습니다.
+  조회 방식을 직접 쿼리문을 작성하여 가져오게 되면  DB 에서 꺼내올 때도 전부 불러와서 필터링 할 때 보다도 성능 개선이 있으며 무엇보다도 JPA 기본 쿼리로는 구현하기 까다로운 조건의 조회도 입맛대로 골라서 구현할 수 있어서 QueryDSL 을 사용하게 되었습니다.
 
 - 결과 :
-우선 예상 외로 코드 리팩토링이 되었습니다. 기본 조회 부분은 카테고리 따위의 필터로 조건 조회를 걸게 되어서 JPA 기본 쿼리도 조건마다 하나씩 들어감으로써 중복되는 코드들이 반복적으로 나타났었는데 QueryDSL 을 사용하여 직접 쿼리문을 작성하게 되니까 기존에 조회를 담당하던 Service 클래스를 쓰지 않아도 될 정도로 압축 되었습니다. 
-페이지네이션을 활용한 무한 스크롤을 적용하였기 때문에 한번에 데이터를 보내줄 때 리스트의 량이 작은 단위로 나눠져 있기 때문에 애초에 성능 개선이 눈에 띄게 올라가지는 않았지만 사용자가 많아져서 트래픽이 증가하게 될 경우에는 이 작은 성능 개선 만으로도 서비스 전반적으로 큰 차이를 보일 것이라고 판단했습니다. 
-마지막으로 주요 논점 이었던 복잡한 조건의 조회를 깔끔하게 해결할 수 있었습니다.
+  우선 예상 외로 코드 리팩토링이 되었습니다. 기본 조회 부분은 카테고리 따위의 필터로 조건 조회를 걸게 되어서 JPA 기본 쿼리도 조건마다 하나씩 들어감으로써 중복되는 코드들이 반복적으로 나타났었는데 QueryDSL 을 사용하여 직접 쿼리문을 작성하게 되니까 기존에 조회를 담당하던 Service 클래스를 쓰지 않아도 될 정도로 압축 되었습니다.
+  페이지네이션을 활용한 무한 스크롤을 적용하였기 때문에 한번에 데이터를 보내줄 때 리스트의 량이 작은 단위로 나눠져 있기 때문에 애초에 성능 개선이 눈에 띄게 올라가지는 않았지만 사용자가 많아져서 트래픽이 증가하게 될 경우에는 이 작은 성능 개선 만으로도 서비스 전반적으로 큰 차이를 보일 것이라고 판단했습니다.
+  마지막으로 주요 논점 이었던 복잡한 조건의 조회를 깔끔하게 해결할 수 있었습니다.
 </details>
 
 
@@ -174,16 +178,16 @@ JPA 기본 쿼리를 사용했었습니다. 간단한 조회를 할 때에는 �
 <br>
 
 - 문제점:
-    1. 재배포를 해야할 때 S3 버킷 내용을 변경하여도 캐시가 유지되는 시간내에는 해당 변경내용이 바로 반영되지 않았습니다.
-    2. 배포된 사이트에서 페이지 이동시마다 404발생하는 문제가 생겼습니다
-    
+  1. 재배포를 해야할 때 S3 버킷 내용을 변경하여도 캐시가 유지되는 시간내에는 해당 변경내용이 바로 반영되지 않았습니다.
+  2. 배포된 사이트에서 페이지 이동시마다 404발생하는 문제가 생겼습니다
+
 - 가정 :
-    1. 이전 캐시가 유지되는 것을 끊고 새롭게 시작해야한다라는 방법을 생각하였습니다.
-    2. local에서 실행시에는 404가 뜨지 않았기에 S3와 CDN문제로 인지하였고 S3에서 Base가 되는 URL을 단 하나인 index.html로 재설정하는 방법 하나와, 구글링을 통해 CDN에서의 오류메세지 처리를 알게 되었습니다.
+  1. 이전 캐시가 유지되는 것을 끊고 새롭게 시작해야한다라는 방법을 생각하였습니다.
+  2. local에서 실행시에는 404가 뜨지 않았기에 S3와 CDN문제로 인지하였고 S3에서 Base가 되는 URL을 단 하나인 index.html로 재설정하는 방법 하나와, 구글링을 통해 CDN에서의 오류메세지 처리를 알게 되었습니다.
 
 - 결과 :
-    1. CDN에서 무효화를 진행하여 Edge Location에 저장된 캐시를 초기화 시켜주었습니다.
-    2. S3서버와 SPA가 가진 특성으로 navigate로 주소 변경시마다 SPA소스는 모든 페이지에 대한 정보를 미리 알고 있지만 서버는 해당 주소를 모르기에 뜨는 문제였습니다. 그렇기에 CDN 오류메시지 처리를 하여  404가 뜰 때 응답코드를 바꿔주는 방법으로 해결하였습니다.
+  1. CDN에서 무효화를 진행하여 Edge Location에 저장된 캐시를 초기화 시켜주었습니다.
+  2. S3서버와 SPA가 가진 특성으로 navigate로 주소 변경시마다 SPA소스는 모든 페이지에 대한 정보를 미리 알고 있지만 서버는 해당 주소를 모르기에 뜨는 문제였습니다. 그렇기에 CDN 오류메시지 처리를 하여  404가 뜰 때 응답코드를 바꿔주는 방법으로 해결하였습니다.
 </details>
 
 <br>
@@ -191,7 +195,7 @@ JPA 기본 쿼리를 사용했었습니다. 간단한 조회를 할 때에는 �
 <br>
 <br>
 
-## 📂REPOSITORIES
+## <img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  REPOSITORIES
 
 - FRONT-END
 
