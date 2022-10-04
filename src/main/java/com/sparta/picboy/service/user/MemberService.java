@@ -62,6 +62,10 @@ public class MemberService {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         }
+        // 정지된 계정인지 확인
+        if (member.getStatus() == 3) {
+            return ResponseDto.fail(ErrorCode.SUSPENDED_ACCOUNT);
+        }
 
         // 비밀번호 일치여부 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
