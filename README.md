@@ -3,15 +3,16 @@
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> 프로젝트 소개****
 - 저희가 기획한 PICBOY는 릴레이로 이어 그린다는 재미에 착안점을 두고 개발 되었습니다.<br>
-- 한사람이 의미없이 그린 그림에 누군가 다음 과정을 예측,상상하여 이어 그려나가 말도안되는 상황 풀이나, 절묘하게 잘 맞아 떨어지는 연계에서 오는 재미를 느껴보세요!
-  <br>
+- 한사람이 의미없이 그린 그림에 누군가 다음 과정을 예측,상상하여 이어 그려나가 말도안되는 상황 풀이나, 절묘하게 잘 맞아 떨어지는 연계에서 오는 재미를 느낄수 있습니다.!
+<br>
 
 👾[PICBOY 바로가기](http://www.naver.com/)
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  바로가기****
 
-- FE GitHub Repository : https://github.com/BE-Project-team-one/picboy
-- BE GitHub Repository : https://github.com/BE-Project-team-one/picboy-FE
+📍[FRONT GIT 바로가기](https://github.com/BE-Project-team-one/picboy-FE/) <br />
+📍[BACK GIT 바로가기](https://github.com/BE-Project-team-one/picboy/) <br />
+📍[TEAM NOTION 바로가기](https://www.notion.so/PicBoy-a564484c040c42d0bd554059f135c6b5/)
 
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  프로젝트 기간****
@@ -20,18 +21,39 @@
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  팀 구성****
 
-|이름|팀원 깃허브|포지션|
-|---|---|---|
-|👑이동건[L]|https://github.com/dongkeon-lee|BE|
-|🪖신선호|https://github.com/yalla12|BE|
-|🪖정용욱|https://github.com/woojangsan|BE|
-|🪖장창균|https://github.com/JangChangKyoon|BE|
-|👑조다솜[VL]|https://github.com/bita5000|FE|
-|🪖정민희|https://github.com/minimi61|FE|
-|🪖우종훈|https://github.com/Jhoon2|FE|
-|🎨김나영|https://www.behance.net/df6c1531|Design|
-
-
+<table>
+   <tr>
+    <td align="center"><b><a href="https://github.com/dongkeon-lee">이동건</a></b></td>
+    <td align="center"><b><a href="https://github.com/yalla12">신선호</a></b></td>
+          <td align="center"><b><a href="https://github.com/JangChangKyoon">장창균</a></b></td>
+     <td align="center"><b><a href="https://github.com/woojangsan">정용욱</a></b></td>
+    <td align="center"><b><a href="https://github.com/bita5000">조다솜</a></b></td>
+    <td align="center"><b><a href="https://github.com/minimi61">정민희</a></b></td>
+    <td align="center"><b><a href="https://github.com/Jhoon2">우종훈</a></b></td>
+    <td align="center"><b><a href="https://www.behance.net/df6c1531">김나영</a></b></td>
+  </tr>
+  <tr>
+     <td align="center"><a href="https://github.com/dongkeon-lee"><img src="https://user-images.githubusercontent.com/98306332/193821902-f4c264e2-de86-4e4b-a2b6-a65d391ca740.gif" width="100px" /></a></td>
+     <td align="center"><a href="https://github.com/yalla12"><img src="https://user-images.githubusercontent.com/98306332/193821957-d2e62bfd-3aca-4f0e-a947-b27ca075f711.gif" width="100px" /></a></td>
+     <td align="center"><a href="https://github.com/JangChangKyoon"><img src="https://avatars.githubusercontent.com/u/97339665?v=4" width="100px" /></a></td>
+     <td align="center"><a href="https://github.com/woojangsan"><img src="https://user-images.githubusercontent.com/98306332/193821792-975ebf26-cf03-4693-a303-ee9ea70347f9.gif" width="100px" /></a></td>
+    <td align="center"><a href="https://github.com/bita5000"><img src="https://user-images.githubusercontent.com/98306332/193821434-75d601e9-14f6-4d21-ba0e-edd0e01ee670.gif" width="100px" /></a></td>
+    <td align="center"><a href="https://github.com/minimi61"><img src="https://user-images.githubusercontent.com/98306332/193821730-45beb191-b8cd-4eaa-be39-0779ae9b07b5.gif" width="100px" /></a></td>
+    <td align="center"><a href="https://github.com/Jhoon2"><img src="https://user-images.githubusercontent.com/98306332/193822060-a37d5382-93a7-4b31-964f-d8a6196015bc.gif" width="100px" /></a></td>
+    <td align="center"><a href="https://www.behance.net/df6c1531"><img src="https://user-images.githubusercontent.com/98306332/193822117-5cfb38c9-88f2-45e3-8b83-159edc012f8b.gif" width="100px" /></a></td>
+    
+  </tr>
+  <tr>
+     <td align="center"><b>(L)Backend</b></td>
+    <td align="center"><b>Backend</b></td>
+    <td align="center"><b>Backend</b></td>     
+    <td align="center"><b>Backend</b></td>
+    <td align="center"><b>(VL)FrontEnd</b></td>
+    <td align="center"><b>FrontEnd</b></td>
+    <td align="center"><b>FrontEnd</b></td>
+    <td align="center"><b>Design</b></td>
+  </tr>
+</table>
 
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  주요기술****
