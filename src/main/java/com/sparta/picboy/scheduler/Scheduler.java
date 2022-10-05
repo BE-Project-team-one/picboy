@@ -8,6 +8,7 @@ import com.sparta.picboy.domain.post.PostRelay;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
+import com.sparta.picboy.service.post.PostWriteService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +28,9 @@ public class Scheduler {
     private final Logger logger = LoggerFactory.getLogger(Scheduler.class);
 
     private final PostRepository postRepository;
-
-    private final AwsS3Service awsS3Service;
-
     private final PostRelayRepository postRelayRepository;
     private final AlarmService alarmService;
+    private final PostWriteService postWriteService;
 
     // 초, 분, 시, 일, 월, 주 순서
     // 영속성 컨테이너 관리 때문에 @Transactional을 꼭 사용해야함
@@ -44,7 +43,6 @@ public class Scheduler {
 
         for(Post post : postList) {
             // 오늘 날짜가 삭제일보다 크고 게시물 상태가 1(미완성)일때
-            //
             if(currentDateTime.isAfter(post.getExpiredAt()) && post.getStatus() == 1) {
 
                 List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
@@ -53,8 +51,8 @@ public class Scheduler {
                 for(PostRelay relay : postRelayList) {
                     memberSet.add(relay.getMember());
                 }
-                postRepository.delete(post);
-                awsS3Service.removeFolder("picboy/images/post" + post.getId());
+
+                postWriteService.postDelete(post.getId());
 
                 MessageDto messageDto = new MessageDto(memberSet, "작성하신 게시물이 삭제되었습니다.", post.getId());
                 alarmService.alarmByMessage(messageDto);

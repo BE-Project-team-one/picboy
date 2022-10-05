@@ -64,6 +64,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.GET,"/mypage/**").permitAll()
                         .antMatchers(HttpMethod.PUT,"/mypage/**").permitAll()
                         .antMatchers("/main/best-top10").permitAll()
+                        .antMatchers("/main/user-info").permitAll()
                         .antMatchers("/admin/**").permitAll()
                         .antMatchers("/",
                                 "/css/**",

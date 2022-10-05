@@ -62,6 +62,10 @@ public class MemberService {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         }
+        // 정지된 계정인지 확인
+        if (member.getStatus() == 3) {
+            return ResponseDto.fail(ErrorCode.SUSPENDED_ACCOUNT);
+        }
 
         // 비밀번호 일치여부 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) { //x DB에 존재한다면 passwordEncoder의 matches메소드를 사용하여 비밀번호 비교 (입력한 비밀번호, 저장되어있는 비밀번호)
