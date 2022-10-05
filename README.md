@@ -12,7 +12,8 @@
 
 📍[FRONT GIT 바로가기](https://github.com/BE-Project-team-one/picboy-FE/) <br />
 📍[BACK GIT 바로가기](https://github.com/BE-Project-team-one/picboy/) <br />
-📍[TEAM NOTION 바로가기](https://www.notion.so/PicBoy-a564484c040c42d0bd554059f135c6b5/)
+📍[TEAM NOTION 바로가기](https://www.notion.so/PicBoy-a564484c040c42d0bd554059f135c6b5/) <br />
+📍[QA 바로가기](https://docs.google.com/spreadsheets/d/1gVpJtyDZOXQk0eIy8IprfcgWvAA4ZKXN253KtHuV_So/edit?usp=sharing/)
 
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  프로젝트 기간****
