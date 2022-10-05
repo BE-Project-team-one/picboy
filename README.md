@@ -57,7 +57,7 @@
 
 
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  주요기술****
-
+<br />
 
 <div align=center> 
 <img src="https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white"> <img src= "https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6db33f?style=for-the-badge&logo=springsecurity&logoColor=white">  <img src= "https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"> <img src="https://img.shields.io/badge/JWT-02303A?style=for-the-badge&logo=jwt&logoColor=white"> <img src="https://img.shields.io/badge/AJAX-0088CC?style=for-the-badge&logo=&logoColor=white"> <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">  <img src="https://img.shields.io/badge/h2-4479A1?style=for-the-badge&logo=h2&logoColor=white"> <img src="https://img.shields.io/badge/ubuntu-e95420?style=for-the-badge&logo=ubuntu&logoColor=white"> <img src="https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white"> <img src="https://img.shields.io/badge/stomp-000000?style=for-the-badge&logo=stomp&logoColor=white">
@@ -176,6 +176,8 @@
 
 
 <br>
+
+
 ## <img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  유저피드백 
 
 <details>
