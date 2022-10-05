@@ -103,9 +103,6 @@
 |Web Socket|실시간으로 알람을 준다는 점에 착안하여 웹소켓의 스톰프를 사용하게 되었습니다. 추후, 공지사항과 같은 내용을 전달하기 위해 SSE가 아닌 웹소켓을 사용하게 되었습니다.|
 |Github Action|협업 과정에서 변경 내용을 적용할 때 서버를 자동배포 함으로써 협업 절차를 좀 더 편하게 할 수 있어 사용되었습니다.|
 |Https|DDos 등 서버 공격에 대한 보안을 위해서 프론트와 백 서버 모두 SSL 인증서를 통한 Https 를 적용하였습니다.|
-|Redux-toolkit|코드의 상태 관리를 효율적으로 관리할 수 있는 방법이 필요했고, 필요한 정보들을 중앙화시키며, 단방향의 흐름으로 버그를 쉽게 예측할 수 있다는 점을 고려한 리덕스를 선택했고, 보일러 플레이트가 많은 리덕스의 단점을 보완하기 위해 리덕스 툴킷을 채택하게 되었습니다.|
-|ContextAPI|전역적으로 관리할 필요가 없는 모달창과 같은 경우는 전역 스토어에 넣어 코드 관리하는 것보다 다른 효율적인 방법을 고민하였습니다.그리고 자주 변하지 않는 간단한 상태 정보만 전달하는 경우, application의 극히 일부 state만 전달하지만 props로 넘기는 단계가 너무 많을 때에 유용한 ContextAPI를 이용하여 모딜창을 띄워주었습니다.또한 ContextAPI는 하나의 데이터만 변경하여도 Provider로 감싼 모든 자식 컴포넌트에서 리랜더링이 일어나는 단점이 있는데 이 부분은 useMemo hook을 사용하여 불필요한 리랜더링을 방지하였습니다.|
-|Styled-Component|스타일 도구 방법(css-in-js, css ,sass) 중 styled-component(css-in-js)는 컴포넌트화로 스타일 시트의 파일을 유지보수 할 필요가 없고, javascript와 css 사이의 상수와 함수를 쉽게 공유, props를 활용한 조건부 스타일링이 가능하며, 재사용성이 강하고, 유니크한 클래스를 자동으로 생성하기 때문에 코드 경량화의 강점이 있기 때문에 사용하게 되었습니다.|
 
 
 
@@ -177,35 +174,47 @@
 </details>
 
 
-<details>
-<summary> <b>CDN</b> </summary>
+
 <br>
+## <img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  유저피드백 
 
-- 문제점:
-  1. 재배포를 해야할 때 S3 버킷 내용을 변경하여도 캐시가 유지되는 시간내에는 해당 변경내용이 바로 반영되지 않았습니다.
-  2. 배포된 사이트에서 페이지 이동시마다 404발생하는 문제가 생겼습니다
-
-- 가정 :
-  1. 이전 캐시가 유지되는 것을 끊고 새롭게 시작해야한다라는 방법을 생각하였습니다.
-  2. local에서 실행시에는 404가 뜨지 않았기에 S3와 CDN문제로 인지하였고 S3에서 Base가 되는 URL을 단 하나인 index.html로 재설정하는 방법 하나와, 구글링을 통해 CDN에서의 오류메세지 처리를 알게 되었습니다.
-
-- 결과 :
-  1. CDN에서 무효화를 진행하여 Edge Location에 저장된 캐시를 초기화 시켜주었습니다.
-  2. S3서버와 SPA가 가진 특성으로 navigate로 주소 변경시마다 SPA소스는 모든 페이지에 대한 정보를 미리 알고 있지만 서버는 해당 주소를 모르기에 뜨는 문제였습니다. 그렇기에 CDN 오류메시지 처리를 하여  404가 뜰 때 응답코드를 바꿔주는 방법으로 해결하였습니다.
+<details>
+  <summary>음향 볼륨 조절</summary>
+  <br />
+ 
+ 
+  * 피드백
+  <pre> 볼륨 조절이 필요할 것 같다.<br>
+ 볼륨이 너무 크다.</pre>
+  * 개선사항
+    - 효과음 파일이 별로 없어서 파일 자체 데시벨을 낮추었다. 
+    <br />
 </details>
 
-<br>
-<br>
-<br>
-<br>
+<details>
+  <summary>설명 추가</summary>
+    <br />
+ 
+ 
+  * 피드백
+  <pre> 메인 페이지 접속 했을때 무슨 사이트인지 모르겠다.<br>
+ 사용방법, 각 페이지별 설명 부족했다. </pre>
+ 
+  * 개선사항
+    - 사용방법을 좀 더 구체적으로 작성, 각 페이지 설명란 추가, 메인 페이지 마우스 커서 추가
+     <br />
+</details>
 
-## <img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  REPOSITORIES
+<details>
+     <summary>스크롤바 추가</summary>
+       <br />
+   
+  * 피드백
+  <pre> 스크롤 바가 없어서 컨텐츠가 어디까지 있는지 구별이 불가능 했다.<br>
+ 컨텐츠 구별 불가 </pre>
+ 
+  * 개선사항
+    - 스크롤바 추가
+     <br />
+</details>
 
-- FRONT-END
-
-[GitHub - Project](https://github.com/BE-Project-team-one/picboy-FE)<br><br>
-
-
-- BACK-END
-
-[GitHub - Project](https://github.com/BE-Project-team-one/picboy)
