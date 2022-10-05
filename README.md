@@ -69,8 +69,13 @@
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white">
 </div>
 
-## ****💡 ERD****
-[ERD](https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/erd%EC%8B%A4%EC%A0%84.png)<br><br>
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> 아키텍쳐****
+<img src="https://user-images.githubusercontent.com/98306332/193819343-1789572a-e67d-4f47-b00d-d1ce90a26817.png" width="1200" margin="auto"/>
+
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> ERD****
+<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/erd%EC%8B%A4%EC%A0%84.png" width="1200" margin="auto"/>
+
+
 
 
 
