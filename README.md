@@ -59,7 +59,7 @@
 ## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  주요기술****
 
 
-
+<div align=center> 
 <img src="https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white"> <img src= "https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white">  <img src= "https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"> <img src="https://img.shields.io/badge/JWT-02303A?style=for-the-badge&logo=jwt&logoColor=white"> <img src="https://img.shields.io/badge/AJAX-0088CC?style=for-the-badge&logo=&logoColor=white"> <img src="https://img.shields.io/badge/AWS%20RDS-%23527FFF.svg?style=for-the-badge&logo=amazon-rds&logoColor=white"> <img src="https://img.shields.io/badge/AmazonS3-569A31.svg?style=for-the-badge&logo=AmazonS3&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6db33f?style=for-the-badge&logo=springsecurity&logoColor=white"> <img src="https://img.shields.io/badge/Route53-4053d6?style=for-the-badge&logo=amazonaws&logoColor=white"> <img src="https://img.shields.io/badge/ubuntu-e95420?style=for-the-badge&logo=ubuntu&logoColor=white">
 
 
@@ -67,7 +67,7 @@
 <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/h2-4479A1?style=for-the-badge&logo=h2&logoColor=white"> <img src="https://img.shields.io/badge/aws-232F3E?style=for-the-badge&logo=AmazonAWS&logoColor=white"> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=Amazon S3&logoColor=white"> <img src="https://img.shields.io/badge/GitHub Actions-2088FF?style=for-the-badge&logo=GitHub Actions&logoColor=white">
 
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/Thymeleaf-%23005C0F.svg?style=for-the-badge&logo=Thymeleaf&logoColor=white"> <img src="https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white"> <img src="https://img.shields.io/badge/stomp-000000?style=for-the-badge&logo=stomp&logoColor=white">
-
+</div>
 
 ## ****💡 ERD****
 [ERD](https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/erd%EC%8B%A4%EC%A0%84.png)<br><br>
