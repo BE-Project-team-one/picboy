@@ -60,7 +60,7 @@
 
 
 <div align=center> 
-<img src="https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white"> <img src= "https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white">  <img src= "https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"> <img src="https://img.shields.io/badge/JWT-02303A?style=for-the-badge&logo=jwt&logoColor=white"> <img src="https://img.shields.io/badge/AJAX-0088CC?style=for-the-badge&logo=&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6db33f?style=for-the-badge&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/ubuntu-e95420?style=for-the-badge&logo=ubuntu&logoColor=white">
+<img src="https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white"> <img src= "https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white"> <img src="https://img.shields.io/badge/spring security-6db33f?style=for-the-badge&logo=springsecurity&logoColor=white">  <img src= "https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"> <img src="https://img.shields.io/badge/JWT-02303A?style=for-the-badge&logo=jwt&logoColor=white"> <img src="https://img.shields.io/badge/AJAX-0088CC?style=for-the-badge&logo=&logoColor=white"> <img src="https://img.shields.io/badge/ubuntu-e95420?style=for-the-badge&logo=ubuntu&logoColor=white">
 
 
 
