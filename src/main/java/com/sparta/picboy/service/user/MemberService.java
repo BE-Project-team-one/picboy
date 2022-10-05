@@ -26,22 +26,22 @@ public class MemberService {
     private final TokenProvider tokenProvider;
 
     // 일반 회원가입
-    @Transactional
+    @Transactional //x DB에 저장하는 것이기 때문에 Transactional 을 붙여줘야 함(쉽게 말해서 DB를 거쳐야 한다면 붙여주는게 좋음)
     public ResponseDto<?> signup(SignupRequestDto requestDto) {
 
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        Member member = new Member(requestDto, password);
+        String password = passwordEncoder.encode(requestDto.getPassword()); //x 패스워드 인코딩(암호화)
+        Member member = new Member(requestDto, password); //x DB에 저장할 사용자에 대한 정보
 
-        memberRepository.save(member);
+        memberRepository.save(member); //x DB에 저장
         return ResponseDto.success("회원가입이 성공했습니다.");
     }
 
     // 아이디 중복 체크
     public ResponseDto<?> idDoubleCheck(String username) {
-        if(memberRepository.findByUsername(username).isPresent()){
-            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME);
+        if(memberRepository.findByUsername(username).isPresent()){ //x memberRepository에서 username으로 찾았을 때 username이 존재한다면
+            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME); //x fail을
             }
-        return ResponseDto.success("사용 가능한 아이디입니다.");
+        return ResponseDto.success("사용 가능한 아이디입니다."); //x 존재하는 경우 외에는 success를
     }
     
     // 닉네임 중복 체크
@@ -54,28 +54,36 @@ public class MemberService {
 
     // 일반 회원 로그인
     @Transactional
-    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
+    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) { //x HttpServlet 사용하는 이유
 
         // DB에 존재하는 아이디 인지 확인
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null);
+        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null); //x username으로 찾아서 없을 경우를 null로 처리하고 null이 나왔을 때의 에러처리
         if (member == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
         }
 
         // 비밀번호 일치여부 확인
-        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) { //x DB에 존재한다면 passwordEncoder의 matches메소드를 사용하여 비밀번호 비교 (입력한 비밀번호, 저장되어있는 비밀번호)
             return ResponseDto.fail(ErrorCode.NOT_CORRECT_PASSWORD);
 
         }
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
+        TokenDto tokenDto = tokenProvider.generateTokenDto(member); //x 일치한다면 tokenprovider의 generateTokenDto에 member로 매개변수를 이용하여 토큰 생성
 
         httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
-        httpServletResponse.addHeader("AccessTokenExpiredTime", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
+        httpServletResponse.addHeader("AccessTokenExpiredTime", tokenDto.getAccessTokenExpiresIn().toString());
 
         return ResponseDto.success(true);
     }
 
+//    public boolean findPw(String phoneNum, String username) {
+//        Member member = memberRepository.findByPhoneNum(phoneNum);
+//        if(member!=null &&member.getUsername().equals(username)){
+//            return true;
+//        }else {
+//            return false;
+//        }
+//    }
 }

@@ -38,4 +38,10 @@ public class MemberController {
     public ResponseDto<?> login(@RequestBody LoginRequestDto requestDto, HttpServletResponse httpServletResponse){
         return memberService.login(requestDto, httpServletResponse);
     }
+
+//    //비밀번호 찾기
+//    @PostMapping("/user/find-password")
+//    public ResponseDto<?> changePw(String phoneNum, String username){
+//        return memberService.changePw(phoneNum, username);
+//    }
 }
