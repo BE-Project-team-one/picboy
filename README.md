@@ -77,42 +77,18 @@
 
 
 
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> 주요 기능****
 
+🎮 내가, 혹은 다른 누군가 그린 그림에 상상력을 발휘하여 다음 그림을 그려봅시다!
+<br />
 
+|                                                                 **그림 작성**                                                                 |                                                                 **이어 그리기**                                                                 |                                                                 **완성**                                                                 |
+| :--------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src ="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_1.gif" width= "310" height="180"/> | <img src ="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_2.gif" width= "310" height="180"/> | <img src ="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_3.gif" width= "310" height="180"/> |
 
-## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/>  프로젝트 상세****
+## ****<img src="https://user-images.githubusercontent.com/98306332/193816813-16147c60-328d-4658-9cf0-dc7b291ffdfd.png" width="25" margin="auto"/> 시연 영상****
 
-#### ✅ 게시 글 작성
-
-<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_1.gif" width="600"/><br>
--제시어를 선택하고(선택 안해도 됨) 첫 번째 그림을 그려봅시다.<br>
--움짤로 만들어질 그림들의 개수도 정해 보아요.<br>
-<br>
-<br>
-<br>
-<br>
-
-#### ✅ 이어 그리기 참여
-<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_2.gif" width="600"/><br>
--진행 중인 게시 글에 이어 그리기 참여를 해봅시다.<br>
--가장 마지막에 그려진 그림을 보고 다음 상황을 예측해서 그려봅니다.<br>
-<br>
-<br>
-<br>
-<br>
-
-#### ✅ 완성된 움짤 감상하기
-
-<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_3.gif" width="600"/><br>
--정해진 그림 개수에 도달하여 움짤로 만들어진 게시 글을 감상해 봅시다.<br>
--재밌게 잘 만들어진 움짤도 저장해 보세요.<br>
-<br>
-<br>
-<br>
-<br>
-
-
-<img src="https://doker-bucket.s3.ap-northeast-2.amazonaws.com/GITHUB+README+%EC%9D%B4%EB%AF%B8%EC%A7%80/picboy_4.gif" width="600"/><br>
+[용량줄인거.webm](https://user-images.githubusercontent.com/98306332/193960764-5cfa75d3-fda7-4538-9753-ed3672b98cf2.webm)
 
 
 
