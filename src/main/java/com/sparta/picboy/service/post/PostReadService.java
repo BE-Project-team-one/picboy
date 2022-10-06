@@ -46,6 +46,7 @@ public class PostReadService {
 
 
     // 메인페이지 베스트 움짤 Top 10
+    @Transactional(readOnly = true)
     public ResponseDto<?> mainTop10() {
         List<Post> postListTop3 = postRepository.findTop3ByStatusOrderByLikeCountDescModifiedAtDesc(2);
         List<Post> postListTop10 = postRepository.findTop10ByStatusOrderByLikeCountDescModifiedAtDesc(2);
@@ -121,6 +122,7 @@ public class PostReadService {
     }
 
     // 로그인 유저 정보 가져오기 <- 병합 후 유저 서비스에 옮겨놓기
+    @Transactional(readOnly = true)
     public ResponseDto<?> loginUserInfo(UserDetailsImpl userDetails) {
         Member member = memberRepository.findByUsername(userDetails.getUsername()).orElse(null);
         // 그럴 일이 없겠지만 혹여나 로그인한 유저의 정보를 못가져 왔을때를 위한 오류
@@ -142,6 +144,7 @@ public class PostReadService {
     }
 
     // 진행중인 움짤 페이지 목록 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> readProceeding(Long tabNum, int size, int page) {
 
         Pageable pageable = PageRequest.of(page, size);
@@ -215,6 +218,7 @@ public class PostReadService {
     }
 
     // 진행중인 움짤 디테일 페이지 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> readProceedingDetail(Long postid) {
 
         Post post = postRepository.findById(postid).orElse(null);
@@ -238,6 +242,7 @@ public class PostReadService {
 
 
     // 완료된 움짤 페이지 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> postRead(int tabNum, int categoryNum, int page, int size, boolean login) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseDto.success(postQueryDsl.postRead(tabNum, categoryNum, pageable, login));

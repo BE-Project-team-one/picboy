@@ -19,8 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,7 @@ public class MyPageService {
     // 마이페이지 게시물 조회
     // tabNum : 전체0/작성1/"참여2"/숨김3
     // category : 최신1/좋아요2/댓글3
+    @Transactional(readOnly = true)
     public ResponseDto<?> getMypagePost(String username, int tabNum, int categoryNum, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseDto.success(postQueryDsl.categorySort(username,tabNum, categoryNum,pageable));
@@ -50,6 +51,7 @@ public class MyPageService {
 
 
     //게시글 참여자 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> getPartipants(Long postIid){
         Post post = postRepository.findById(postIid).orElse(null);
         if(post == null){
@@ -70,6 +72,8 @@ public class MyPageService {
         return ResponseDto.success(mypagePaticipantsResponseDtoList);
     }
 
+    // 유저 정보 가져오기
+    @Transactional(readOnly = true)
     public ResponseDto<MypageUserInfoResponseDto> getUserInfo(String username){
         //String nickname = requestDto.getNickname();
         Member member = memberRepository.findByUsername(username).orElse(null);

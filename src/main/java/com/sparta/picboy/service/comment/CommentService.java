@@ -13,8 +13,8 @@ import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +102,7 @@ public class CommentService {
         }
     }
 
+    @Transactional(readOnly = true)
     public ResponseDto<?> getComment (Long postId){
         Post post = postRepository.findById(postId).orElse(null);
         if(post == null){
