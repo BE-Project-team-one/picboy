@@ -24,7 +24,7 @@ public enum ErrorCode {
     NOT_CORRECT_PASSWORD(500,"MEMBER-ERR-500", "비밀번호가 일치하지 않습니다."),
     NOT_CORRECT_CERTIFINUM(500,"MEMBER-ERR-500", "인증 번호가 일치하지 않습니다."),
 
-    SUSPENDED_ACCOUNT(600, "MEMBER-ERR-500", "정지된 계정입니다.")
+    SUSPENDED_ACCOUNT(600, "MEMBER-ERR-600", "정지된 계정입니다.")
     ;
 
 
