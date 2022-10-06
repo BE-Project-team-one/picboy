@@ -44,18 +44,7 @@ public class Scheduler {
         for(Post post : postList) {
             // 오늘 날짜가 삭제일보다 크고 게시물 상태가 1(미완성)일때
             if(currentDateTime.isAfter(post.getExpiredAt()) && post.getStatus() == 1) {
-
-                List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
-                Set<Member> memberSet = new HashSet<>();
-
-                for(PostRelay relay : postRelayList) {
-                    memberSet.add(relay.getMember());
-                }
-
                 postWriteService.postDelete(post.getId());
-
-                MessageDto messageDto = new MessageDto(memberSet, "작성하신 게시물이 삭제되었습니다.", post.getId());
-                alarmService.alarmByMessage(messageDto);
                 logger.info("게시물 <"+post.getId()+">번이 삭제되었습니다.");
             }
         }

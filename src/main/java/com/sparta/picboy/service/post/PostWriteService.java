@@ -171,8 +171,9 @@ public class PostWriteService {
         return awsS3Service.upload(file,"picboy/gif/post" + postId);
     }
 
-    @Transactional
+
     // 게시물 삭제
+    @Transactional
     public ResponseDto<?> postDelete(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
