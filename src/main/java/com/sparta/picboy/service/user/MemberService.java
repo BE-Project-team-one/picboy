@@ -11,8 +11,10 @@ import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
+
 
 
 @Service
@@ -37,6 +39,7 @@ public class MemberService {
     }
 
     // 아이디 중복 체크
+    @Transactional(readOnly = true)
     public ResponseDto<?> idDoubleCheck(String username) {
         if(memberRepository.findByUsername(username).isPresent()){
             return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME);
@@ -45,6 +48,7 @@ public class MemberService {
     }
     
     // 닉네임 중복 체크
+    @Transactional(readOnly = true)
     public ResponseDto<?> nickDoubleCheck(String nickname) {
         if((memberRepository.findByNickname(nickname).isPresent())){
             return ResponseDto.fail(ErrorCode.ALREADY_EXIST_NICKNAME);

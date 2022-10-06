@@ -18,12 +18,14 @@ public class AdminService {
     private final PostRepositoryImpl postRepository;
 
     // 전체 회원 찾기
+    @Transactional(readOnly = true)
     public List<UserResponseDto> findAllUser() {
         return memberRepository.findAllMember();
     }
 
 
     // 전체 게시물 찾기
+    @Transactional(readOnly = true)
     public List<PostResponseDto> findAllPost() {
         return postRepository.findAllPost();
     }
@@ -41,60 +43,72 @@ public class AdminService {
     }
 
     // 총 유저 수 count
+    @Transactional(readOnly = true)
     public int userCount() {
         return memberRepository.findAllMember().size();
     }
 
     // 총 게시물 수 count
+    @Transactional(readOnly = true)
     public int postCount() {
         return postRepository.findAllPost().size();
     }
 
     // 주제어 있는 게시물 count
+    @Transactional(readOnly = true)
     public int topicIsNotNullPost() {
         return postRepository.topicIsNotNullPost();
     }
 
     // 주제어 없는 게시물 count
+    @Transactional(readOnly = true)
     public int topicIsNullPost() {
         return postRepository.topicIsNullPost();
     }
 
     // 완성된 게시물 count
+    @Transactional(readOnly = true)
     public int completePost() {
         return postRepository.completePost();
     }
     // 진행중인 게시물 count
+    @Transactional(readOnly = true)
     public int proceedingPost() {
         return postRepository.proceedingPost();
     }
 
     // 숨겨진 게시글 count
+    @Transactional(readOnly = true)
     public int hidnPost() {
         return postRepository.hidnPost();
     }
 
     // 오늘 가입된 유저 count
+    @Transactional(readOnly = true)
     public int todayRegister() {
         return memberRepository.todayRegister();
     }
 
     // 오늘 생성된 게시물 count
+    @Transactional(readOnly = true)
     public int todayCreatePost() {
         return postRepository.todayCreatePost();
     }
 
     // 오늘 완성된 게시물 count
+    @Transactional(readOnly = true)
     public int todayCompletePost() {
         return postRepository.todayCompletePost();
     }
 
     // 오늘 삭제될 게시물 count
+    @Transactional(readOnly = true)
     public int todayDeletePost() {
         return postRepository.todayDeletePost();
     }
 
     // 신고된 게시물 전체 조회
+    @Transactional(readOnly = true)
     public List<PostResponseDto> reportPost() {
         return postRepository.reportPost();
     }

@@ -11,7 +11,6 @@ import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.repository.queryDsl.PostRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +37,7 @@ public class AlarmService {
     }
 
     //게시글 중 읽지 않은 메시지가 있는지 확인 -> true 다 읽음, false 다 읽지 않음
+    @Transactional(readOnly = true)
     public ResponseDto<?> readCheck(UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         int count = postRepository.readCheckPost(username);
@@ -60,6 +60,7 @@ public class AlarmService {
     }
 
     // 내 알람 전체 가져오기
+    @Transactional(readOnly = true)
     public ResponseDto<?> alertGet(UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
         return ResponseDto.success(postRepository.alertAllGet(username));

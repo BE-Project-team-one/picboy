@@ -77,6 +77,7 @@ public class PostWriteService {
     }
 
     //랜덤 제시어 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> randomTopic() {
         List<RandomTopic> randomTopicList = randomTopicRepository.findAll();
         Random random = new Random();
