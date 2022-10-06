@@ -1,12 +1,6 @@
 package com.sparta.picboy.scheduler;
 
-import com.sparta.picboy.S3Upload.AwsS3Service;
-import com.sparta.picboy.WebSocket.AlarmService;
-import com.sparta.picboy.WebSocket.MessageDto;
 import com.sparta.picboy.domain.post.Post;
-import com.sparta.picboy.domain.post.PostRelay;
-import com.sparta.picboy.domain.user.Member;
-import com.sparta.picboy.repository.post.PostRelayRepository;
 import com.sparta.picboy.repository.post.PostRepository;
 import com.sparta.picboy.service.post.PostWriteService;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
@@ -28,8 +20,6 @@ public class Scheduler {
     private final Logger logger = LoggerFactory.getLogger(Scheduler.class);
 
     private final PostRepository postRepository;
-    private final PostRelayRepository postRelayRepository;
-    private final AlarmService alarmService;
     private final PostWriteService postWriteService;
 
     // 초, 분, 시, 일, 월, 주 순서
