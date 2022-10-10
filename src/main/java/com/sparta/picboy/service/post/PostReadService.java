@@ -242,6 +242,7 @@ public class PostReadService {
 
 
     // 완료된 움짤 페이지 조회
+    @Transactional(readOnly = true)
     public ResponseDto<?> postRead(int tabNum, int categoryNum, int page, int size, boolean login) {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseDto.success(postQueryDsl.postRead(tabNum, categoryNum, pageable, login));
