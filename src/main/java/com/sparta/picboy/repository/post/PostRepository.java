@@ -36,8 +36,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     List<Post> findAllByOrderByCreatedAtDesc(); // 최신순
-//--------------------
-    Page<Post> findAllByStatusOrderByCompletAtDesc(int status, Pageable pageable); //--------------------
 
 
 
