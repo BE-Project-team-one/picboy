@@ -67,6 +67,14 @@ public class PostReadController {
         return postReadService.postRead(tabNum, categoryNum, page, size, login);
 
     }
+//-----------------------------
+    // 완료된 움짤페이지 jpa 기본 쿼리 조회 부하 테스트
+    @GetMapping("/post/giftest")
+    public ResponseDto<?> readCompletion(@RequestParam int size, @RequestParam int page) {
+        return postReadService.postReadtest(size, page);
+
+    }
+    //---------------------------------
 
 
     // 완료된 움짤 디테일 페이지
