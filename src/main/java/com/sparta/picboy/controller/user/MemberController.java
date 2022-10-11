@@ -1,5 +1,6 @@
 package com.sparta.picboy.controller.user;
 
+import com.sparta.picboy.dto.request.user.CertificationRequestDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
@@ -39,9 +40,15 @@ public class MemberController {
         return memberService.login(requestDto, httpServletResponse);
     }
 
-//    //비밀번호 찾기
-//    @PostMapping("/user/find-password")
-//    public ResponseDto<?> changePw(String phoneNum, String username){
-//        return memberService.changePw(phoneNum, username);
+    //username 찾기
+    @GetMapping("/user/find-username")
+    public ResponseDto<?> findUsername(@RequestBody CertificationRequestDto requestDto){
+        return memberService.findUsername(requestDto.getPhoneNum());
+    }
+
+//    //pw 찾기
+//    @GetMapping("/user/change-password")
+//    public ResponseDto<?> changePassword(String username){
+//        return memberService.changePassword(username);
 //    }
 }

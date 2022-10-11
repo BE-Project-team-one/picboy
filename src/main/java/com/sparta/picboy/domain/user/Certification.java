@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 public class Certification {

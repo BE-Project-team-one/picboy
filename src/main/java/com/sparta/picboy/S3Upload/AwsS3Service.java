@@ -39,12 +39,12 @@ public class AwsS3Service {
         String fileName = "";
 
         if(filePath.length() >= 14) {
-             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   // S3에 저장된 파일 이름
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(14);   //  S3에 저장된 파일 이름
         } else {
-             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(11);   // S3에 저장된 파일 이름
+             fileName = filePath + "/" + UUID.randomUUID() + "-" + filePath.substring(11);   //  S3에 저장된 파일 이름
         }
 
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+        String uploadImageUrl = putS3(uploadFile, fileName); //  s3로 업로드
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
@@ -68,7 +68,7 @@ public class AwsS3Service {
     private Optional<File> convert(String stringImage) throws IOException {
         byte[] bytes = decodeBase64(stringImage);
         File convertFile = new File(System.getProperty("user.dir") + "/" + "ServerImageFile.png");
-        if (convertFile.createNewFile()) { // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
+        if (convertFile.createNewFile()) { //  바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
                 fos.write(bytes);
             }

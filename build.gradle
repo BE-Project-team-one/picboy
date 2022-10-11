@@ -29,7 +29,7 @@ repositories {
 dependencies {
     // 전화번호 인증
     implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     //네이버 전화번호 인증

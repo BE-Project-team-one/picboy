@@ -1,47 +1,67 @@
 package com.sparta.picboy.service.user;
 
+import com.sparta.picboy.domain.user.Certification;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
+import com.sparta.picboy.dto.request.user.CertificationRequestDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
 import com.sparta.picboy.exception.ErrorCode;
 import com.sparta.picboy.jwt.TokenProvider;
+import com.sparta.picboy.repository.user.CertificationRepository;
 import com.sparta.picboy.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final CertificationRepository certificationRepository;
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final TokenProvider tokenProvider;
 
+    @Value("${api_key}")
+    private String api_key;
+
+    @Value("${api_secret}")
+    private String api_secret;
+
+    @Value("${phoneNum}")
+    private String phoneNum;
+
     // 일반 회원가입
-    @Transactional //x DB에 저장하는 것이기 때문에 Transactional 을 붙여줘야 함(쉽게 말해서 DB를 거쳐야 한다면 붙여주는게 좋음)
+    @Transactional
     public ResponseDto<?> signup(SignupRequestDto requestDto) {
 
-        String password = passwordEncoder.encode(requestDto.getPassword()); //x 패스워드 인코딩(암호화)
-        Member member = new Member(requestDto, password); //x DB에 저장할 사용자에 대한 정보
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        Member member = new Member(requestDto, password);
 
-        memberRepository.save(member); //x DB에 저장
+        memberRepository.save(member);
         return ResponseDto.success("회원가입이 성공했습니다.");
     }
 
     // 아이디 중복 체크
     public ResponseDto<?> idDoubleCheck(String username) {
-        if(memberRepository.findByUsername(username).isPresent()){ //x memberRepository에서 username으로 찾았을 때 username이 존재한다면
-            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME); //x fail을
+        if(memberRepository.findByUsername(username).isPresent()){
+            return ResponseDto.fail(ErrorCode.ALREADY_EXIST_USERNAME);
             }
-        return ResponseDto.success("사용 가능한 아이디입니다."); //x 존재하는 경우 외에는 success를
+        return ResponseDto.success("사용 가능한 아이디입니다.");
     }
     
     // 닉네임 중복 체크
@@ -54,10 +74,10 @@ public class MemberService {
 
     // 일반 회원 로그인
     @Transactional
-    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) { //x HttpServlet 사용하는 이유
+    public ResponseDto<?> login(LoginRequestDto requestDto, HttpServletResponse httpServletResponse) {
 
         // DB에 존재하는 아이디 인지 확인
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null); //x username으로 찾아서 없을 경우를 null로 처리하고 null이 나왔을 때의 에러처리
+        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null);
         if (member == null) {
             return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
@@ -68,12 +88,12 @@ public class MemberService {
         }
 
         // 비밀번호 일치여부 확인
-        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) { //x DB에 존재한다면 passwordEncoder의 matches메소드를 사용하여 비밀번호 비교 (입력한 비밀번호, 저장되어있는 비밀번호)
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
             return ResponseDto.fail(ErrorCode.NOT_CORRECT_PASSWORD);
 
         }
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(member); //x 일치한다면 tokenprovider의 generateTokenDto에 member로 매개변수를 이용하여 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
 
         httpServletResponse.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
         httpServletResponse.addHeader("Refresh-Token", tokenDto.getRefreshToken());
@@ -82,12 +102,55 @@ public class MemberService {
         return ResponseDto.success(true);
     }
 
-//    public boolean findPw(String phoneNum, String username) {
-//        Member member = memberRepository.findByPhoneNum(phoneNum);
-//        if(member!=null &&member.getUsername().equals(username)){
-//            return true;
-//        }else {
-//            return false;
+    public ResponseDto<?> findUsername(String phoneNumber) {
+        Member member = memberRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        if(member == null){
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        }else {
+            String username = member.getUsername();
+            return ResponseDto.success(username);
+        }
+    }
+
+//    public ResponseDto<?> changePassword(String username) {
+//        Member member = memberRepository.findByUsername(username).orElse(null);
+//        if(member == null){
+//            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+//        }else{
+//            String phoneNumber = member.getPhoneNumber();
+//
+//            Random random  = new Random();
+//            StringBuffer sf = new StringBuffer();
+//            String numStr = "";
+//            for(int i=0; i<8; i++) {
+//                String ran = Integer.toString(random.nextInt(10));
+//                numStr+=ran;
+//            }
+//
+//            Message coolsms = new Message(api_key, api_secret);
+//
+//            // 4 params(to, from, type, text) are mandatory. must be filled
+//            HashMap<String, String> params = new HashMap<String, String>();
+//            params.put("to", phoneNumber);    // 수신전화번호
+//            params.put("from", phoneNum);    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+//            params.put("type", "SMS");
+//            params.put("text", "임시 비밀번호 :"+ "["+numStr+"]" + "입니다.");
+//            params.put("app_version", "test app 1.2"); // application name and version
+//
+//            try {
+//                JSONObject obj = (JSONObject) coolsms.send(params);
+//                System.out.println(obj.toString());
+//            } catch (CoolsmsException e) {
+//                System.out.println(e.getMessage());
+//                System.out.println(e.getCode());
+//            }
+//
+//            Certification certification = certificationRepository.findByPhoneNum(phoneNumber);
+//            if (certification == null){
+//                certificationRepository.save(new Certification(phoneNumber, numStr));
+//            }else{
+//                certification.update(numStr);
+//            }return ResponseDto.success(true);
 //        }
 //    }
 }
