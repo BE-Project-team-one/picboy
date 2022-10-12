@@ -15,7 +15,8 @@ public class GifSequenceWriter {
     protected IIOMetadata metadata;
 
     public GifSequenceWriter(ImageOutputStream out, int imageType, int delay, boolean loop) throws IOException {
-        writer = ImageIO.getImageWritersBySuffix("gif").next();
+//        writer = ImageIO.getImageWritersBySuffix("gif").next();
+        writer = ImageIO.getImageWritersBySuffix("webp").next();
         params = writer.getDefaultWriteParam();
 
         ImageTypeSpecifier imageTypeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(imageType);
