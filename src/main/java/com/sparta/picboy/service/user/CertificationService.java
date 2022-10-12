@@ -38,11 +38,13 @@ public class CertificationService {
     public ResponseDto<?> certifiedPhoneNumber(CertificationRequestDto requestDto) {
 
         Random random  = new Random();
-        String numStr = "";
-        for(int i=0; i<4; i++) {
-            String ran = Integer.toString(random.nextInt(10));
-            numStr+=ran;
-        }
+        int leftLimit = 48;
+        int rightLimit = 57;
+        int stringLength = 4;
+        String certificationNum = random.ints(leftLimit, rightLimit +1 )
+                .limit(stringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
 
         Message coolsms = new Message(api_key, api_secret);
 
@@ -51,7 +53,7 @@ public class CertificationService {
         params.put("to", requestDto.getPhoneNum() );    // 수신전화번호
         params.put("from", phoneNum);    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
         params.put("type", "SMS");
-        params.put("text", "휴대폰 인증 메시지 : 인증번호는" + "["+numStr+"]" + "입니다.");
+        params.put("text", "휴대폰 인증 메시지 : 인증번호는" + "["+certificationNum+"]" + "입니다.");
         params.put("app_version", "test app 1.2"); // application name and version
 
         try {
@@ -64,9 +66,9 @@ public class CertificationService {
 
         Certification certification = certificationRepository.findByPhoneNum(requestDto.getPhoneNum());
         if (certification == null){
-            certificationRepository.save(new Certification(requestDto.getPhoneNum(), numStr));
+            certificationRepository.save(new Certification(requestDto.getPhoneNum(), certificationNum));
         }else{
-            certification.update(numStr);
+            certification.update(certificationNum);
         }
         return ResponseDto.success("인증 번호가 전송되었습니다.");
     }

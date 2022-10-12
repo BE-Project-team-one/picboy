@@ -4,6 +4,7 @@ import com.sparta.picboy.domain.user.Certification;
 import com.sparta.picboy.domain.user.Member;
 import com.sparta.picboy.dto.request.TokenDto;
 import com.sparta.picboy.dto.request.user.CertificationRequestDto;
+import com.sparta.picboy.dto.request.user.FindPasswordRequestDto;
 import com.sparta.picboy.dto.request.user.LoginRequestDto;
 import com.sparta.picboy.dto.request.user.SignupRequestDto;
 import com.sparta.picboy.dto.response.ResponseDto;
@@ -90,7 +91,6 @@ public class MemberService {
         // 비밀번호 일치여부 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())) {
             return ResponseDto.fail(ErrorCode.NOT_CORRECT_PASSWORD);
-
         }
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
@@ -112,45 +112,46 @@ public class MemberService {
         }
     }
 
-//    public ResponseDto<?> changePassword(String username) {
-//        Member member = memberRepository.findByUsername(username).orElse(null);
-//        if(member == null){
-//            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
-//        }else{
-//            String phoneNumber = member.getPhoneNumber();
-//
-//            Random random  = new Random();
-//            StringBuffer sf = new StringBuffer();
-//            String numStr = "";
-//            for(int i=0; i<8; i++) {
-//                String ran = Integer.toString(random.nextInt(10));
-//                numStr+=ran;
-//            }
-//
-//            Message coolsms = new Message(api_key, api_secret);
-//
-//            // 4 params(to, from, type, text) are mandatory. must be filled
-//            HashMap<String, String> params = new HashMap<String, String>();
-//            params.put("to", phoneNumber);    // 수신전화번호
-//            params.put("from", phoneNum);    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
-//            params.put("type", "SMS");
-//            params.put("text", "임시 비밀번호 :"+ "["+numStr+"]" + "입니다.");
-//            params.put("app_version", "test app 1.2"); // application name and version
-//
-//            try {
-//                JSONObject obj = (JSONObject) coolsms.send(params);
-//                System.out.println(obj.toString());
-//            } catch (CoolsmsException e) {
-//                System.out.println(e.getMessage());
-//                System.out.println(e.getCode());
-//            }
-//
-//            Certification certification = certificationRepository.findByPhoneNum(phoneNumber);
-//            if (certification == null){
-//                certificationRepository.save(new Certification(phoneNumber, numStr));
-//            }else{
-//                certification.update(numStr);
-//            }return ResponseDto.success(true);
-//        }
-//    }
+    public ResponseDto<?> getTempPw(FindPasswordRequestDto requestDto) {
+        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElse(null);
+        if(member == null){
+            return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
+        }else if (!member.getPhoneNumber().equals(requestDto.getPhoneNumber())) {
+            return ResponseDto.fail(ErrorCode.NOT_CORRECT_PHONENUMBER);
+        }else {
+            //임시 비밀번호 발급
+            Random random  = new Random();
+            int leftLimit = 48;
+            int rightLimit = 122;
+            int stringLength = 10;
+            String tempPassword = random.ints(leftLimit, rightLimit +1 )
+                    .filter(i -> (i <= 57 || i>= 65) && (i <=90 || i>= 97))
+                    .limit(stringLength)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+
+            Message coolsms = new Message(api_key, api_secret);
+
+            // 4 params(to, from, type, text) are mandatory. must be filled
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("to", requestDto.getPhoneNumber());    // 수신전화번호
+            params.put("from", phoneNum);    // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+            params.put("type", "SMS");
+            params.put("text", "임시 비밀번호 :"+ "["+tempPassword+"]" + "입니다.");
+            params.put("app_version", "test app 1.2"); // application name and version
+
+            try {
+                JSONObject obj = (JSONObject) coolsms.send(params);
+                System.out.println(obj.toString());
+            } catch (CoolsmsException e) {
+                System.out.println(e.getMessage());
+                System.out.println(e.getCode());
+            }
+            //임시 비밀번호로 비밀번호 변경
+            member.updatePw(passwordEncoder.encode(tempPassword));
+            memberRepository.save(member);
+
+            return ResponseDto.success(true);
+        }
+    }
 }

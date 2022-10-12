@@ -67,4 +67,8 @@ public class Member extends Timestamped {
     public void updateImg(String profileImg){
         this.profileImg = profileImg;
     }
+
+    public void updatePw(String password) {
+        this.password = password;
+    }
 }
