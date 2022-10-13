@@ -94,16 +94,13 @@ public class PostWriteService {
 
 
     // 이어 그리기 생성
-//    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Lock(value = LockModeType.OPTIMISTIC)
+    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
         if (member == null) return ResponseDto.fail(ErrorCode.NOT_FOUND_MEMBER);
 
-//        Post post = postRepository.findById(postId).orElse(null);
-//        Post post = this.entityManager.find(Post.class, postId, LockModeType.PESSIMISTIC_WRITE, Map.of("javax.persistence.lock.timeout", 1L));
-        Post post = this.entityManager.find(Post.class, postId, LockModeType.OPTIMISTIC);
+        Post post = this.entityManager.find(Post.class, postId, LockModeType.PESSIMISTIC_WRITE, Map.of("javax.persistence.lock.timeout", 1L));
         if (post == null) return ResponseDto.fail(ErrorCode.NOT_FOUNT_POST);
         if (post.getStatus() == 2) return ResponseDto.fail(ErrorCode.ALREADY_COMPLETED_POST);
 
