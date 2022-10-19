@@ -120,7 +120,7 @@ public class PostWriteService {
 
             //마지막 프레임 완성일 = gif 게시물 작성일
             LocalDateTime completAt = postRelay.getModifiedAt();
-            this.entityManager.lock(Post.class, LockModeType.OPTIMISTIC);
+            this.entityManager.lock(Post.class, LockModeType.OPTIMISTIC, Map.of("javax.persistence.lock.timout", 1L));
             post.updateCompletAt(completAt);
 
             List<PostRelay> postRelayList = postRelayRepository.findAllByPost(post);
