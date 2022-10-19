@@ -95,7 +95,7 @@ public class PostWriteService {
 
     // 이어 그리기 생성
 //    @Lock(value = LockModeType.PESSIMISTIC_WRITE)
-    @Lock(value = LockModeType.OPTIMISTIC)
+    @Lock(value = LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     @Transactional
     public ResponseDto<?> relayPost(Long postId, PostDelayRequestDto postDelayRequestDto, UserDetails userinfo) {
         Member member = memberRepository.findByUsername(userinfo.getUsername()).orElse(null);
